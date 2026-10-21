@@ -25,12 +25,13 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > • Profile pages also list the account's Highlights and its full-size profile picture
 > • Files are sorted into Downloads/ig.tools/<username>/ with posts, stories and highlights folders
 > • Press Alt+Shift+S to open it from the keyboard
+> • Optional: turn on download buttons right on Instagram, next to the bookmark on posts, on profile grids, and on Stories and Reels
 >
 > SIGNED OUT, OR PREFER NOT TO SIGN IN?
 > Paste any Instagram link or @username into the popup, or right-click an Instagram link, to open it in ig.tools and view public posts, Reels and Stories there without signing in.
 >
 > PRIVACY
-> Saving happens in your browser. The extension sees a page only after you click its icon, talks only to Instagram, and collects nothing.
+> Saving happens in your browser. Unless you turn on the optional on-page buttons, the extension sees a page only after you click its icon. It talks only to Instagram and collects nothing.
 >
 > OPEN SOURCE
 > https://github.com/ig-tools-app/ig-tools-extension
@@ -61,6 +62,7 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 - `scripting`: Runs one function in that tab to request the page's media from Instagram's own web API with the user's session. No content scripts run on any page.
 - `downloads`: Saves the photos and videos the user chooses to the Downloads folder.
 - `contextMenus`: Adds "Open link with ig.tools" and "Open this page with ig.tools" to the right-click menu on Instagram links and pages.
+- Optional host permission `https://www.instagram.com/*`: Requested only when the user turns on "Download buttons on Instagram" in the popup. It lets the extension add download buttons to Instagram posts, profile grids and Stories. It is never requested at install, and turning the switch off removes it.
 
 **Remote code**: No, I am not using remote code.
 

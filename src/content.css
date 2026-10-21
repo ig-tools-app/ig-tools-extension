@@ -1,0 +1,67 @@
+/* On-page download buttons. Every rule is scoped to igt- classes so nothing
+   else on instagram.com changes. Icons use currentColor, so they follow
+   Instagram's light and dark themes like its own icons. */
+.igt-button {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  color: inherit;
+  font: 600 14px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.igt-button svg { width: 24px; height: 24px; flex: none; }
+.igt-button:focus-visible { outline: 2px solid #b42a78; outline-offset: 2px; border-radius: 8px; }
+.igt-button[data-igt-state="busy"] { opacity: .45; cursor: progress; }
+.igt-button[data-igt-state="done"] { color: #1f8a5b; }
+.igt-button[data-igt-state="failed"] { color: #d93a35; }
+
+/* In a post's action row, next to the bookmark. Instagram's own classes on the
+   bookmark group stack it vertically, so the row direction is forced here. */
+.igt-row-end { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 4px; }
+/* Same height as Instagram's 24px icons so the row keeps its height; the width
+   keeps a comfortable click target. */
+.igt-action { width: 36px; height: 24px; border-radius: 6px; }
+.igt-action:hover { opacity: .6; }
+
+/* Profile grid: shown on hover or keyboard focus, bottom-right of the tile. */
+.igt-tile { position: relative; }
+.igt-tile-button {
+  position: absolute;
+  inset-block-end: 8px;
+  inset-inline-end: 8px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 92%);
+  color: #1d1a22;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+  opacity: 0;
+  transition: opacity .15s;
+}
+.igt-tile:hover .igt-tile-button,
+.igt-tile-button:focus-visible,
+.igt-tile-button[data-igt-state="busy"],
+.igt-tile-button[data-igt-state="done"],
+.igt-tile-button[data-igt-state="failed"] { opacity: 1; }
+@media (hover: none) { .igt-tile-button { opacity: 1; } }
+
+/* Stories, Highlights and the Reels player. */
+.igt-float {
+  position: fixed;
+  inset-block-start: 16px;
+  inset-inline-end: 16px;
+  z-index: 2147483000;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 62%);
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+.igt-float:hover { background: rgb(0 0 0 / 78%); }
+.igt-float[data-igt-state="done"] { color: #6fe0a6; }
+.igt-float[data-igt-state="failed"] { color: #ff9a95; }

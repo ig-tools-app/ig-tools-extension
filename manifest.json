@@ -29,5 +29,6 @@
       "suggested_key": { "default": "Alt+Shift+S" }
     }
   },
-  "permissions": ["activeTab", "contextMenus", "downloads", "scripting"]
+  "permissions": ["activeTab", "contextMenus", "downloads", "scripting"],
+  "optional_host_permissions": ["https://www.instagram.com/*"]
 }

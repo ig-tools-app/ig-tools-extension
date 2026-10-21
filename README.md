@@ -4,6 +4,7 @@ Save photos, videos, Reels and Stories from the Instagram page you have open, st
 
 - **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; save one or all of them.
 - **Profile pages**: three tabs. **Stories** lists the account's current Stories, so you can save them without opening the Stories viewer. Saving them this way doesn't add you to the Story's viewer list (tested in October 2026; Instagram may change this). If you open a Story in Instagram itself, Instagram records the view as usual. **Highlights** lists the account's Highlights; open one to save its items. **Profile picture** saves the full-size picture shown on the profile.
+- **Download buttons on Instagram** (optional, off by default): turn on the switch in the popup to get a download button next to the bookmark on posts, on profile grid tiles (on hover), and a floating button on Stories, Highlights and the Reels player.
 - **Open in ig.tools**: paste any Instagram link or `@username` in the popup, or right-click an Instagram link and choose "Open link with ig.tools".
 - **Shortcut**: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> opens the popup. If another extension already uses it, Chrome leaves it unset; choose your own at `chrome://extensions/shortcuts`.
 - **Tidy downloads**: files go to `Downloads/ig.tools/<username>/` with `posts/`, `stories/` and `highlights/<title>/` folders.
@@ -21,8 +22,9 @@ Saving happens locally: the extension asks Instagram for the media on the open p
 | `scripting` | With that access, read the media on the open Instagram page (one request to Instagram's own web API). |
 | `downloads` | Save the files you choose to your Downloads folder. |
 | `contextMenus` | Add "Open link with ig.tools" and "Open this page with ig.tools" to the right-click menu. |
+| `https://www.instagram.com/*` (optional) | Only if you turn on **Download buttons on Instagram** in the popup. Adds the buttons to Instagram pages. Turning the switch off removes the access again. |
 
-There are no host permissions and no content scripts: the extension cannot see any page until you click its icon.
+Without the optional access there are no host permissions and no content scripts: the extension cannot see any page until you click its icon.
 
 ## How saving works
 

@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "このプロフィール写真は現在利用できません。",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "Instagramにダウンロードボタンを表示",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "投稿、プロフィールのグリッド、ストーリーズ、リールにダウンロードボタンを追加します。Chromeがinstagram.comへのアクセス許可を求めます。",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "ig.toolsでダウンロード",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "ダウンロードできませんでした",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "此大頭貼目前無法取得。",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "在 Instagram 顯示下載按鈕",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "在貼文、個人檔案網格、限時動態和 Reels 加上下載按鈕。Chrome 會要求存取 instagram.com 的權限。",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "用 ig.tools 下載",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "無法下載",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

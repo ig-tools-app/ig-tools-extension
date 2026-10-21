@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "صورة الملف الشخصي هذه غير متاحة الآن.",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "أزرار التنزيل على Instagram",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "يضيف زر تنزيل إلى المنشورات وشبكات الملفات الشخصية والقصص وReels. سيطلب Chrome الوصول إلى instagram.com.",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "نزّل باستخدام ig.tools",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "تعذّر التنزيل",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

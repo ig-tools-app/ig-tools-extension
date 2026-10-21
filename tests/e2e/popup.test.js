@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { bigCarouselPost, carouselPost, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
+import { bigCarouselPost, carouselPost, feedHtml, gridHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
 import { shortcodeToId } from "../../src/instagram.js";
 
 const root = fileURLToPath(new URL("../..", import.meta.url));
@@ -112,7 +112,9 @@ before(async () => {
     // Every page carries the GraphQL token; profile pages also name the account ID.
     // quietacct has no current Stories; mixedup's page names natgeo's ID, as a broken lookup would.
     const profileIds = { "/natgeo/": scenario === "no-profile-id" ? null : "787132", "/quietacct/": "555", "/mixedup/": "787132" };
-    const header = scenario === "avatar-on-page" && new URL(url).pathname === "/natgeo/" ? profileHeader : "";
+    const pathname = new URL(url).pathname;
+    const header = scenario === "avatar-on-page" && pathname === "/natgeo/" ? profileHeader
+      : pathname === "/" ? feedHtml : pathname === "/gridacct/" ? gridHtml : "";
     return route.fulfill({ status: 200, contentType: "text/html", headers: { "Set-Cookie": "csrftoken=test-token; Path=/" }, body: profileHtml(profileIds[new URL(url).pathname], header) });
   });
 });
@@ -418,4 +420,100 @@ test("pages without media only show the link field", async () => {
   await home.popup.getByText("Open a post, Reel, Story or profile on Instagram").waitFor();
   assert.equal(await home.popup.locator("#open").getAttribute("class"), "primary");
   await close(home.page, home.popup);
+});
+
+// ---- On-page download buttons ----
+// The test build holds instagram.com access from the start, as after the user
+// turns the buttons on, so the content script is registered.
+
+// Records the file names the background asks Chrome to save.
+async function recordBackgroundDownloads() {
+  await worker.evaluate(() => {
+    globalThis.requestedFiles = [];
+    if (globalThis.downloadsWrapped) return;
+    globalThis.downloadsWrapped = true;
+    const download = chrome.downloads.download.bind(chrome.downloads);
+    chrome.downloads.download = options => { globalThis.requestedFiles.push(options.filename); return download(options); };
+  });
+}
+const backgroundFiles = () => worker.evaluate(() => globalThis.requestedFiles.slice().sort());
+
+async function closePage(page) {
+  await page.close();
+  await worker.evaluate(() => chrome.downloads.erase({}));
+  rmSync(downloads, { recursive: true, force: true });
+}
+
+test("with instagram.com access the page buttons are registered and the switch is on", async () => {
+  const scripts = await worker.evaluate(() => chrome.scripting.getRegisteredContentScripts());
+  assert.deepEqual(scripts.map(s => [s.id, s.js, s.css]), [["page-buttons", ["src/content.js"], ["src/content.css"]]]);
+  const { page, popup } = await openPopup("https://www.instagram.com/");
+  assert.equal(await popup.getByRole("switch", { name: "Download buttons on Instagram" }).isChecked(), true);
+  await close(page, popup);
+});
+
+test("a feed post gets a button next to the bookmark that saves the post", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/");
+  const button = page.locator("article").first().locator(".igt-action");
+  await button.waitFor();
+  // In the bookmark's group, in front of the bookmark.
+  assert.equal(await page.locator("article").first().evaluate(a => a.querySelector("section").lastElementChild.firstElementChild.classList.contains("igt-action")), true);
+  assert.equal(await button.getAttribute("aria-label"), "Download with ig.tools");
+  await button.click();
+  await page.locator('article .igt-action[data-igt-state="done"]').first().waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Cphoto11111.jpg"]);
+  // Each row gets one button, also after the page re-renders.
+  await page.evaluate(() => document.body.append(document.createElement("div")));
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator(".igt-action").count(), 2);
+  await closePage(page);
+});
+
+test("a failed download shows on the button with the reason", async () => {
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/");
+  const button = page.locator("article").nth(1).locator(".igt-action");
+  await button.click();
+  await page.locator('article .igt-action[data-igt-state="failed"]').waitFor();
+  assert.match(await button.getAttribute("title"), /^Couldn't download/);
+  await closePage(page);
+});
+
+test("profile grid tiles get a download button on hover", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/gridacct/");
+  const tileButton = page.locator(".igt-tile-button").first();
+  await tileButton.waitFor({ state: "attached" });
+  assert.equal(await page.locator(".igt-tile-button").count(), 2);
+  assert.equal(await tileButton.evaluate(b => getComputedStyle(b).opacity), "0");
+  await page.locator(".igt-tile").first().hover();
+  await page.waitForTimeout(250);
+  assert.equal(await tileButton.evaluate(b => getComputedStyle(b).opacity), "1");
+  await tileButton.click();
+  await page.locator('.igt-tile-button[data-igt-state="done"]').waitFor();
+  // The click saved the post and did not follow the tile's link.
+  assert.equal(new URL(page.url()).pathname, "/gridacct/");
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Ccarousel33_1.jpg", "ig.tools/natgeo/posts/Ccarousel33_2.mp4", "ig.tools/natgeo/posts/Ccarousel33_3.jpg"]);
+  await closePage(page);
+});
+
+test("a Story page gets a floating button that saves the Story on screen", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/stories/natgeo/3101/");
+  const button = page.locator(".igt-float");
+  await button.waitFor();
+  assert.equal(await button.textContent(), "Download");
+  await button.click();
+  await page.locator('.igt-float[data-igt-state="done"]').waitFor();
+  // Only the Story in the address, not the account's other Stories.
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/stories/3101.mp4"]);
+  // Leaving the Stories viewer removes the button.
+  await page.evaluate(() => history.pushState({}, "", "/natgeo/"));
+  await page.evaluate(() => document.body.append(document.createElement("div")));
+  await button.waitFor({ state: "detached" });
+  await closePage(page);
 });

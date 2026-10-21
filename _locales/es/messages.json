@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "Esta foto de perfil no está disponible en este momento.",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "Botones de descarga en Instagram",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "Añade un botón de descarga a publicaciones, cuadrículas de perfil, historias y Reels. Chrome pedirá acceso a instagram.com.",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "Descargar con ig.tools",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "No se pudo descargar",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

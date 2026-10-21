@@ -304,6 +304,32 @@ const testTab = Number(new URLSearchParams(location.search).get("tab"));
 const query = testTab ? chrome.tabs.get(testTab).then(tab => [tab]) : chrome.tabs.query({ active: true, currentWindow: true });
 query.then(([tab]) => loadPage(tab)).finally(() => { if (mediaSection.hidden) input.focus(); });
 
+// ---- On-page buttons: an optional permission for instagram.com ----
+
+const pageButtons = $("page-buttons");
+const instagramOrigins = ["https://www.instagram.com/*"];
+chrome.permissions.contains({ origins: instagramOrigins }).then(enabled => { pageButtons.checked = enabled; });
+
+pageButtons.addEventListener("change", async () => {
+  if (pageButtons.checked) {
+    // permissions.request must run straight from the click, before any other await.
+    const granted = await chrome.permissions.request({ origins: instagramOrigins }).catch(() => false);
+    pageButtons.checked = granted;
+    if (!granted) return;
+    await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
+    // The open Instagram tab gets the buttons now, without a reload.
+    const tab = tabId && await chrome.tabs.get(tabId).catch(() => null);
+    if (tab?.url && pageFromUrl(tab.url)) {
+      await chrome.scripting.insertCSS({ target: { tabId }, files: ["src/content.css"] }).catch(() => {});
+      await chrome.scripting.executeScript({ target: { tabId }, files: ["src/content.js"] }).catch(() => {});
+    }
+  } else {
+    const removed = await chrome.permissions.remove({ origins: instagramOrigins }).catch(() => false);
+    pageButtons.checked = !removed;
+    if (removed) await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
+  }
+});
+
 input.addEventListener("input", () => { error.hidden = true; input.removeAttribute("aria-invalid"); });
 
 form.addEventListener("submit", event => {

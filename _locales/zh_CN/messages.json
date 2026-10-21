@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "此头像当前无法获取。",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "在 Instagram 显示下载按钮",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "在帖子、主页网格、快拍和 Reels 上添加下载按钮。Chrome 会请求访问 instagram.com 的权限。",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "用 ig.tools 下载",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "无法下载",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

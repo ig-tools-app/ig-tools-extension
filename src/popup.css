@@ -89,7 +89,7 @@ h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
 [dir="rtl"] .back::before { content: "› "; }
 /* Chrome caps popups at 600px tall, so long carousels scroll inside this box.
    The grid itself must not scroll, or its rows shrink and cards overlap. */
-.scroller { max-height: 316px; overflow-y: auto; }
+.scroller { max-height: 240px; overflow-y: auto; }
 .grid {
   list-style: none;
   margin: 0;
@@ -205,6 +205,47 @@ button.secondary { border: 1px solid var(--line-strong); background: transparent
 button.secondary:hover { border-color: var(--primary); color: var(--primary); }
 button:disabled { opacity: .6; }
 button:focus-visible, a:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+/* On-page buttons setting: a switch row under the link field. */
+.setting {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--line);
+  cursor: pointer;
+}
+.setting-text { display: grid; gap: 2px; font-size: 13px; font-weight: 600; }
+.setting-text small { color: var(--muted); font-weight: 400; font-size: 12px; }
+.setting input {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 36px;
+  height: 20px;
+  margin: 1px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background .15s;
+}
+.setting input::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform .15s;
+}
+.setting input:checked { background: var(--primary); }
+.setting input:checked::after { transform: translateX(16px); }
+[dir="rtl"] .setting input:checked::after { transform: translateX(-16px); }
+.setting input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
 .error { margin: 0; color: var(--danger); }
 .helper { margin: 0; color: var(--muted); font-size: 13px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

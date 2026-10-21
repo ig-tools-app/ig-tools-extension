@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "Foto profil ini sedang tidak tersedia.",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "Tombol unduh di Instagram",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "Menambahkan tombol unduh ke postingan, grid profil, Story, dan Reels. Chrome akan meminta akses ke instagram.com.",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "Unduh dengan ig.tools",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "Gagal mengunduh",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

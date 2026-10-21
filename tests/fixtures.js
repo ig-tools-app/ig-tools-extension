@@ -80,6 +80,23 @@ export const profileHeader = `<header>
 <img alt="natgeo's profile picture" src="${cdn}/avatar_page_1080.jpg?oh=x">
 </header>`;
 
+// Markup shaped like instagram.com's (October 2026), for the on-page buttons.
+// An action row is a short <section>: like, comment, repost, share on the left,
+// the bookmark alone in its last child.
+const icon = label => `<svg aria-label="${label}" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>`;
+export const actionRow = `<section style="display:flex;justify-content:space-between;height:40px">
+<div style="display:flex">${["Like", "Comment", "Repost", "Share"].map(label => `<div role="button">${icon(label)}</div>`).join("")}</div>
+<div><div role="button" class="bookmark">${icon("Save")}</div></div>
+</section>`;
+export const feedHtml = `<main>
+<article><a href="/p/Cphoto11111/"><time>1h</time></a><img src="${cdn}/photo_640.jpg" width="400" height="400">${actionRow}</article>
+<article><a href="/p/Cmissing999/"><time>2h</time></a>${actionRow}</article>
+</main>`;
+export const gridHtml = `<main><div style="display:flex">
+<div style="width:200px;height:250px"><a href="/gridacct/p/Ccarousel33/" role="link"><img src="${cdn}/slide1_320.jpg" width="200" height="250"></a></div>
+<div style="width:200px;height:250px"><a href="/gridacct/reel/Creel222222/" role="link"><img src="${cdn}/reelcover_320.jpg" width="200" height="250"></a></div>
+</div></main>`;
+
 // The profile page HTML names the account ID and carries the GraphQL request token.
 // Other pages pass no ID and carry only the token.
 export const profileHtml = (profileId, body = "") => `<!doctype html><title>Instagram</title>${body}

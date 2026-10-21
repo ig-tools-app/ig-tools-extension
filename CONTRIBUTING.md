@@ -5,7 +5,7 @@ Thanks for helping. Bug reports and small, focused pull requests are welcome. Pl
 ## Ground rules
 
 - **Saving stays local.** Media is read from the open Instagram tab and downloaded from Instagram's CDN. No requests to any other server, no analytics, no remote code. If a change affects what data is read or where it goes, update `PRIVACY.md` in the same pull request.
-- **Minimal permissions.** The extension uses `activeTab`, `scripting`, `downloads` and `contextMenus`, with no host permissions and no content scripts. Changes that need more permissions need an issue and discussion first.
+- **Minimal permissions.** The extension uses `activeTab`, `scripting`, `downloads` and `contextMenus`. Access to instagram.com is an optional permission, requested only when the user turns on the on-page buttons; the content script is registered at runtime while it is held (`syncPageButtons` in `src/background.js`). Never move it into `host_permissions` or a static `content_scripts` entry: that would ask every user at install and disable the extension for existing users on update. Changes that need more permissions need an issue and discussion first.
 - **Describe only what is tested.** Do not add claims to the README or store copy that you have not verified on instagram.com.
 
 ## How media is fetched
@@ -27,6 +27,19 @@ On profile pages the popup passes the account ID back to the collector after the
 - Story results whose owner differs from the requested username are dropped.
 - Failures return `{ reason, detail }`, and the popup shows the detail, e.g. `(story 500)`. Please include it in bug reports.
 - Videos use the first progressive MP4 in `video_versions`, which carries audio. Downloads are limited to `cdninstagram.com` and `fbcdn.net` over HTTPS.
+
+## On-page buttons
+
+[`src/content.js`](src/content.js) is a classic content script (no imports). It only places buttons; on click it sends the post or Story address to the background, which reads and saves the media with the same code as the popup ([`src/page-media.js`](src/page-media.js)).
+
+Instagram's markup has no stable class names and its labels are translated, so elements are found by structure (checked October 2026):
+
+- **Action row**: a `<section>` under 64px tall with at least four labelled icons. Its last child holds the bookmark; our button goes in front of it.
+- **Post address**: the `<time>` link inside a feed `<article>`; on a post page or post dialog, the page address.
+- **Profile grid**: links to `/<user>/p/<code>/` or `/<user>/reel/<code>/` that contain an image. The button sits in the tile's parent and shows on hover or focus.
+- **Stories, Highlights, Reels player**: one floating button (top right) for the address in the address bar. On a Story address it saves only that Story.
+
+All CSS lives in [`src/content.css`](src/content.css) under `igt-` classes; nothing else on instagram.com is restyled. A `MutationObserver` re-scans after Instagram re-renders, and processed elements are marked with `data-igt-done`.
 
 ## Popup
 

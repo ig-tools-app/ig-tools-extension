@@ -142,5 +142,21 @@
   "avatarUnavailable": {
     "message": "Bu profil fotoğrafı şu anda kullanılamıyor.",
     "description": "Shown when no profile picture could be loaded"
+  },
+  "pageButtons": {
+    "message": "Instagram'da indirme düğmeleri",
+    "description": "Popup switch that turns the on-page download buttons on or off"
+  },
+  "pageButtonsHelp": {
+    "message": "Gönderilere, profil ızgaralarına, hikâyelere ve Reels'e bir indirme düğmesi ekler. Chrome, instagram.com'a erişim izni ister.",
+    "description": "Explains the switch and Chrome's permission prompt"
+  },
+  "pageButtonTitle": {
+    "message": "ig.tools ile indir",
+    "description": "Tooltip and accessible name of a download button on instagram.com"
+  },
+  "pageButtonFailed": {
+    "message": "İndirilemedi",
+    "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
   }
 }

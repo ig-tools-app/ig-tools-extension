@@ -17,7 +17,7 @@ export function pageFromUrl(url) {
   if (["p", "reel"].includes(second) && shortcode.test(third)) return { kind: "post", shortcode: third };
   if (first === "stories" && second === "highlights" && /^\d{5,25}$/.test(third)) return { kind: "highlight", highlightId: third };
   if (first === "stories" && /^[A-Za-z0-9._]{1,30}$/.test(second)) {
-    return { kind: "story", username: second.toLowerCase(), storyId: /^\d{5,25}$/.test(third) ? third : null };
+    return { kind: "story", username: second.toLowerCase(), storyId: /^\d{1,25}$/.test(third) ? third : null };
   }
   if (first && !reserved.has(first.toLowerCase()) && /^[A-Za-z0-9._]{1,30}$/.test(first)) return { kind: "profile", username: first.toLowerCase() };
   return { kind: "other" };
