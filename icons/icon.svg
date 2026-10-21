@@ -1,14 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <radialGradient id="brand" cx="25%" cy="100%" r="120%">
-      <stop stop-color="#ffdc80"/>
-      <stop offset=".27" stop-color="#f77737"/>
-      <stop offset=".52" stop-color="#e1306c"/>
-      <stop offset=".7" stop-color="#c13584"/>
-      <stop offset=".87" stop-color="#833ab4"/>
-      <stop offset="1" stop-color="#405de6"/>
-    </radialGradient>
-  </defs>
-  <rect width="64" height="64" rx="18" fill="url(#brand)"/>
+  <rect width="64" height="64" rx="18" fill="#b42a78"/>
   <path d="M32 17v25m-9-9 9 9 9-9M18 48h28" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -40,8 +40,8 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 | Asset | Size | Content |
 | --- | --- | --- |
 | Icon | 128×128 | `icons/icon-128.png` |
-| Screenshots | 1280×800 | 1) Popup on an Instagram post with the link filled in; 2) right-click menu on an Instagram link; 3) the ig.tools result opened from the extension |
-| Small promo tile | 440×280 | Icon + "Open Instagram links in ig.tools" |
+| Screenshots | 1280×800 | `store/images/screenshot-1-popup.png` (a second one showing the ig.tools result can be added later) |
+| Small promo tile | 440×280 | `store/images/promo-small-440x280.png` |
 
 ## Privacy practices
 
