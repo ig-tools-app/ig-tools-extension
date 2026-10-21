@@ -110,5 +110,37 @@
   "noStories": {
     "message": "이 계정에는 현재 스토리가 없습니다.",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "스토리",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "하이라이트",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "프로필 사진",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "뒤로",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "이 계정에는 하이라이트가 없습니다.",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "ig.tools에서 원본 크기 사진 받기",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "지금은 인스타그램에서 원본 크기 사진을 받지 못해 작은 사진을 표시합니다.",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "지금은 이 프로필 사진을 사용할 수 없습니다.",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

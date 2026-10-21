@@ -17,6 +17,10 @@ All Instagram requests live in [`src/collect.js`](src/collect.js). It runs in th
 | Post, Reel, carousel | REST `GET /api/v1/media/<id>/info/` (shortcode to ID in `src/instagram.js`) |
 | Story, profile | Account ID from `"profile_id"` in the `/<username>/` page HTML, falling back to `/api/v1/users/web_profile_info/`; then the GraphQL query `PolarisStoriesV3ReelPageGalleryQuery` |
 | Highlight | GraphQL `PolarisStoriesV3HighlightsPageQuery` with `highlight:<id>` |
+| Profile: Highlights tab | GraphQL `PolarisProfileStoryHighlightsTrayContentQuery` with `{ user_id }` |
+| Profile: picture tab | The `<img>` instagram.com shows in the profile header, matched by the username in its alt text: it is the full-size 1080px picture and needs no request. Fallbacks: REST `GET /api/v1/users/<id>/info/` (Android app ID first, then web; often rate limited), then the 150px `profile_pic_url_hd` from the profile page HTML |
+
+On profile pages the popup passes the account ID back to the collector after the first request, so switching tabs does not reload the profile page. Downloads go to `ig.tools/<username>/posts|stories|highlights/<title>/`; Highlight titles pass through `safeFolder` in `src/instagram.js`.
 
 - GraphQL requests need the page's `fb_dtsg` token (`DTSGInitialData`). The `doc_id`s are hard-coded and change when Instagram updates its web app; that is the usual cause of breakage.
 - `/api/v1/feed/reels_media/` answers 500 on the web (October 2026), so Stories and Highlights use GraphQL.

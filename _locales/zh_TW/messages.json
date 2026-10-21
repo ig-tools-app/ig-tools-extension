@@ -110,5 +110,37 @@
   "noStories": {
     "message": "此帳號目前沒有限時動態。",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "限時動態",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "精選動態",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "大頭貼",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "返回",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "此帳號沒有精選動態。",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "在 ig.tools 取得原尺寸大頭貼",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "Instagram 目前沒有提供原尺寸大頭貼，這是較小的版本。",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "此大頭貼目前無法取得。",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

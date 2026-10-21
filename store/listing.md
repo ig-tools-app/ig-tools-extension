@@ -22,6 +22,9 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > • Videos and Reels as MP4 with sound, never re-encoded and with no added watermark
 > • Every slide of a carousel, and all current Stories of an account
 > • On a profile page, the account's current Stories are listed without opening them. Saving them this way doesn't add you to the Story's viewer list. If you open a Story in Instagram itself, Instagram records the view as usual.
+> • Profile pages also list the account's Highlights and its full-size profile picture
+> • Files are sorted into Downloads/ig.tools/<username>/ with posts, stories and highlights folders
+> • Press Alt+Shift+S to open it from the keyboard
 >
 > SIGNED OUT, OR PREFER NOT TO SIGN IN?
 > Paste any Instagram link or @username into the popup, or right-click an Instagram link, to open it in ig.tools and view public posts, Reels and Stories there without signing in.

@@ -2,9 +2,11 @@
 
 Save photos, videos, Reels and Stories from the Instagram page you have open, straight from your browser. When you are signed out, or want to look without signing in, open the same link in [ig.tools](https://ig.tools/).
 
-- **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; save one or all of them. Files go to `Downloads/ig.tools/`.
-- **Stories from a profile**: on an account's profile page, the popup lists that account's current Stories, so you can save them without opening the Stories viewer. Saving them this way doesn't add you to the Story's viewer list (tested in October 2026; Instagram may change this). If you open a Story in Instagram itself, Instagram records the view as usual.
+- **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; save one or all of them.
+- **Profile pages**: three tabs. **Stories** lists the account's current Stories, so you can save them without opening the Stories viewer. Saving them this way doesn't add you to the Story's viewer list (tested in October 2026; Instagram may change this). If you open a Story in Instagram itself, Instagram records the view as usual. **Highlights** lists the account's Highlights; open one to save its items. **Profile picture** saves the full-size picture shown on the profile.
 - **Open in ig.tools**: paste any Instagram link or `@username` in the popup, or right-click an Instagram link and choose "Open link with ig.tools".
+- **Shortcut**: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> opens the popup. If another extension already uses it, Chrome leaves it unset; choose your own at `chrome://extensions/shortcuts`.
+- **Tidy downloads**: files go to `Downloads/ig.tools/<username>/` with `posts/`, `stories/` and `highlights/<title>/` folders.
 - 10 languages, light and dark themes.
 
 Saving happens locally: the extension asks Instagram for the media on the open page using your existing Instagram session in this browser, and Chrome downloads the files from Instagram's servers. Nothing is sent to ig.tools or anywhere else. See [PRIVACY.md](PRIVACY.md).

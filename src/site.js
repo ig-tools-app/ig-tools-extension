@@ -32,7 +32,9 @@ export function inputFromTabUrl(tabUrl) {
   return `https://www.instagram.com${url.pathname}`;
 }
 
-export function siteUrl(input, uiLanguage) {
+// `tool` is an optional ig.tools page slug, e.g. "instagram-profile-picture-downloader".
+export function siteUrl(input, uiLanguage, tool = "") {
   const params = new URLSearchParams({ url: input, utm_source: "chrome_extension", utm_medium: "extension" });
-  return `${SITE}${localePath(uiLanguage) || "/"}?${params}`;
+  const base = localePath(uiLanguage);
+  return `${SITE}${tool ? `${base}/${tool}` : base || "/"}?${params}`;
 }

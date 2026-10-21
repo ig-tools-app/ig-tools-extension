@@ -57,7 +57,36 @@ h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
 .form-title { font-size: 13px; color: var(--muted); font-weight: 600; }
 
 .media { display: grid; gap: 10px; }
+.tabs { display: flex; gap: 4px; padding: 4px; border-radius: var(--r-md); background: var(--surface-2); }
+.tabs [role="tab"] {
+  flex: 1;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tabs [role="tab"]:hover { color: var(--text); }
+.tabs [aria-selected="true"] { background: var(--bg); color: var(--primary); box-shadow: var(--shadow-sm); }
 .media-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; }
+.media-head h1 { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.back {
+  min-height: 40px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.back::before { content: "‹ "; }
+[dir="rtl"] .back::before { content: "› "; }
 /* Chrome caps popups at 600px tall, so long carousels scroll inside this box.
    The grid itself must not scroll, or its rows shrink and cards overlap. */
 .scroller { max-height: 316px; overflow-y: auto; }
@@ -80,6 +109,29 @@ h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
 }
 .is-story .card { aspect-ratio: 9 / 16; }
 .is-single .card { aspect-ratio: auto; height: 280px; }
+/* The picture is round; the card itself is not, so the download button is never clipped. */
+.is-avatar .card { aspect-ratio: 1; height: auto; width: 240px; margin-inline: auto; overflow: visible; background: none; }
+.is-avatar .card img { object-fit: cover; border-radius: 50%; background: var(--surface-2); }
+.is-avatar .save { inset-block-end: 8px; inset-inline-end: 8px; }
+
+/* Highlights tray: round covers with titles, like Instagram's own tray. */
+.highlight-open {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.highlight-open:hover { background: var(--surface-2); }
+.highlight-cover { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: var(--surface-2); outline: 1px solid var(--line); }
+.highlight-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.highlight-title { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .is-single .card img { object-fit: contain; }
 .badge {

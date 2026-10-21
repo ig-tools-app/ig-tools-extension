@@ -39,3 +39,8 @@ test("builds a site link that the site prefills and attributes", () => {
   assert.equal(siteUrl("@natgeo", "en-US"), "https://ig.tools/?url=%40natgeo&utm_source=chrome_extension&utm_medium=extension");
   assert.equal(siteUrl("https://www.instagram.com/reel/ABC/", "es"), "https://ig.tools/es?url=https%3A%2F%2Fwww.instagram.com%2Freel%2FABC%2F&utm_source=chrome_extension&utm_medium=extension");
 });
+
+test("links to a specific ig.tools tool keep the language prefix", () => {
+  assert.equal(siteUrl("@natgeo", "en-US", "instagram-profile-picture-downloader"), "https://ig.tools/instagram-profile-picture-downloader?url=%40natgeo&utm_source=chrome_extension&utm_medium=extension");
+  assert.equal(siteUrl("@natgeo", "ja", "instagram-profile-picture-downloader"), "https://ig.tools/ja/instagram-profile-picture-downloader?url=%40natgeo&utm_source=chrome_extension&utm_medium=extension");
+});

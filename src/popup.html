@@ -6,7 +6,13 @@
 </head>
 <body>
   <section id="media" class="media" hidden aria-labelledby="media-title">
-    <div class="media-head">
+    <div id="tabs" class="tabs" role="tablist" hidden>
+      <button type="button" role="tab" data-tab="stories" data-i18n="tabStories"></button>
+      <button type="button" role="tab" data-tab="highlights" data-i18n="tabHighlights"></button>
+      <button type="button" role="tab" data-tab="avatar" data-i18n="tabAvatar"></button>
+    </div>
+    <div id="media-head" class="media-head">
+      <button id="back" type="button" class="back" hidden data-i18n="back"></button>
       <h1 id="media-title" data-i18n="onThisPage"></h1>
       <button id="download-all" type="button" class="primary" hidden data-i18n="downloadAll"></button>
     </div>

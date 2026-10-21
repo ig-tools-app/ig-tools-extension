@@ -12,6 +12,10 @@
 //   viewer uses. The REST /api/v1/feed/reels_media/ endpoint now answers 500.
 // - account ID for Stories: "profile_id" in the profile page's HTML, with
 //   /api/v1/users/web_profile_info/ (often rate limited) as the fallback.
+// - Highlights tray: GraphQL PolarisProfileStoryHighlightsTrayContentQuery.
+// - full-size profile picture: the <img> instagram.com shows in the profile header
+//   (1080px); then REST /api/v1/users/<id>/info/ (rate limited at times); the
+//   150px picture in the profile page HTML is the last fallback.
 export async function collectFromPage(page) {
   const appId = "936619743392459";
   const csrf = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/)?.[1] ?? "";
@@ -20,6 +24,11 @@ export async function collectFromPage(page) {
     story: { name: "PolarisStoriesV3ReelPageGalleryQuery", docId: "28262315486766731" },
     highlight: { name: "PolarisStoriesV3HighlightsPageQuery", docId: "28325328583775973" },
   };
+  // The profile's Highlights tray (found in instagram.com's own scripts, October 2026).
+  const highlightsTrayQuery = { name: "PolarisProfileStoryHighlightsTrayContentQuery", docId: "38168009559465141" };
+  // The full-size profile picture comes from /api/v1/users/<id>/info/. Instagram's
+  // Android app ID is tried first, as on the ig.tools site, then the web one.
+  const avatarAppIds = ["567067343352427", appId];
 
   // Failures carry the step and HTTP status so a report can say which request broke.
   async function request(step, path, options = {}) {
@@ -59,30 +68,44 @@ export async function collectFromPage(page) {
   }
 
   // The profile page HTML is what the browser loads anyway; it names the account
-  // ID ("profile_id") and carries a request token for GraphQL.
+  // ID ("profile_id"), carries a request token for GraphQL and a small profile picture.
   async function profilePage(username) {
     try {
       const { response } = await request("profile", `/${encodeURIComponent(username)}/`);
       const html = await response.text();
-      return { userId: html.match(/"profile_id":"(\d{3,25})"/)?.[1] ?? null, dtsg: dtsgFrom(html) };
+      let smallPicture = null;
+      try { smallPicture = JSON.parse(`"${html.match(/"profile_pic_url_hd":"((?:[^"\\]|\\.)*)"/)?.[1] ?? ""}"`) || null; } catch { /* no picture */ }
+      return { userId: html.match(/"profile_id":"(\d{3,25})"/)?.[1] ?? null, dtsg: dtsgFrom(html), smallPicture };
     } catch (error) {
       if (error?.reason === "unavailable") throw error;
-      return { userId: null, dtsg: null };
+      return { userId: null, dtsg: null, smallPicture: null };
     }
   }
 
-  async function storyItems(kind, reelId, dtsg) {
-    const { name, docId } = storyQueries[kind];
-    if (!dtsg) throw { reason: "login", detail: `${kind} no-token` };
+  // The account behind a profile or Story page. The popup passes the ID back
+  // once known, so switching tabs does not load the profile page again.
+  async function account(page) {
+    if (page.userId) return { userId: page.userId, dtsg: dtsgFromDocument(), smallPicture: page.smallPicture ?? null };
+    const profile = await profilePage(page.username);
+    if (!profile.userId) {
+      const data = await rest("profile-api", `/api/v1/users/web_profile_info/?username=${encodeURIComponent(page.username)}`);
+      profile.userId = data?.data?.user?.id ?? null;
+    }
+    if (!profile.userId) throw { reason: "unavailable", detail: "profile no-id" };
+    return { ...profile, dtsg: dtsgFromDocument() ?? profile.dtsg };
+  }
+
+  async function graphql(step, { name, docId }, variables, dtsg) {
+    if (!dtsg) throw { reason: "login", detail: `${step} no-token` };
     const body = new URLSearchParams({
       fb_dtsg: dtsg,
       fb_api_caller_class: "RelayModern",
       fb_api_req_friendly_name: name,
       doc_id: docId,
-      variables: JSON.stringify({ initial_reel_id: reelId, reel_ids: [reelId], first: 3, last: 2, __relay_internal__pv__PolarisCommunityNoteStoriesLabelEnabledrelayprovider: true }),
+      variables: JSON.stringify(variables),
       server_timestamps: true,
     });
-    const { response, detail } = await request(kind, "/graphql/query", {
+    const { response, detail } = await request(step, "/graphql/query", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": csrf, "X-IG-App-ID": appId, "X-FB-Friendly-Name": name },
       body,
@@ -90,8 +113,51 @@ export async function collectFromPage(page) {
     let data;
     try { data = await response.json(); } catch { throw { reason: "failed", detail: `${detail} not-json` }; }
     if (data?.errors?.length && !data?.data) throw { reason: "failed", detail: `${detail} graphql-error` };
-    const node = data?.data?.xdt_api__v1__feed__reels_media__connection?.edges?.[0]?.node;
+    return data?.data ?? {};
+  }
+
+  async function storyItems(kind, reelId, dtsg) {
+    const variables = { initial_reel_id: reelId, reel_ids: [reelId], first: 3, last: 2, __relay_internal__pv__PolarisCommunityNoteStoriesLabelEnabledrelayprovider: true };
+    const data = await graphql(kind, storyQueries[kind], variables, dtsg);
+    const node = data?.xdt_api__v1__feed__reels_media__connection?.edges?.[0]?.node;
     return { items: node?.items ?? [], owner: node?.user?.username ?? null };
+  }
+
+  // The profile header shows the full-size picture (1080px) once instagram.com has
+  // loaded it; the HTML only names a 150px one. Its alt text contains the username
+  // in every language ("<username>'s profile picture"), which also rules out a stale
+  // header left from the previous profile.
+  function pictureOnPage(username) {
+    // The whole username, not part of a longer one ("geo" must not match "natgeo").
+    const name = new RegExp(`(^|[^a-z0-9._])${username.toLowerCase().replace(/\./g, "\\.")}($|[^a-z0-9._])`);
+    const candidates = [...document.querySelectorAll("header img, main img")]
+      .filter(img => name.test((img.alt || "").toLowerCase()) && !/[sp]\d{2,3}x\d{2,3}/.test(img.currentSrc || img.src))
+      .sort((a, b) => b.naturalWidth - a.naturalWidth);
+    const img = candidates[0];
+    if (!img) return null;
+    return { url: img.currentSrc || img.src, width: img.naturalWidth || null, height: img.naturalHeight || null, hd: true };
+  }
+
+  // The picture shown on the page first, then the user info API, then the small
+  // picture from the profile page HTML.
+  async function profilePicture(userId, smallPicture, username) {
+    const shown = pictureOnPage(username);
+    if (shown) return { picture: shown };
+    let detail = "avatar";
+    for (const id of avatarAppIds) {
+      try {
+        const response = await fetch(`/api/v1/users/${userId}/info/`, { credentials: "include", headers: { ...restHeaders, "X-IG-App-ID": id } });
+        detail = `avatar ${response.status}`;
+        if (!response.ok) continue;
+        const user = (await response.json())?.user;
+        const versions = [user?.hd_profile_pic_url_info, ...(user?.hd_profile_pic_versions ?? [])].filter(v => v?.url);
+        versions.sort((a, b) => (b.width ?? 0) - (a.width ?? 0));
+        if (versions[0]) return { picture: { url: versions[0].url, width: versions[0].width, height: versions[0].height, hd: true } };
+      } catch {
+        detail = "avatar network";
+      }
+    }
+    return { picture: smallPicture ? { url: smallPicture, hd: false } : null, detail };
   }
 
   try {
@@ -100,17 +166,20 @@ export async function collectFromPage(page) {
       return { items: data?.items ?? [] };
     }
     if (page.kind === "story") {
-      const profile = await profilePage(page.username);
-      let userId = profile.userId;
-      if (!userId) {
-        const data = await rest("profile-api", `/api/v1/users/web_profile_info/?username=${encodeURIComponent(page.username)}`);
-        userId = data?.data?.user?.id;
-      }
-      if (!userId) return { reason: "unavailable", detail: "profile no-id" };
-      const result = await storyItems("story", userId, dtsgFromDocument() ?? profile.dtsg);
+      const { userId, dtsg, smallPicture } = await account(page);
+      const result = await storyItems("story", userId, dtsg);
       // Never offer another account's Stories if the ID lookup went wrong.
-      if (result.owner && result.owner.toLowerCase() !== page.username.toLowerCase()) return { reason: "unavailable", detail: "story owner-mismatch" };
-      return { ...result, owner: result.owner ?? page.username };
+      if (result.owner && result.owner.toLowerCase() !== page.username.toLowerCase()) return { reason: "unavailable", detail: "story owner-mismatch", userId, smallPicture };
+      return { ...result, owner: result.owner ?? page.username, userId, smallPicture };
+    }
+    if (page.kind === "highlights") {
+      const { userId, dtsg, smallPicture } = await account(page);
+      const data = await graphql("highlights", highlightsTrayQuery, { user_id: userId }, dtsg);
+      return { highlights: data?.highlights ?? { edges: [] }, userId, smallPicture };
+    }
+    if (page.kind === "avatar") {
+      const { userId, smallPicture } = await account(page);
+      return { ...await profilePicture(userId, smallPicture, page.username), userId, smallPicture };
     }
     if (page.kind === "highlight") {
       let dtsg = dtsgFromDocument();

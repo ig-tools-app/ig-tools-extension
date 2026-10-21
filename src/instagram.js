@@ -57,7 +57,23 @@ function extension(url, type) {
   return match ? match[1].toLowerCase().replace("jpeg", "jpg") : type === "video" ? "mp4" : "jpg";
 }
 
-const safeName = value => String(value || "instagram").replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 60);
+// File and folder names are path segments, so "." and ".." are never returned.
+const safeName = value => {
+  const name = String(value || "instagram").replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 60);
+  return /^\.+$/.test(name) ? "_" : name;
+};
+
+// A folder name from free text such as a Highlight title: keeps letters in any
+// script, drops characters Windows and macOS reject, and never yields "." or "..".
+export function safeFolder(value, fallback) {
+  const cleaned = String(value ?? "")
+    .normalize("NFC")
+    .replace(/[\u0000-\u001f\u007f<>:"/\\|?*]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[.\s]+|[.\s]+$/g, "");
+  return [...cleaned].slice(0, 60).join("").trim() || safeName(fallback);
+}
 
 // Turns one API item (a post, Reel, carousel or Story) into the files it contains.
 // Videos use the largest progressive MP4 Instagram provides, which carries audio.
@@ -83,9 +99,16 @@ function filesFromItem(item, owner) {
   });
 }
 
-// Maps a collector result (see collect.js) to files with download names.
-// Names: ig.tools/<username>_<post code or story id>_<n>.<ext>
-export function mediaFromResult(result) {
+// Folders under Downloads/ig.tools/<username>/ for each kind of page.
+function folderFor(place) {
+  if (place?.kind === "highlight") return `highlights/${safeFolder(place.title, place.highlightId)}`;
+  return place?.kind === "post" ? "posts" : "stories";
+}
+
+// Maps a collector result (see collect.js) to files with download names:
+// ig.tools/<username>/posts/<code>[_<n>].<ext>, .../stories/<id>.<ext>,
+// .../highlights/<title>/<id>.<ext>. `place` is { kind, title?, highlightId? }.
+export function mediaFromResult(result, place = { kind: "post" }) {
   const items = Array.isArray(result?.items) ? result.items : [];
   const files = items.flatMap(item => filesFromItem(item, result?.owner));
   const counts = new Map();
@@ -96,6 +119,30 @@ export function mediaFromResult(result) {
     seen.set(file.code, index);
     const suffix = counts.get(file.code) > 1 ? `_${index}` : "";
     const { owner, code, ...rest } = file;
-    return { ...rest, filename: `ig.tools/${safeName(owner)}_${safeName(code)}${suffix}.${extension(file.url, file.type)}` };
+    return { ...rest, filename: `ig.tools/${safeName(owner)}/${folderFor(place)}/${safeName(code)}${suffix}.${extension(file.url, file.type)}` };
   });
+}
+
+// The Highlights tray of a profile (GraphQL "highlights" connection).
+export function highlightsFromResult(result) {
+  const edges = Array.isArray(result?.highlights?.edges) ? result.highlights.edges : [];
+  return edges.flatMap(({ node } = {}) => {
+    const id = String(node?.id ?? "").replace(/^highlight:/, "");
+    if (!/^\d{5,25}$/.test(id)) return [];
+    return [{ id, title: String(node?.title ?? ""), coverUrl: safeMediaUrl(node?.cover_media?.cropped_image_version?.url) }];
+  });
+}
+
+// The profile picture as one file. `hd` is Instagram's full-size picture when it
+// was returned; otherwise the small picture from the profile page is used.
+export function avatarFile(username, picture) {
+  const url = safeMediaUrl(picture?.url);
+  if (!url) return null;
+  const owner = safeName(username);
+  return {
+    type: "image", url, previewUrl: url,
+    width: Number(picture.width) || null, height: Number(picture.height) || null,
+    hd: Boolean(picture.hd),
+    filename: `ig.tools/${owner}/${owner}_profile_picture.${extension(url, "image")}`,
+  };
 }

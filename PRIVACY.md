@@ -5,7 +5,7 @@ The ig.tools extension does not collect, store or transmit any personal data, an
 **Saving from an Instagram page**
 
 - The extension can see a page only after you click its toolbar icon, and only that tab (Chrome's `activeTab` permission).
-- It then asks Instagram, from that tab and with your existing Instagram session, for the photos and videos on the page. This request goes only to instagram.com, as if the page had loaded the media itself.
+- It then asks Instagram, from that tab and with your existing Instagram session, for the photos and videos on the page (on a profile page: its Stories, Highlights and profile picture). This request goes only to instagram.com, as if the page had loaded the media itself.
 - The files you choose are downloaded directly from Instagram's servers to your computer. The extension keeps no record of them.
 - Your Instagram session, cookies and account details are never read out, saved or sent anywhere.
 

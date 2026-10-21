@@ -24,5 +24,10 @@
     "service_worker": "src/background.js",
     "type": "module"
   },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+S" }
+    }
+  },
   "permissions": ["activeTab", "contextMenus", "downloads", "scripting"]
 }

@@ -110,5 +110,37 @@
   "noStories": {
     "message": "このアカウントには現在ストーリーズがありません。",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "ストーリーズ",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "ハイライト",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "プロフィール写真",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "戻る",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "このアカウントにはハイライトがありません。",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "ig.toolsでフルサイズの写真を取得",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "現在Instagramからフルサイズの写真を取得できないため、小さいサイズを表示しています。",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "このプロフィール写真は現在利用できません。",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

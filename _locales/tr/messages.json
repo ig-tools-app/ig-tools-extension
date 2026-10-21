@@ -110,5 +110,37 @@
   "noStories": {
     "message": "Bu hesabın şu anda hikâyesi yok.",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "Hikâyeler",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "Öne çıkanlar",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "Profil fotoğrafı",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "Geri",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "Bu hesabın öne çıkanı yok.",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "Tam boyutlu fotoğrafı ig.tools'ta al",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "Instagram şu anda tam boyutlu fotoğrafı vermedi; bu daha küçük sürüm.",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "Bu profil fotoğrafı şu anda kullanılamıyor.",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

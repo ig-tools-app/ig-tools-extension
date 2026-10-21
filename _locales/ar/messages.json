@@ -110,5 +110,37 @@
   "noStories": {
     "message": "لا توجد قصص لهذا الحساب حاليًا.",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "القصص",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "القصص المميزة",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "صورة الملف الشخصي",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "رجوع",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "لا توجد قصص مميزة لهذا الحساب.",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "احصل على الصورة بالحجم الكامل على ig.tools",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "لم يُرجع Instagram الصورة بالحجم الكامل الآن، لذا هذه نسخة أصغر.",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "صورة الملف الشخصي هذه غير متاحة الآن.",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

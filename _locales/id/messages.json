@@ -110,5 +110,37 @@
   "noStories": {
     "message": "Akun ini sedang tidak memiliki Story.",
     "description": "Shown on a profile page when the account has no current Stories"
+  },
+  "tabStories": {
+    "message": "Story",
+    "description": "Profile popup tab: the account's current Stories"
+  },
+  "tabHighlights": {
+    "message": "Sorotan",
+    "description": "Profile popup tab: the account's Highlights"
+  },
+  "tabAvatar": {
+    "message": "Foto profil",
+    "description": "Profile popup tab and image label: the account's profile picture"
+  },
+  "back": {
+    "message": "Kembali",
+    "description": "Button that returns from one Highlight to the Highlights list"
+  },
+  "noHighlights": {
+    "message": "Akun ini tidak memiliki Sorotan.",
+    "description": "Shown when the account has no Highlights"
+  },
+  "avatarOnSite": {
+    "message": "Ambil foto ukuran penuh di ig.tools",
+    "description": "Link that opens the ig.tools profile picture downloader for this account"
+  },
+  "avatarSmall": {
+    "message": "Instagram tidak mengembalikan foto ukuran penuh saat ini, jadi ini versi yang lebih kecil.",
+    "description": "Shown under the profile picture when only the small version was returned"
+  },
+  "avatarUnavailable": {
+    "message": "Foto profil ini sedang tidak tersedia.",
+    "description": "Shown when no profile picture could be loaded"
   }
 }

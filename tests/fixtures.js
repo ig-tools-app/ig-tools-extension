@@ -51,8 +51,37 @@ const reelsConnection = items => ({ data: { xdt_api__v1__feed__reels_media__conn
 export const storyGraphql = reelsConnection(storyItems);
 export const highlightGraphql = reelsConnection(highlightItems);
 
+// The profile's Highlights tray (GraphQL "highlights" connection).
+export const highlightsTray = {
+  highlights: {
+    edges: [
+      { node: { id: "highlight:17900000000000001", title: "Travel 2026", cover_media: { cropped_image_version: { url: `${cdn}/hlcover1.jpg?stp=x` } }, user: { username: "natgeo" } } },
+      { node: { id: "highlight:17900000000000002", title: "", cover_media: { cropped_image_version: { url: "https://evil.example/c.jpg" } } } },
+      { node: { id: "not-a-highlight", title: "skip" } },
+    ],
+    page_info: { has_next_page: false },
+  },
+};
+
+// /api/v1/users/<id>/info/ with the full-size profile picture.
+export const userInfo = {
+  user: {
+    username: "natgeo",
+    hd_profile_pic_url_info: { url: `${cdn}/avatar_1080.jpg?stp=x`, width: 1080, height: 1080 },
+    hd_profile_pic_versions: [{ url: `${cdn}/avatar_320.jpg?stp=x`, width: 320, height: 320 }],
+  },
+};
+
+// The profile header as instagram.com renders it after loading: the account's
+// full-size picture, next to the signed-in viewer's small one and a look-alike name.
+export const profileHeader = `<header>
+<img alt="viewer's profile picture" src="${cdn}/viewer_s150x150.jpg?stp=dst-jpg_s150x150">
+<img alt="natgeotravel's profile picture" src="${cdn}/lookalike_1080.jpg">
+<img alt="natgeo's profile picture" src="${cdn}/avatar_page_1080.jpg?oh=x">
+</header>`;
+
 // The profile page HTML names the account ID and carries the GraphQL request token.
 // Other pages pass no ID and carry only the token.
-export const profileHtml = profileId => `<!doctype html><title>Instagram</title>
+export const profileHtml = (profileId, body = "") => `<!doctype html><title>Instagram</title>${body}
 <script type="application/json">{"require":[["DTSGInitialData",[],{"token":"test-dtsg"}]]}</script>
-${profileId ? `<script type="application/json">{"page_logging":{"params":{"page_id":"profilePage_${profileId}","profile_id":"${profileId}"}}}</script>` : ""}`;
+${profileId ? `<script type="application/json">{"page_logging":{"params":{"page_id":"profilePage_${profileId}","profile_id":"${profileId}"}},"profile_pic_url_hd":"${cdn.replace(/\//g, "\\/")}\\/avatar_150.jpg?stp=x"}</script>` : ""}`;
