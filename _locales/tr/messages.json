@@ -1,0 +1,34 @@
+{
+  "extName": {
+    "message": "ig.tools – Instagram için İndirici",
+    "description": "Extension name in the Chrome Web Store (max 75 characters)"
+  },
+  "extDescription": {
+    "message": "Instagram gönderilerini, Reels, hikâyeleri ve profilleri ig.tools'ta açın; herkese açık içeriği görün ve kaydedin. Giriş gerekmez.",
+    "description": "Store and extensions-page summary (max 132 characters)"
+  },
+  "openButton": {
+    "message": "ig.tools'ta aç",
+    "description": "Popup button and toolbar tooltip"
+  },
+  "placeholder": {
+    "message": "Bağlantı veya @kullanıcı",
+    "description": "Popup input placeholder, same wording as the site field"
+  },
+  "helper": {
+    "message": "Yalnızca herkese açık içerik. Instagram girişi gerekmez.",
+    "description": "Line under the popup input, same wording as the site"
+  },
+  "invalidInput": {
+    "message": "Bir Instagram bağlantısı veya @kullanıcı adı girin.",
+    "description": "Shown when the popup input is not an Instagram link or username"
+  },
+  "menuOpenLink": {
+    "message": "Bağlantıyı ig.tools ile aç",
+    "description": "Context menu on an Instagram link"
+  },
+  "menuOpenPage": {
+    "message": "Bu sayfayı ig.tools ile aç",
+    "description": "Context menu on an Instagram page"
+  }
+}

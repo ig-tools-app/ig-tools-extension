@@ -1,0 +1,69 @@
+/* Colours and radii follow the ig.tools site tokens. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --line-strong: #d9d6de;
+  --text: #1d1a22;
+  --muted: #66616d;
+  --placeholder: #8f8996;
+  --primary: #b42a78;
+  --primary-hover: #9a2167;
+  --primary-ink: #ffffff;
+  --focus-ring: rgb(180 42 120 / 16%);
+  --danger: #b8322f;
+  --r-md: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #1c1a20;
+    --line-strong: #3d3943;
+    --text: #f2f0f4;
+    --muted: #a8a2af;
+    --placeholder: #7c7683;
+    --primary: #e0559f;
+    --primary-hover: #ea6dae;
+    --primary-ink: #1a0712;
+    --focus-ring: rgb(224 85 159 / 26%);
+    --danger: #ff8a85;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  width: 340px;
+  margin: 0;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+form { display: grid; gap: 10px; }
+.field { display: block; }
+input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+input::placeholder { color: var(--placeholder); }
+input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+input[aria-invalid="true"] { border-color: var(--danger); }
+button {
+  height: 44px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--primary);
+  color: var(--primary-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { background: var(--primary-hover); }
+button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+.error { margin: 0; color: var(--danger); }
+.helper { margin: 0; color: var(--muted); font-size: 13px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -1,0 +1,34 @@
+{
+  "extName": {
+    "message": "ig.tools – Descargador para Instagram",
+    "description": "Extension name in the Chrome Web Store (max 75 characters)"
+  },
+  "extDescription": {
+    "message": "Abre publicaciones, Reels, historias y perfiles de Instagram en ig.tools para ver y guardar contenido público. Sin iniciar sesión.",
+    "description": "Store and extensions-page summary (max 132 characters)"
+  },
+  "openButton": {
+    "message": "Abrir en ig.tools",
+    "description": "Popup button and toolbar tooltip"
+  },
+  "placeholder": {
+    "message": "Enlace o @usuario",
+    "description": "Popup input placeholder, same wording as the site field"
+  },
+  "helper": {
+    "message": "Solo contenido público. No se necesita iniciar sesión en Instagram.",
+    "description": "Line under the popup input, same wording as the site"
+  },
+  "invalidInput": {
+    "message": "Introduce un enlace de Instagram o un @usuario.",
+    "description": "Shown when the popup input is not an Instagram link or username"
+  },
+  "menuOpenLink": {
+    "message": "Abrir enlace con ig.tools",
+    "description": "Context menu on an Instagram link"
+  },
+  "menuOpenPage": {
+    "message": "Abrir esta página con ig.tools",
+    "description": "Context menu on an Instagram page"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ig-tools-extension",
+  "private": true,
+  "type": "module",
+  "description": "Browser extension that opens Instagram links and usernames in ig.tools.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "package": "git archive --format=zip -o ig-tools-extension.zip HEAD manifest.json src _locales icons"
+  }
+}

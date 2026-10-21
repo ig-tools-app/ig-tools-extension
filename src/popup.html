@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <form id="form" novalidate>
+    <label class="field">
+      <span class="sr-only" data-i18n="placeholder"></span>
+      <input id="input" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2048" aria-describedby="helper">
+    </label>
+    <button type="submit" data-i18n="openButton"></button>
+    <p id="error" class="error" role="alert" hidden data-i18n="invalidInput"></p>
+    <p id="helper" class="helper" data-i18n="helper"></p>
+  </form>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

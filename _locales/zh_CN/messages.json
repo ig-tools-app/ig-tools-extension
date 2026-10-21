@@ -1,0 +1,34 @@
+{
+  "extName": {
+    "message": "ig.tools – Instagram 下载工具",
+    "description": "Extension name in the Chrome Web Store (max 75 characters)"
+  },
+  "extDescription": {
+    "message": "在 ig.tools 打开 Instagram 帖子、Reels、快拍和个人主页，预览并保存公开内容，无需登录 Instagram。",
+    "description": "Store and extensions-page summary (max 132 characters)"
+  },
+  "openButton": {
+    "message": "在 ig.tools 打开",
+    "description": "Popup button and toolbar tooltip"
+  },
+  "placeholder": {
+    "message": "链接或 @用户名",
+    "description": "Popup input placeholder, same wording as the site field"
+  },
+  "helper": {
+    "message": "仅限公开内容，无需登录 Instagram。",
+    "description": "Line under the popup input, same wording as the site"
+  },
+  "invalidInput": {
+    "message": "请输入 Instagram 链接或 @用户名。",
+    "description": "Shown when the popup input is not an Instagram link or username"
+  },
+  "menuOpenLink": {
+    "message": "用 ig.tools 打开链接",
+    "description": "Context menu on an Instagram link"
+  },
+  "menuOpenPage": {
+    "message": "用 ig.tools 打开此页面",
+    "description": "Context menu on an Instagram page"
+  }
+}

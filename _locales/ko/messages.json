@@ -1,0 +1,34 @@
+{
+  "extName": {
+    "message": "ig.tools – 인스타그램용 다운로더",
+    "description": "Extension name in the Chrome Web Store (max 75 characters)"
+  },
+  "extDescription": {
+    "message": "인스타그램 게시물, 릴스, 스토리, 프로필을 ig.tools에서 열어 공개 콘텐츠를 보고 저장하세요. 로그인이 필요 없습니다.",
+    "description": "Store and extensions-page summary (max 132 characters)"
+  },
+  "openButton": {
+    "message": "ig.tools에서 열기",
+    "description": "Popup button and toolbar tooltip"
+  },
+  "placeholder": {
+    "message": "링크 또는 @사용자명",
+    "description": "Popup input placeholder, same wording as the site field"
+  },
+  "helper": {
+    "message": "공개 콘텐츠만 지원합니다. Instagram 로그인이 필요하지 않습니다.",
+    "description": "Line under the popup input, same wording as the site"
+  },
+  "invalidInput": {
+    "message": "인스타그램 링크 또는 @사용자명을 입력하세요.",
+    "description": "Shown when the popup input is not an Instagram link or username"
+  },
+  "menuOpenLink": {
+    "message": "링크를 ig.tools에서 열기",
+    "description": "Context menu on an Instagram link"
+  },
+  "menuOpenPage": {
+    "message": "이 페이지를 ig.tools에서 열기",
+    "description": "Context menu on an Instagram page"
+  }
+}

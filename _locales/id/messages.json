@@ -1,0 +1,34 @@
+{
+  "extName": {
+    "message": "ig.tools – Pengunduh untuk Instagram",
+    "description": "Extension name in the Chrome Web Store (max 75 characters)"
+  },
+  "extDescription": {
+    "message": "Buka postingan, Reels, Story, dan profil Instagram di ig.tools untuk melihat dan menyimpan konten publik. Tanpa login Instagram.",
+    "description": "Store and extensions-page summary (max 132 characters)"
+  },
+  "openButton": {
+    "message": "Buka di ig.tools",
+    "description": "Popup button and toolbar tooltip"
+  },
+  "placeholder": {
+    "message": "Tautan atau @pengguna",
+    "description": "Popup input placeholder, same wording as the site field"
+  },
+  "helper": {
+    "message": "Hanya konten publik. Tidak perlu login Instagram.",
+    "description": "Line under the popup input, same wording as the site"
+  },
+  "invalidInput": {
+    "message": "Masukkan tautan Instagram atau @pengguna.",
+    "description": "Shown when the popup input is not an Instagram link or username"
+  },
+  "menuOpenLink": {
+    "message": "Buka tautan dengan ig.tools",
+    "description": "Context menu on an Instagram link"
+  },
+  "menuOpenPage": {
+    "message": "Buka halaman ini dengan ig.tools",
+    "description": "Context menu on an Instagram page"
+  }
+}
