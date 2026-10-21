@@ -5,12 +5,25 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
+  <section id="media" class="media" hidden aria-labelledby="media-title">
+    <div class="media-head">
+      <h1 id="media-title" data-i18n="onThisPage"></h1>
+      <button id="download-all" type="button" class="primary" hidden data-i18n="downloadAll"></button>
+    </div>
+    <div class="scroller"><ul id="grid" class="grid"></ul></div>
+  </section>
+  <div id="status" class="status" role="status" hidden>
+    <p id="status-text"></p>
+    <a id="status-link" href="#" hidden></a>
+    <small id="status-detail" class="detail" hidden></small>
+  </div>
   <form id="form" novalidate>
+    <h2 id="form-title" class="form-title" hidden data-i18n="viewOnSite"></h2>
     <label class="field">
       <span class="sr-only" data-i18n="placeholder"></span>
       <input id="input" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2048" aria-describedby="helper">
     </label>
-    <button type="submit" data-i18n="openButton"></button>
+    <button id="open" type="submit" class="primary" data-i18n="openButton"></button>
     <p id="error" class="error" role="alert" hidden data-i18n="invalidInput"></p>
     <p id="helper" class="helper" data-i18n="helper"></p>
   </form>

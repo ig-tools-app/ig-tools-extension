@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "在 ig.tools 開啟 Instagram 貼文、Reels、限時動態和個人檔案，預覽並儲存公開內容，無需登入 Instagram。",
+    "message": "儲存目前 Instagram 頁面中的相片、影片、Reels 和限時動態，也能在 ig.tools 免登入開啟連結。",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "用 ig.tools 開啟此頁面",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "此頁面的媒體",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "全部下載",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "下載",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "已儲存",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "無法開始下載，請再試一次。",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "正在尋找此頁面的媒體…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "在 Instagram 開啟貼文、Reel、限時動態或個人檔案後，點擊 ig.tools 圖示即可儲存媒體。",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "在 ig.tools 瀏覽此帳號",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "改在 ig.tools 開啟",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "在此瀏覽器登入 Instagram 後即可從此頁面儲存，或免登入在 ig.tools 查看。",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "此貼文或限時動態為私人、已刪除或已無法查看。",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "Instagram 沒有回應，請稍後再試。",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "免登入在 ig.tools 查看",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "相片 $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "影片 $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "目前的限時動態",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "此帳號目前沒有限時動態。",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

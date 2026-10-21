@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "افتح منشورات Instagram وReels والقصص والملفات الشخصية في ig.tools لعرض المحتوى العام وحفظه. دون تسجيل الدخول إلى Instagram.",
+    "message": "احفظ الصور والفيديوهات وReels والقصص من صفحة Instagram المفتوحة. وافتح الروابط في ig.tools دون تسجيل الدخول.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "افتح هذه الصفحة باستخدام ig.tools",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "في هذه الصفحة",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "تنزيل الكل",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "تنزيل",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "تم الحفظ",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "تعذّر بدء التنزيل. حاول مرة أخرى.",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "جارٍ البحث عن الوسائط في هذه الصفحة…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "افتح منشورًا أو Reel أو قصة أو ملفًا شخصيًا على Instagram، ثم انقر على أيقونة ig.tools لحفظ الوسائط.",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "تصفّح هذا الحساب على ig.tools",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "افتح في ig.tools",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "سجّل الدخول إلى Instagram في هذا المتصفح للحفظ من هذه الصفحة، أو اعرضه على ig.tools دون تسجيل الدخول.",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "هذا المنشور أو القصة خاص أو محذوف أو لم يعد متاحًا.",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "لم يستجب Instagram. حاول مرة أخرى بعد قليل.",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "اعرض على ig.tools دون تسجيل الدخول",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "صورة $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "فيديو $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "القصص الحالية",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "لا توجد قصص لهذا الحساب حاليًا.",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

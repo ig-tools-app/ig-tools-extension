@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "인스타그램 게시물, 릴스, 스토리, 프로필을 ig.tools에서 열어 공개 콘텐츠를 보고 저장하세요. 로그인이 필요 없습니다.",
+    "message": "보고 있는 인스타그램 페이지의 사진, 동영상, 릴스, 스토리를 저장하세요. 링크는 로그인 없이 ig.tools에서 열 수 있습니다.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "이 페이지를 ig.tools에서 열기",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "이 페이지",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "모두 다운로드",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "다운로드",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "저장됨",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "다운로드를 시작하지 못했습니다. 다시 시도하세요.",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "이 페이지의 미디어를 찾는 중…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "인스타그램에서 게시물, 릴스, 스토리 또는 프로필을 연 다음 ig.tools 아이콘을 클릭해 미디어를 저장하세요.",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "ig.tools에서 이 계정 보기",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "ig.tools에서 열기",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "이 브라우저에서 인스타그램에 로그인하면 이 페이지에서 저장할 수 있습니다. 로그인 없이 ig.tools에서 볼 수도 있습니다.",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "비공개이거나 삭제되었거나 더 이상 볼 수 없는 게시물 또는 스토리입니다.",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "인스타그램이 응답하지 않습니다. 잠시 후 다시 시도하세요.",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "로그인 없이 ig.tools에서 보기",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "사진 $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "동영상 $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "현재 스토리",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "이 계정에는 현재 스토리가 없습니다.",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Instagram gönderilerini, Reels, hikâyeleri ve profilleri ig.tools'ta açın; herkese açık içeriği görün ve kaydedin. Giriş gerekmez.",
+    "message": "Açık Instagram sayfasındaki fotoğraf, video, Reels ve hikâyeleri kaydedin. Bağlantıları giriş yapmadan ig.tools'ta açın.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "Bu sayfayı ig.tools ile aç",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "Bu sayfada",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "Tümünü indir",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "İndir",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "Kaydedildi",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "İndirme başlatılamadı. Tekrar deneyin.",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "Bu sayfadaki medya aranıyor…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "Instagram'da bir gönderi, Reel, hikâye veya profil açın, ardından medyayı kaydetmek için ig.tools simgesine tıklayın.",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "Bu hesaba ig.tools'ta göz atın",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "ig.tools'ta aç",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "Bu sayfadan kaydetmek için bu tarayıcıda Instagram'a giriş yapın veya giriş yapmadan ig.tools'ta görüntüleyin.",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "Bu gönderi veya hikâye gizli, kaldırılmış ya da artık mevcut değil.",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "Instagram yanıt vermedi. Biraz sonra tekrar deneyin.",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "Giriş yapmadan ig.tools'ta görüntüle",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "Fotoğraf $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "Video $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "Güncel hikâyeler",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "Bu hesabın şu anda hikâyesi yok.",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

@@ -1,23 +1,34 @@
 # ig.tools for Chrome
 
-A small browser extension that opens Instagram posts, Reels, Stories and profiles in [ig.tools](https://ig.tools/), where you can preview and save public media without signing in to Instagram.
+Save photos, videos, Reels and Stories from the Instagram page you have open, straight from your browser. When you are signed out, or want to look without signing in, open the same link in [ig.tools](https://ig.tools/).
 
-- **Toolbar popup**: paste a link or an `@username`. On an Instagram page, the current post or profile is filled in for you.
-- **Right-click menu**: "Open link with ig.tools" on any Instagram link, and "Open this page with ig.tools" on Instagram pages.
-- Opens ig.tools in your browser's language (10 languages).
+- **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; save one or all of them. Files go to `Downloads/ig.tools/`.
+- **Stories from a profile**: on an account's profile page, the popup lists that account's current Stories, so you can save them without opening the Stories viewer. Saving them this way doesn't add you to the Story's viewer list (tested in October 2026; Instagram may change this). If you open a Story in Instagram itself, Instagram records the view as usual.
+- **Open in ig.tools**: paste any Instagram link or `@username` in the popup, or right-click an Instagram link and choose "Open link with ig.tools".
+- 10 languages, light and dark themes.
 
-The extension itself collects nothing and makes no network requests. It only opens a new tab on ig.tools. See [PRIVACY.md](PRIVACY.md).
+Saving happens locally: the extension asks Instagram for the media on the open page using your existing Instagram session in this browser, and Chrome downloads the files from Instagram's servers. Nothing is sent to ig.tools or anywhere else. See [PRIVACY.md](PRIVACY.md).
 
-> Not affiliated with Instagram or Meta. Use it only for content you own or have permission to save.
+> Not affiliated with Instagram or Meta. Save only content you own or have permission to save.
 
 ## Permissions
 
 | Permission | Why |
 | --- | --- |
-| `activeTab` | When you click the toolbar icon, read the address of the current tab so an Instagram page can be prefilled. Nothing is read until you click. |
-| `contextMenus` | Add the two right-click menu items. |
+| `activeTab` | Access to the current tab is granted only when you click the toolbar icon, and only for that tab. |
+| `scripting` | With that access, read the media on the open Instagram page (one request to Instagram's own web API). |
+| `downloads` | Save the files you choose to your Downloads folder. |
+| `contextMenus` | Add "Open link with ig.tools" and "Open this page with ig.tools" to the right-click menu. |
 
-The extension has no host permissions and no content scripts.
+There are no host permissions and no content scripts: the extension cannot see any page until you click its icon.
+
+## How saving works
+
+1. [`src/instagram.js`](src/instagram.js) works out what the open page is (post, Reel, Story, Highlight, profile) from its address.
+2. [`src/collect.js`](src/collect.js) runs once in that tab and calls the same endpoints instagram.com uses, with your session: `/api/v1/media/<id>/info/` for posts and Reels, and the GraphQL queries of instagram.com's own Stories viewer for Stories and Highlights.
+3. The popup turns the response into files with [`mediaFromResult`](src/instagram.js). Videos use the largest MP4 Instagram provides with sound; nothing is re-encoded.
+
+When Instagram changes these endpoints, `src/collect.js` is the file to update.
 
 ## Install from source
 
@@ -27,11 +38,21 @@ The extension has no host permissions and no content scripts.
 
 ## Develop
 
-Plain JavaScript, no build step and no dependencies.
+Plain JavaScript, no build step. The extension itself has no dependencies; Playwright is only used by the end-to-end tests.
 
 ```bash
 npm test
 ```
+
+```bash
+npm install
+```
+
+```bash
+npm run test:e2e
+```
+
+The end-to-end tests load the extension in Chromium, serve a stand-in instagram.com with fixture responses, and check listing and downloading. They never contact Instagram.
 
 ```bash
 npm run package
@@ -43,7 +64,7 @@ Translations live in `_locales/<locale>/messages.json`. The popup wording matche
 
 ### Using another service
 
-All site-specific behaviour is in [`src/site.js`](src/site.js). Change `SITE` (and the locale paths if needed) to point the extension at your own service. If you publish a fork, please read [TRADEMARK.md](TRADEMARK.md) first.
+All ig.tools-specific behaviour is in [`src/site.js`](src/site.js). Change `SITE` (and the locale paths if needed) to point the extension at your own service. If you publish a fork, please read [TRADEMARK.md](TRADEMARK.md) first.
 
 ## License
 

@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Buka postingan, Reels, Story, dan profil Instagram di ig.tools untuk melihat dan menyimpan konten publik. Tanpa login Instagram.",
+    "message": "Simpan foto, video, Reels, dan Story dari halaman Instagram yang terbuka. Buka tautan di ig.tools tanpa login.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "Buka halaman ini dengan ig.tools",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "Di halaman ini",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "Unduh semua",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "Unduh",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "Tersimpan",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "Unduhan tidak dapat dimulai. Coba lagi.",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "Mencari media di halaman ini…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "Buka postingan, Reel, Story, atau profil di Instagram, lalu klik ikon ig.tools untuk menyimpan medianya.",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "Lihat akun ini di ig.tools",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "Buka di ig.tools",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "Login ke Instagram di browser ini untuk menyimpan dari halaman ini, atau lihat di ig.tools tanpa login.",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "Postingan atau Story ini privat, sudah dihapus, atau tidak tersedia lagi.",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "Instagram tidak merespons. Coba lagi sebentar lagi.",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "Lihat di ig.tools tanpa login",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "Foto $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "Video $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "Story saat ini",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "Akun ini sedang tidak memiliki Story.",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

@@ -2,6 +2,8 @@
 :root {
   color-scheme: light;
   --bg: #ffffff;
+  --surface-2: #f6f5f8;
+  --line: #ebe9ee;
   --line-strong: #d9d6de;
   --text: #1d1a22;
   --muted: #66616d;
@@ -9,14 +11,20 @@
   --primary: #b42a78;
   --primary-hover: #9a2167;
   --primary-ink: #ffffff;
+  --primary-soft: #fbf0f6;
   --focus-ring: rgb(180 42 120 / 16%);
+  --ok: #1f8a5b;
   --danger: #b8322f;
+  --r-sm: 8px;
   --r-md: 10px;
+  --shadow-sm: 0 1px 2px rgb(29 26 34 / 8%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --bg: #1c1a20;
+    --surface-2: #25222a;
+    --line: #2c2931;
     --line-strong: #3d3943;
     --text: #f2f0f4;
     --muted: #a8a2af;
@@ -24,19 +32,96 @@
     --primary: #e0559f;
     --primary-hover: #ea6dae;
     --primary-ink: #1a0712;
+    --primary-soft: #2e1d28;
     --focus-ring: rgb(224 85 159 / 26%);
+    --ok: #4cc38a;
     --danger: #ff8a85;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
   }
 }
 * { box-sizing: border-box; }
 body {
-  width: 340px;
+  width: 360px;
   margin: 0;
   padding: 16px;
+  display: grid;
+  gap: 14px;
   background: var(--bg);
   color: var(--text);
-  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Named fonts before system-ui: on Chinese Windows, system-ui resolves to a
+     font that draws no visible underscore at 125% scaling. */
+  font: 14px/1.45 -apple-system, "Segoe UI", system-ui, Roboto, sans-serif;
 }
+[hidden] { display: none !important; }
+h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
+.form-title { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+.media { display: grid; gap: 10px; }
+.media-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; }
+/* Chrome caps popups at 600px tall, so long carousels scroll inside this box.
+   The grid itself must not scroll, or its rows shrink and cards overlap. */
+.scroller { max-height: 316px; overflow-y: auto; }
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.grid.is-story { grid-template-columns: repeat(3, 1fr); }
+.grid.is-single { grid-template-columns: 1fr; }
+.card {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+.is-story .card { aspect-ratio: 9 / 16; }
+.is-single .card { aspect-ratio: auto; height: 280px; }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.is-single .card img { object-fit: contain; }
+.badge {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 55%);
+  color: #fff;
+}
+.badge svg { width: 13px; height: 13px; }
+.save {
+  position: absolute;
+  inset-block-end: 6px;
+  inset-inline-end: 6px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+.save svg { width: 20px; height: 20px; }
+.save:hover { color: var(--primary); }
+.save.is-done { color: var(--ok); }
+.save:disabled { cursor: default; }
+
+.status { display: grid; gap: 6px; padding: 12px; border-radius: var(--r-md); background: var(--surface-2); }
+.status p { margin: 0; color: var(--muted); }
+.status a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.status .detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+.status a:hover { text-decoration: underline; }
+
 form { display: grid; gap: 10px; }
 .field { display: block; }
 input {
@@ -48,22 +133,26 @@ input {
   background: transparent;
   color: var(--text);
   font: inherit;
+  line-height: normal;
 }
 input::placeholder { color: var(--placeholder); }
 input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
 input[aria-invalid="true"] { border-color: var(--danger); }
-button {
+button.primary, button.secondary {
   height: 44px;
-  border: 0;
+  padding: 0 16px;
   border-radius: var(--r-md);
-  background: var(--primary);
-  color: var(--primary-ink);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
-button:hover { background: var(--primary-hover); }
-button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+button.primary { border: 0; background: var(--primary); color: var(--primary-ink); }
+button.primary:hover { background: var(--primary-hover); }
+.media-head button.primary { height: 40px; }
+button.secondary { border: 1px solid var(--line-strong); background: transparent; color: var(--text); }
+button.secondary:hover { border-color: var(--primary); color: var(--primary); }
+button:disabled { opacity: .6; }
+button:focus-visible, a:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
 .error { margin: 0; color: var(--danger); }
 .helper { margin: 0; color: var(--muted); font-size: 13px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

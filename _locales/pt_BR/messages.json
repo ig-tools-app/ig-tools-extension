@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Abra publicações, Reels, Stories e perfis do Instagram no ig.tools para ver e salvar conteúdo público. Sem entrar na conta.",
+    "message": "Salve fotos, vídeos, Reels e Stories da página do Instagram aberta. Abra links no ig.tools sem entrar na conta.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "Abrir esta página com o ig.tools",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "Nesta página",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "Baixar tudo",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "Baixar",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "Salvo",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "Não foi possível iniciar o download. Tente novamente.",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "Procurando mídia nesta página…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "Abra uma publicação, um Reel, um Story ou um perfil no Instagram e clique no ícone do ig.tools para salvar a mídia.",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "Ver esta conta no ig.tools",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "Abrir no ig.tools",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "Entre no Instagram neste navegador para salvar desta página, ou veja no ig.tools sem entrar na conta.",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "Esta publicação ou Story é privado, foi removido ou não está mais disponível.",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "O Instagram não respondeu. Tente novamente em instantes.",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "Ver no ig.tools sem entrar na conta",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "Foto $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "Vídeo $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "Stories atuais",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "Esta conta não tem Stories no momento.",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

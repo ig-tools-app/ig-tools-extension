@@ -4,7 +4,7 @@
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "在 ig.tools 打开 Instagram 帖子、Reels、快拍和个人主页，预览并保存公开内容，无需登录 Instagram。",
+    "message": "保存当前 Instagram 页面中的图片、视频、Reels 和快拍，也能在 ig.tools 免登录打开链接。",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -30,5 +30,85 @@
   "menuOpenPage": {
     "message": "用 ig.tools 打开此页面",
     "description": "Context menu on an Instagram page"
+  },
+  "onThisPage": {
+    "message": "此页面的媒体",
+    "description": "Popup heading above the media found on the open Instagram page"
+  },
+  "downloadAll": {
+    "message": "全部下载",
+    "description": "Popup button that saves every file on the page"
+  },
+  "download": {
+    "message": "下载",
+    "description": "Accessible name of each file's download button"
+  },
+  "saved": {
+    "message": "已保存",
+    "description": "Accessible name of a download button after the file was saved"
+  },
+  "downloadFailed": {
+    "message": "无法开始下载，请重试。",
+    "description": "Shown when Chrome could not start a download"
+  },
+  "loading": {
+    "message": "正在查找此页面的媒体…",
+    "description": "Shown while the popup reads the open Instagram page"
+  },
+  "notMediaPage": {
+    "message": "在 Instagram 打开帖子、Reel、快拍或个人主页后，点击 ig.tools 图标即可保存媒体。",
+    "description": "Shown on Instagram pages without a post, Reel, Story or profile"
+  },
+  "browseOnSite": {
+    "message": "在 ig.tools 浏览此账号",
+    "description": "Link on an Instagram profile page that opens the account on ig.tools"
+  },
+  "openOnSite": {
+    "message": "改在 ig.tools 打开",
+    "description": "Link under an error that opens the same page on ig.tools"
+  },
+  "loginNeeded": {
+    "message": "在此浏览器登录 Instagram 后即可从此页面保存，或免登录在 ig.tools 查看。",
+    "description": "Shown when the browser is not signed in to Instagram"
+  },
+  "unavailable": {
+    "message": "此帖子或快拍为私密、已删除或已无法查看。",
+    "description": "Shown for private, deleted or expired content"
+  },
+  "failed": {
+    "message": "Instagram 没有响应，请稍后再试。",
+    "description": "Shown when Instagram returned an error or did not respond"
+  },
+  "viewOnSite": {
+    "message": "免登录在 ig.tools 查看",
+    "description": "Heading above the ig.tools link field when media is shown"
+  },
+  "photoLabel": {
+    "message": "图片 $NUMBER$",
+    "description": "Accessible name of a photo in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "videoLabel": {
+    "message": "视频 $NUMBER$",
+    "description": "Accessible name of a video in the grid; $NUMBER$ is its position",
+    "placeholders": {
+      "number": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "currentStories": {
+    "message": "当前快拍",
+    "description": "Popup heading above an account's current Stories, listed from its profile page"
+  },
+  "noStories": {
+    "message": "此账号当前没有快拍。",
+    "description": "Shown on a profile page when the account has no current Stories"
   }
 }

@@ -1,11 +1,16 @@
 # Privacy
 
-The ig.tools extension does not collect, store or transmit any data.
+The ig.tools extension does not collect, store or transmit any personal data, and has no server of its own.
 
-- It makes no network requests of its own.
-- It reads the address of the current tab only when you click the toolbar icon (Chrome's `activeTab` permission), and only to prefill an Instagram link in the popup. The address is not saved or sent anywhere.
-- When you choose "Open in ig.tools" or a right-click menu item, the extension opens a new tab on `https://ig.tools/` with the Instagram link or username you chose in the address, plus `utm_source=chrome_extension` so the site can count visits that came from the extension.
+**Saving from an Instagram page**
 
-What happens on the website is covered by the ig.tools [Privacy Policy](https://ig.tools/privacy).
+- The extension can see a page only after you click its toolbar icon, and only that tab (Chrome's `activeTab` permission).
+- It then asks Instagram, from that tab and with your existing Instagram session, for the photos and videos on the page. This request goes only to instagram.com, as if the page had loaded the media itself.
+- The files you choose are downloaded directly from Instagram's servers to your computer. The extension keeps no record of them.
+- Your Instagram session, cookies and account details are never read out, saved or sent anywhere.
+
+**Opening ig.tools**
+
+When you choose "Open in ig.tools" or a right-click menu item, the extension opens a new tab on `https://ig.tools/` with the Instagram link or username you chose in the address, plus `utm_source=chrome_extension` so the site can count visits that came from the extension. What happens on the website is covered by the ig.tools [Privacy Policy](https://ig.tools/privacy).
 
 Contact: dev@ig.tools
