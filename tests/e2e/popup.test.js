@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { bigCarouselPost, carouselPost, feedHtml, gridHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
+import { bigCarouselPost, carouselPageHtml, carouselPost, feedCarouselHtml, feedHtml, gridHtml, reelsPageHtml, storyPageHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
 import { shortcodeToId } from "../../src/instagram.js";
 
 const root = fileURLToPath(new URL("../..", import.meta.url));
@@ -114,7 +114,9 @@ before(async () => {
     const profileIds = { "/natgeo/": scenario === "no-profile-id" ? null : "787132", "/quietacct/": "555", "/mixedup/": "787132" };
     const pathname = new URL(url).pathname;
     const header = scenario === "avatar-on-page" && pathname === "/natgeo/" ? profileHeader
-      : pathname === "/" ? feedHtml : pathname === "/gridacct/" ? gridHtml : "";
+      : pathname === "/" ? feedHtml : pathname === "/gridacct/" ? gridHtml : pathname === "/p/Ccarousel33/" ? carouselPageHtml
+      : pathname === "/feedcarousel/" ? feedCarouselHtml : pathname === "/reels/Creel222222/" ? reelsPageHtml
+      : pathname.startsWith("/stories/") && scenario !== "no-story-header" ? storyPageHtml() : "";
     return route.fulfill({ status: 200, contentType: "text/html", headers: { "Set-Cookie": "csrftoken=test-token; Path=/" }, body: profileHtml(profileIds[new URL(url).pathname], header) });
   });
 });
@@ -257,7 +259,8 @@ test("a GraphQL error is reported with the failed step", async () => {
 test("a Highlight lists its items", async () => {
   const { page, popup } = await openPopup("https://www.instagram.com/stories/highlights/17900000000000001/");
   await popup.locator(".card").first().waitFor();
-  assert.equal(await popup.locator(".card").count(), 1);
+  await popup.locator(".card").nth(1).waitFor();
+  assert.equal(await popup.locator(".card").count(), 2);
   await close(page, popup);
 });
 
@@ -500,20 +503,132 @@ test("profile grid tiles get a download button on hover", async () => {
   await closePage(page);
 });
 
-test("a Story page gets a floating button that saves the Story on screen", async () => {
+test("a Story gets a header control before \"more\" that saves the Story on screen", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/stories/natgeo/3101/");
+  const button = page.locator(".igt-story-button");
+  await button.waitFor();
+  // With the sound and pause controls, right after pause and before "more".
+  assert.equal(await button.evaluate(b => b.parentElement.classList.contains("controls") && b.previousElementSibling.classList.contains("pause")), true);
+  assert.equal(await page.locator(".igt-float").count(), 0);
+  await button.click();
+  await page.locator('.igt-story-button[data-igt-state="done"]').waitFor();
+  // Only the Story in the address, not the account's other Stories.
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/stories/3101.mp4"]);
+  await closePage(page);
+});
+
+test("a Highlight's header control saves the item playing, read from the progress bars", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/stories/highlights/17900000000000001/");
+  const button = page.locator(".igt-story-button");
+  await button.click();
+  await page.locator('.igt-story-button[data-igt-state="done"]').waitFor();
+  // Bars: the first is full, the second partly filled, so the second item is playing.
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/highlights/17900000000000001/3201.mp4"]);
+  await closePage(page);
+});
+
+test("without a recognisable Story header, a floating button is the fallback", async () => {
+  scenario = "no-story-header";
   await recordBackgroundDownloads();
   const page = await context.newPage();
   await page.goto("https://www.instagram.com/stories/natgeo/3101/");
   const button = page.locator(".igt-float");
-  await button.waitFor();
+  await button.waitFor({ timeout: 5000 });
   assert.equal(await button.textContent(), "Download");
   await button.click();
   await page.locator('.igt-float[data-igt-state="done"]').waitFor();
-  // Only the Story in the address, not the account's other Stories.
   assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/stories/3101.mp4"]);
   // Leaving the Stories viewer removes the button.
   await page.evaluate(() => history.pushState({}, "", "/natgeo/"));
   await page.evaluate(() => document.body.append(document.createElement("div")));
   await button.waitFor({ state: "detached" });
+  await closePage(page);
+  scenario = "ok";
+});
+
+test("the Reels player gets a button in its action column, between share and save", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/reels/Creel222222/");
+  const button = page.locator(".igt-reel-button");
+  await button.waitFor();
+  const placement = await button.evaluate(b => {
+    const wrapper = b.parentElement;
+    return { previous: wrapper.previousElementSibling.className, next: wrapper.nextElementSibling.className, wrapper: wrapper.className };
+  });
+  assert.deepEqual(placement, { previous: "reel-item item-share", next: "reel-item item-save", wrapper: "reel-item item-share" });
+  assert.equal(await page.locator(".igt-float").count(), 0);
+  await button.click();
+  await page.locator('.igt-reel-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Creel222222.mp4"]);
+  await closePage(page);
+});
+
+test("a feed carousel's slide button stays put while the slides scroll", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/feedcarousel/");
+  const button = page.locator(".igt-slide-button");
+  await button.waitFor({ state: "attached" });
+  // In the non-scrolling parent of the scrolling frame.
+  assert.equal(await button.evaluate(b => b.parentElement.classList.contains("host")), true);
+  const before = await button.boundingBox();
+  await page.locator(".scroller").evaluate(s => { s.scrollLeft = 400; });
+  await page.locator(".host").hover();
+  assert.deepEqual(await button.boundingBox(), before);
+  await button.hover();
+  assert.equal(await button.getAttribute("aria-label"), "Download this one (2/3)");
+  await button.click();
+  await page.locator('.igt-slide-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Ccarousel33_2.mp4"]);
+  await closePage(page);
+});
+
+test("a carousel gets a top-right button that saves only the slide on screen", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/p/Ccarousel33/");
+  const slideButton = page.locator(".igt-slide-button");
+  await slideButton.waitFor({ state: "attached" });
+  assert.equal(await page.locator(".igt-slide-button").count(), 1);
+  // Hidden until the pointer is over the media, then in the top-right corner.
+  assert.equal(await slideButton.evaluate(b => getComputedStyle(b).opacity), "0");
+  await page.locator(".frame").hover();
+  await page.waitForTimeout(250);
+  assert.equal(await slideButton.evaluate(b => getComputedStyle(b).opacity), "1");
+  const [frame, button] = await Promise.all([page.locator(".frame").boundingBox(), slideButton.boundingBox()]);
+  assert.ok(button.x + button.width > frame.x + frame.width - 24 && button.y < frame.y + 24, "top-right corner");
+  // Swipe to the second slide (a video) and save it.
+  await page.locator(".track").evaluate(track => { track.style.transform = "translateX(-400px)"; });
+  await slideButton.hover();
+  assert.equal(await slideButton.getAttribute("aria-label"), "Download this one (2/3)");
+  await slideButton.click();
+  await page.locator('.igt-slide-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Ccarousel33_2.mp4"]);
+  // The action row button still saves every slide, and says so.
+  const allButton = page.locator(".igt-action");
+  await allButton.hover();
+  assert.equal(await allButton.getAttribute("aria-label"), "Download all 3");
+  await recordBackgroundDownloads();
+  await allButton.click();
+  await page.locator('.igt-action[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Ccarousel33_1.jpg", "ig.tools/natgeo/posts/Ccarousel33_2.mp4", "ig.tools/natgeo/posts/Ccarousel33_3.jpg"]);
+  // A re-rendered slide list keeps a single button in the frame.
+  await page.locator("ul").evaluate(ul => ul.replaceWith(ul.cloneNode(true)));
+  await page.waitForTimeout(150);
+  assert.equal(await page.locator(".igt-slide-button").count(), 1);
+  await closePage(page);
+});
+
+test("single posts and Highlight trays get no slide button", async () => {
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/");
+  await page.locator(".igt-action").first().waitFor();
+  assert.equal(await page.locator(".igt-slide-button").count(), 0);
+  assert.equal(await page.locator(".igt-action").first().getAttribute("aria-label"), "Download with ig.tools");
   await closePage(page);
 });

@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   if (message?.type !== "download-page-media" || !sender.tab?.id) return false;
   (async () => {
-    const media = await mediaForUrl(sender.tab.id, message.url);
+    const media = await mediaForUrl(sender.tab.id, message.url, Number.isInteger(message.index) ? message.index : null);
     if (!media.files) return sendResponse(media);
     try {
       for (const file of media.files) await chrome.downloads.download({ url: file.url, filename: file.filename, conflictAction: "uniquify" });

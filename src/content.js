@@ -9,12 +9,17 @@
 //   the bookmark button. Our button goes in front of the bookmark.
 // - post address: the <time> link inside a feed <article>, else the page address.
 // - profile grid: links to /<user>/p/<code>/ or /<user>/reel/<code>/ with an image.
-// - Stories, Highlights and the Reels player: a floating button, top right.
+// - carousel: a <ul> whose <li> slides sit at translateX(index × width) inside a
+//   clipping frame; the slide whose left edge meets the frame is on screen. A
+//   button in the frame's top-right corner saves that slide only.
+// - Reels player: an item in the vertical action column, between share and save.
+// - Stories and Highlights: a control in the playing card's header, before
+//   "more"; a floating button only if that header is not found.
 (() => {
   if (window.__igToolsButtons) return;
   window.__igToolsButtons = true;
 
-  const t = key => chrome.i18n.getMessage(key);
+  const t = (key, ...substitutions) => chrome.i18n.getMessage(key, substitutions.map(String));
   const svg = path => `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
   const icons = {
     download: svg('<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>'),
@@ -30,6 +35,7 @@
     button.className = `igt-button ${className}`;
     button.dataset.igtUrl = url;
     button.innerHTML = icons.download + (label ? `<span>${label}</span>` : "");
+    button.dataset.igtIcon = "download";
     button.title = t("pageButtonTitle");
     button.setAttribute("aria-label", t("pageButtonTitle"));
     // The button sits inside Instagram's links and gesture areas; keep clicks to ourselves.
@@ -38,13 +44,27 @@
     return button;
   }
 
+  // `button.describe` (optional) gives the idle label, e.g. "Download all 6".
+  // The icon is only replaced when it changes: replacing it under the pointer
+  // (e.g. on hover) would swallow the click that follows.
   function setState(button, state, detail) {
     button.dataset.igtState = state;
-    const label = button.querySelector("span")?.outerHTML ?? "";
-    button.innerHTML = (state === "done" ? icons.done : state === "failed" ? icons.failed : icons.download) + label;
-    const text = state === "done" ? t("saved") : state === "failed" ? `${t("pageButtonFailed")}${detail ? ` (${detail})` : ""}` : t("pageButtonTitle");
+    const icon = state === "done" || state === "failed" ? state : "download";
+    if (button.dataset.igtIcon !== icon) {
+      const label = button.querySelector("span")?.outerHTML ?? "";
+      button.innerHTML = icons[icon] + label;
+      button.dataset.igtIcon = icon;
+    }
+    const text = state === "done" ? t("saved") : state === "failed" ? `${t("pageButtonFailed")}${detail ? ` (${detail})` : ""}` : button.describe?.() ?? t("pageButtonTitle");
     button.title = text;
     button.setAttribute("aria-label", text);
+  }
+
+  // Refreshes an idle button's label just before the user reads or clicks it.
+  function describeOnHover(button) {
+    const refresh = () => { if (!button.dataset.igtState || button.dataset.igtState === "idle") setState(button, "idle"); };
+    button.addEventListener("pointerenter", refresh);
+    button.addEventListener("focus", refresh);
   }
 
   async function onClick(event) {
@@ -52,17 +72,20 @@
     event.stopPropagation();
     const button = event.currentTarget;
     if (button.dataset.igtState === "busy") return;
+    // Slide, Reels and Story buttons save what is on screen at click time.
+    const index = button.slideIndex?.() ?? null;
+    const url = button.targetUrl?.() ?? button.dataset.igtUrl;
     setState(button, "busy");
     let response;
     try {
-      response = await chrome.runtime.sendMessage({ type: "download-page-media", url: button.dataset.igtUrl });
+      response = await chrome.runtime.sendMessage({ type: "download-page-media", url, index });
     } catch {
       response = { reason: "failed", detail: "extension reloaded" };
     }
     if (response?.count) setState(button, "done");
     else setState(button, "failed", response?.detail ?? response?.reason);
-    // The floating button follows the page, so it resets for the next Story.
-    if (button.classList.contains("igt-float")) setTimeout(() => setState(button, "idle"), 2500);
+    // These buttons follow what is on screen, so they reset for the next Story, Reel or slide.
+    if (button.matches(".igt-float, .igt-slide-button, .igt-reel-button, .igt-story-button")) setTimeout(() => setState(button, "idle"), 2500);
   }
 
   function actionRows(root) {
@@ -79,6 +102,68 @@
     return (link ?? location.pathname).match(postPath)?.[1] ?? null;
   }
 
+  // ---- Carousels ----
+
+  const slideOffset = li => Number((li.style.transform || "").match(/translateX\((-?\d+(?:\.\d+)?)px\)/)?.[1] ?? NaN);
+
+  // The <ul> of slides, the element that clips it to one slide (`frame`) and the
+  // element the slide button goes in (`host`). Post pages clip with
+  // overflow: hidden and move slides with transforms; the feed scrolls the frame
+  // itself (overflow-x: auto), so there the button sits in the frame's parent,
+  // which does not scroll.
+  function carouselParts(ul) {
+    let frame = ul.parentElement;
+    while (frame && frame !== document.body && !/hidden|clip|auto|scroll/.test(getComputedStyle(frame).overflowX)) frame = frame.parentElement;
+    if (!frame || frame === document.body) return null;
+    const width = frame.getBoundingClientRect().width;
+    // Real slides are as wide as the frame; a Highlights tray or other list is not.
+    const slides = [...ul.children].filter(li => Number.isFinite(slideOffset(li)) && Math.abs(li.getBoundingClientRect().width - width) < 2);
+    if (!slides.length || width <= 0) return null;
+    const scrolls = /auto|scroll/.test(getComputedStyle(frame).overflowX);
+    const parent = frame.parentElement;
+    const host = scrolls && parent && Math.abs(parent.getBoundingClientRect().width - width) < 2 ? parent : frame;
+    return { frame, host, slides, width };
+  }
+
+  // 0-based index of the slide on screen and the number of slides. Instagram
+  // renders only nearby slides plus a 1px end marker at translateX(count × width − 1).
+  function slidePosition(ul) {
+    const parts = carouselParts(ul);
+    if (!parts) return null;
+    const left = parts.frame.getBoundingClientRect().left;
+    const current = parts.slides.find(li => Math.abs(li.getBoundingClientRect().left - left) < parts.width / 2) ?? parts.slides[0];
+    const total = Math.max(...[...ul.children].map(li => Math.round((slideOffset(li) + li.getBoundingClientRect().width) / parts.width)).filter(Number.isFinite));
+    const index = Math.round(slideOffset(current) / parts.width);
+    return { index, total: Math.max(total, index + 1) };
+  }
+
+  const carouselIn = scope => [...(scope?.querySelectorAll("ul") ?? [])].find(ul => carouselParts(ul));
+
+  function addCarouselButtons() {
+    for (const ul of document.querySelectorAll("main ul, [role=dialog] ul")) {
+      if (ul.dataset.igtDone) continue;
+      const parts = carouselParts(ul);
+      if (!parts || !ul.querySelector("img, video")) continue;
+      ul.dataset.igtDone = "1";
+      // Instagram may replace the list while keeping the frame: reuse the frame's button.
+      const existing = parts.host.querySelector(":scope > .igt-slide-button");
+      if (existing) { existing.carousel = ul; continue; }
+      const article = ul.closest("article");
+      const code = (article?.querySelector("time")?.closest("a")?.getAttribute("href") ?? location.pathname).match(postPath)?.[1];
+      if (!code) continue;
+      const button = makeButton("igt-slide-button", postUrl(code));
+      button.carousel = ul;
+      button.slideIndex = () => slidePosition(button.carousel)?.index ?? null;
+      button.describe = () => {
+        const position = slidePosition(button.carousel);
+        return position ? t("pageButtonSlide", position.index + 1, position.total) : t("pageButtonTitle");
+      };
+      describeOnHover(button);
+      parts.host.classList.add("igt-slide-frame");
+      parts.host.append(button);
+    }
+  }
+
   function addActionButtons() {
     for (const section of actionRows(document)) {
       section.dataset.igtDone = "1";
@@ -86,7 +171,16 @@
       if (!code) continue;
       const bookmarkGroup = section.lastElementChild;
       bookmarkGroup.classList.add("igt-row-end");
-      bookmarkGroup.prepend(makeButton("igt-action", postUrl(code)));
+      const button = makeButton("igt-action", postUrl(code));
+      // On a carousel this button saves every slide; its label says how many.
+      const scope = section.closest("article, [role=dialog]") ?? document.querySelector("main");
+      button.describe = () => {
+        const ul = carouselIn(scope);
+        const total = ul && slidePosition(ul)?.total;
+        return total > 1 ? t("pageButtonAll", total) : t("pageButtonTitle");
+      };
+      describeOnHover(button);
+      bookmarkGroup.prepend(button);
     }
   }
 
@@ -102,33 +196,111 @@
     }
   }
 
-  // Stories and Highlights play full screen and the Reels player has its own layout;
-  // one floating button saves what the address bar points at.
+  const currentUrl = () => `https://www.instagram.com${location.pathname}`;
+  const hasIcon = el => Boolean(el.querySelector("svg[aria-label]"));
+
+  // ---- Reels player (/reels/): the vertical action column ----
+  // Like, comment and repost carry counts; share, save and "more" are bare icons.
+  // The button goes between share and save, as next to the bookmark on posts, in a
+  // wrapper that copies the share item's classes so spacing and colour match.
+  function addReelButtons() {
+    if (!location.pathname.startsWith("/reels/")) return;
+    for (const column of document.querySelectorAll("main div")) {
+      if (column.dataset.igtDone || column.children.length < 4) continue;
+      const items = [...column.children].filter(hasIcon);
+      if (items.length < 4 || items.some(item => item.querySelector("[role=link] svg"))) continue;
+      const lefts = items.map(item => item.getBoundingClientRect().left), tops = items.map(item => item.getBoundingClientRect().top);
+      if (Math.max(...lefts) - Math.min(...lefts) > 12 || Math.max(...tops) - Math.min(...tops) < 100) continue;
+      column.dataset.igtDone = "1";
+      const bare = items.filter(item => !item.innerText.trim());
+      const wrapper = document.createElement("div");
+      wrapper.className = (bare[0] ?? items[0]).className;
+      const button = makeButton("igt-reel-button", currentUrl());
+      // The address bar follows the Reel on screen as the user scrolls.
+      button.targetUrl = currentUrl;
+      wrapper.append(button);
+      if (bare.length >= 3) column.insertBefore(wrapper, bare[1]);
+      else column.prepend(wrapper);
+    }
+  }
+
+  // ---- Stories and Highlights: the header of the playing card ----
+  // A flex row: avatar and name, then sound and pause controls, then the "more"
+  // button (24px icon). The button joins the controls, before "more".
+  function storyHeaderRows() {
+    return [...document.querySelectorAll("div")].filter(row => {
+      if (row.dataset.igtDone || row.children.length < 2 || getComputedStyle(row).display !== "flex") return false;
+      const more = row.lastElementChild;
+      const moreIcon = more?.matches("[role=button]") && more.querySelector("svg[aria-label]");
+      return moreIcon && Math.round(moreIcon.getBoundingClientRect().width) === 24 && row.querySelector("img") && row.querySelectorAll("svg[aria-label]").length >= 2;
+    });
+  }
+
+  // 0-based index of the playing item, from the progress bars above the header:
+  // finished bars are full, the playing one is partly filled (translateX(-x%)).
+  function storyIndex(row) {
+    let card = row;
+    for (let level = 0; level < 6 && card; level++, card = card.parentElement) {
+      const bars = [...card.querySelectorAll("div")].filter(d => { const r = d.getBoundingClientRect(); return r.height > 0 && r.height <= 4 && r.width >= row.getBoundingClientRect().width * 0.6; })
+        .sort((a, b) => b.children.length - a.children.length)[0];
+      if (!bars?.children.length) continue;
+      const fills = [...bars.children].map(segment => {
+        const moved = [segment, ...segment.querySelectorAll("*")].find(el => /translateX\(/.test(el.style.transform || ""));
+        return moved ? 100 + Number(moved.style.transform.match(/translateX\((-?[\d.]+)%\)/)?.[1] ?? -100) : 0;
+      });
+      const finished = fills.filter(fill => fill >= 99.5).length;
+      return Math.min(finished, fills.length - 1);
+    }
+    return null;
+  }
+
+  function addStoryButtons() {
+    if (!location.pathname.startsWith("/stories/")) return;
+    const rows = storyHeaderRows();
+    // Desktop shows neighbouring Stories as small previews; the playing card is the widest.
+    const row = rows.sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0];
+    if (!row) return;
+    row.dataset.igtDone = "1";
+    const button = makeButton("igt-story-button", currentUrl());
+    button.targetUrl = currentUrl;
+    // A Story address names its item; a Highlight address does not, so the progress bars tell.
+    button.slideIndex = () => (/^\/stories\/(?!highlights\/)[^/]+\/\d+/.test(location.pathname) ? null : storyIndex(row));
+    const controls = row.lastElementChild.previousElementSibling;
+    if (controls?.querySelector("[role=button]") && getComputedStyle(controls).display === "flex") controls.append(button);
+    else row.insertBefore(button, row.lastElementChild);
+  }
+
+  // Fallback when the Story header is not found (e.g. after an Instagram redesign):
+  // a floating button for the address in the address bar.
+  let storyPageSince = 0;
   function updateFloatingButton() {
-    const path = location.pathname;
-    const wanted = /^\/stories\//.test(path) || /^\/reels?\/[A-Za-z0-9_-]{5,64}/.test(path);
-    let button = document.querySelector(".igt-float");
-    if (!wanted) return button?.remove();
-    const url = `https://www.instagram.com${path}`;
-    if (!button) {
-      button = makeButton("igt-float", url, t("download"));
-      document.body.append(button);
+    const button = document.querySelector(".igt-float");
+    if (!location.pathname.startsWith("/stories/")) {
+      storyPageSince = 0;
+      return button?.remove();
     }
-    if (button.dataset.igtUrl !== url) {
-      button.dataset.igtUrl = url;
-      setState(button, "idle");
-    }
+    if (document.querySelector(".igt-story-button")) return button?.remove();
+    storyPageSince ||= Date.now();
+    if (Date.now() - storyPageSince < 2000) return setTimeout(schedule, 2100);
+    if (button) return;
+    const floating = makeButton("igt-float", currentUrl(), t("download"));
+    floating.targetUrl = currentUrl;
+    document.body.append(floating);
   }
 
   let scheduled = false;
   function scan() {
     scheduled = false;
     addActionButtons();
+    addCarouselButtons();
     addGridButtons();
+    addReelButtons();
+    addStoryButtons();
     updateFloatingButton();
   }
-  new MutationObserver(() => {
+  function schedule() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(scan); }
-  }).observe(document.body, { childList: true, subtree: true });
+  }
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   scan();
 })();

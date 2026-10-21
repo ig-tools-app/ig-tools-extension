@@ -158,5 +158,29 @@
   "pageButtonFailed": {
     "message": "ダウンロードできませんでした",
     "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
+  },
+  "pageButtonSlide": {
+    "message": "この1枚を保存（$CURRENT$/$TOTAL$）",
+    "description": "Label of the carousel slide button; $CURRENT$ is the slide on screen, $TOTAL$ the number of slides",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "6"
+      }
+    }
+  },
+  "pageButtonAll": {
+    "message": "$COUNT$枚すべて保存",
+    "description": "Label of a carousel post's action-row button; $COUNT$ is the number of slides",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "6"
+      }
+    }
   }
 }

@@ -45,7 +45,10 @@ export const storyItems = [
   { pk: "3100", id: "3100_787132", media_type: 1, image_versions2: { candidates: candidates("story1") } },
   { pk: "3101", id: "3101_787132", media_type: 2, image_versions2: { candidates: candidates("story2cover") }, video_versions: [storyVideo("story2"), { ...storyVideo("story2"), type: 102 }] },
 ];
-export const highlightItems = [{ pk: "3200", media_type: 1, image_versions2: { candidates: candidates("hl1") } }];
+export const highlightItems = [
+  { pk: "3200", media_type: 1, image_versions2: { candidates: candidates("hl1") } },
+  { pk: "3201", media_type: 2, image_versions2: { candidates: candidates("hl2cover") }, video_versions: [storyVideo("hl2")] },
+];
 
 const reelsConnection = items => ({ data: { xdt_api__v1__feed__reels_media__connection: { edges: [{ node: { user: { username: "natgeo" }, items } }] } } });
 export const storyGraphql = reelsConnection(storyItems);
@@ -92,6 +95,59 @@ export const feedHtml = `<main>
 <article><a href="/p/Cphoto11111/"><time>1h</time></a><img src="${cdn}/photo_640.jpg" width="400" height="400">${actionRow}</article>
 <article><a href="/p/Cmissing999/"><time>2h</time></a>${actionRow}</article>
 </main>`;
+// A carousel post page: slides at translateX(index × width) in a clipping frame,
+// plus Instagram's 1px end marker. Tests move .track to change the slide on screen.
+const slide = (offset, inner) => `<li style="position:absolute;top:0;left:0;width:400px;height:500px;transform:translateX(${offset}px)">${inner}</li>`;
+export const carouselPageHtml = `<main>
+<div class="frame" style="overflow:hidden;width:400px;height:500px">
+<div class="track" style="transition:none"><ul style="list-style:none;margin:0;padding:0;position:relative;height:500px">
+${slide(0, `<img src="${cdn}/slide1_320.jpg" width="400" height="500">`)}
+${slide(400, `<video width="400" height="500"></video>`)}
+${slide(800, `<img src="${cdn}/slide3_320.jpg" width="400" height="500">`)}
+<li style="position:absolute;top:0;left:0;width:1px;height:1px;transform:translateX(1199px)"></li>
+</ul></div></div>
+${actionRow}
+</main>`;
+
+// A feed carousel: the frame scrolls itself (overflow-x: auto); tests set scrollLeft.
+export const feedCarouselHtml = `<main><article>
+<a href="/p/Ccarousel33/"><time>3h</time></a>
+<div class="host" style="width:400px;position:relative">
+<div class="scroller" style="overflow-x:auto;overflow-y:hidden;width:400px;height:500px">
+<ul style="list-style:none;margin:0;padding:0;position:relative;width:1200px;height:500px">
+${slide(0, `<img src="${cdn}/slide1_320.jpg" width="400" height="500">`)}
+${slide(400, `<video width="400" height="500"></video>`)}
+${slide(800, `<img src="${cdn}/slide3_320.jpg" width="400" height="500">`)}
+<li style="position:absolute;top:0;left:0;width:1px;height:1px;transform:translateX(1199px)"></li>
+</ul></div></div>
+${actionRow}
+</article></main>`;
+
+// The Reels player's vertical action column: like, comment and repost with counts,
+// then share, save and "more" as bare icons, then the audio thumbnail.
+const column = (label, count) => `<div class="reel-item item-${label.toLowerCase()}" style="display:flex;flex-direction:column;align-items:center;margin-top:20px"><div role="button">${icon(label)}</div>${count ? `<span>${count}</span>` : ""}</div>`;
+export const reelsPageHtml = `<main><div style="display:flex;gap:16px">
+<div style="width:300px;height:540px;background:#111"><video width="300" height="540"></video></div>
+<div class="reel-column" style="display:flex;flex-direction:column;justify-content:flex-end;height:540px">
+${column("Like", "28K")}${column("Comment", "935")}${column("Repost", "1.2K")}${column("Share")}${column("Save")}${column("More")}
+<div style="margin-top:20px"><a href="/reels/audio/1/" role="link"><img src="${cdn}/audio.jpg" width="26" height="26"></a></div>
+</div></div></main>`;
+
+// The playing Story card: progress bars, then a flex header with the avatar,
+// the sound and pause controls (32px boxes, 16px icons) and "more" (24px icon).
+// `fills` gives each bar's progress in percent.
+export const storyPageHtml = (fills = [100, 40]) => `<section><div class="card" style="width:500px;margin:20px auto;background:#222;color:#fff">
+<div class="bars" style="display:flex;gap:4px;height:2px;width:480px;margin:0 10px">
+${fills.map(fill => `<div style="flex:1;height:2px;overflow:hidden;background:#555"><div style="height:2px;background:#fff;transform:translateX(${fill - 100}%)"></div></div>`).join("")}
+</div>
+<div class="story-header" style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 10px">
+<div style="display:flex;align-items:center;gap:8px"><img src="${cdn}/avatar_150.jpg" width="32" height="32"><a href="/natgeo/">natgeo</a></div>
+<div class="controls" style="display:flex"><div role="button" style="width:32px;height:32px"><svg aria-label="Muted" width="16" height="16"></svg></div><div role="button" class="pause" style="width:32px;height:32px"><svg aria-label="Pause" width="16" height="16"></svg></div></div>
+<div role="button" class="more" style="width:40px;height:40px"><div><svg aria-label="Menu" width="24" height="24"></svg></div></div>
+</div>
+<div style="height:700px"></div>
+</div></section>`;
+
 export const gridHtml = `<main><div style="display:flex">
 <div style="width:200px;height:250px"><a href="/gridacct/p/Ccarousel33/" role="link"><img src="${cdn}/slide1_320.jpg" width="200" height="250"></a></div>
 <div style="width:200px;height:250px"><a href="/gridacct/reel/Creel222222/" role="link"><img src="${cdn}/reelcover_320.jpg" width="200" height="250"></a></div>

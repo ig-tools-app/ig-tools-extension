@@ -158,5 +158,29 @@
   "pageButtonFailed": {
     "message": "Não foi possível baixar",
     "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
+  },
+  "pageButtonSlide": {
+    "message": "Baixar esta ($CURRENT$/$TOTAL$)",
+    "description": "Label of the carousel slide button; $CURRENT$ is the slide on screen, $TOTAL$ the number of slides",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "6"
+      }
+    }
+  },
+  "pageButtonAll": {
+    "message": "Baixar todas as $COUNT$",
+    "description": "Label of a carousel post's action-row button; $COUNT$ is the number of slides",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "6"
+      }
+    }
   }
 }

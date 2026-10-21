@@ -158,5 +158,29 @@
   "pageButtonFailed": {
     "message": "İndirilemedi",
     "description": "Tooltip of an on-page button after the download failed; a detail may follow in brackets"
+  },
+  "pageButtonSlide": {
+    "message": "Bunu indir ($CURRENT$/$TOTAL$)",
+    "description": "Label of the carousel slide button; $CURRENT$ is the slide on screen, $TOTAL$ the number of slides",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "6"
+      }
+    }
+  },
+  "pageButtonAll": {
+    "message": "$COUNT$ öğenin tümünü indir",
+    "description": "Label of a carousel post's action-row button; $COUNT$ is the number of slides",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "6"
+      }
+    }
   }
 }

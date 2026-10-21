@@ -25,7 +25,7 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > • Profile pages also list the account's Highlights and its full-size profile picture
 > • Files are sorted into Downloads/ig.tools/<username>/ with posts, stories and highlights folders
 > • Press Alt+Shift+S to open it from the keyboard
-> • Optional: turn on download buttons right on Instagram, next to the bookmark on posts, on profile grids, and on Stories and Reels
+> • Optional: turn on download buttons right on Instagram, next to the bookmark on posts, on each carousel slide, on profile grids, and on Stories and Reels
 >
 > SIGNED OUT, OR PREFER NOT TO SIGN IN?
 > Paste any Instagram link or @username into the popup, or right-click an Instagram link, to open it in ig.tools and view public posts, Reels and Stories there without signing in.
