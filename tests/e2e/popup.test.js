@@ -309,6 +309,8 @@ test("a profile page lists the account's current Stories without opening them", 
   assert.equal(await popup.locator("#media-title").textContent(), "Current Stories");
   assert.equal(await popup.locator("#grid").getAttribute("class"), "grid is-story");
   assert.equal(await popup.locator("#input").inputValue(), "https://www.instagram.com/natgeo/");
+  // The account's own picture from the profile HTML, never the signed-in viewer's beside it.
+  assert.match(await popup.locator("#source-picture img").getAttribute("src"), /avatar_150/);
   // Only the profile page and the Stories query; no Stories page is opened and nothing else is sent.
   assert.deepEqual(instagramRequests, ["GET /natgeo/", "GET /natgeo/", "POST /graphql/query PolarisStoriesV3ReelPageGalleryQuery"]);
   await popup.getByRole("button", { name: "Download all" }).click();
@@ -371,6 +373,8 @@ test("the profile picture shown on the page is saved without any request", async
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/natgeo_profile_picture.jpg"]);
   // The account's own picture, not the viewer's small one or a look-alike username's.
   assert.match(await popup.locator(".card img").getAttribute("src"), /avatar_page_1080/);
+  // The account line uses the same header picture.
+  assert.match(await popup.locator("#source-picture img").getAttribute("src"), /avatar_page_1080/);
   assert.deepEqual(avatarAppIds, [], "the user info API is not called");
   assert.equal(await popup.locator("#status").isHidden(), true);
   await close(page, popup);
@@ -427,6 +431,9 @@ test("a profile without current Stories says so and offers ig.tools", async () =
   const { page, popup } = await openPopup("https://www.instagram.com/quietacct/");
   await popup.getByText("This account has no Stories right now.").waitFor();
   await popup.getByRole("link", { name: "Browse this account on ig.tools" }).waitFor();
+  // Only the viewer's picture is in this page's HTML: the initial stands in.
+  assert.equal(await popup.locator("#source-picture img").count(), 0);
+  assert.equal(await popup.locator("#source-picture").textContent(), "q");
   await close(page, popup);
 });
 

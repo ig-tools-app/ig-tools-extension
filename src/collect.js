@@ -67,15 +67,26 @@ export async function collectFromPage(page) {
     return null;
   }
 
+  // A profile picture in page HTML, only where the nearest "username" is this
+  // account's: the HTML also carries the signed-in viewer's own picture
+  // (October 2026: on another account's profile, often only the viewer's).
+  function pictureFromHtml(html, username) {
+    const names = [...html.matchAll(/"username":"([^"]+)"/g)].map(match => ({ at: match.index, name: match[1].toLowerCase() }));
+    for (const match of html.matchAll(/"profile_pic_url_hd":"((?:[^"\\]|\\.)*)"/g)) {
+      const nearest = names.reduce((best, entry) => (Math.abs(entry.at - match.index) < Math.abs((best?.at ?? Infinity) - match.index) ? entry : best), null);
+      if (nearest?.name !== username.toLowerCase() || Math.abs(nearest.at - match.index) > 2000) continue;
+      try { return JSON.parse(`"${match[1]}"`) || null; } catch { return null; }
+    }
+    return null;
+  }
+
   // The profile page HTML is what the browser loads anyway; it names the account
-  // ID ("profile_id"), carries a request token for GraphQL and a small profile picture.
+  // ID ("profile_id"), carries a request token for GraphQL and maybe a small profile picture.
   async function profilePage(username) {
     try {
       const { response } = await request("profile", `/${encodeURIComponent(username)}/`);
       const html = await response.text();
-      let smallPicture = null;
-      try { smallPicture = JSON.parse(`"${html.match(/"profile_pic_url_hd":"((?:[^"\\]|\\.)*)"/)?.[1] ?? ""}"`) || null; } catch { /* no picture */ }
-      return { userId: html.match(/"profile_id":"(\d{3,25})"/)?.[1] ?? null, dtsg: dtsgFrom(html), smallPicture };
+      return { userId: html.match(/"profile_id":"(\d{3,25})"/)?.[1] ?? null, dtsg: dtsgFrom(html), smallPicture: pictureFromHtml(html, username) };
     } catch (error) {
       if (error?.reason === "unavailable") throw error;
       return { userId: null, dtsg: null, smallPicture: null };
@@ -84,15 +95,18 @@ export async function collectFromPage(page) {
 
   // The account behind a profile or Story page. The popup passes the ID back
   // once known, so switching tabs does not load the profile page again.
+  // `headerPicture` is the picture in the profile header on the page, for the
+  // popup's account line.
   async function account(page) {
-    if (page.userId) return { userId: page.userId, dtsg: dtsgFromDocument(), smallPicture: page.smallPicture ?? null };
+    const headerPicture = pictureOnPage(page.username)?.url ?? null;
+    if (page.userId) return { userId: page.userId, dtsg: dtsgFromDocument(), smallPicture: page.smallPicture ?? null, headerPicture };
     const profile = await profilePage(page.username);
     if (!profile.userId) {
       const data = await rest("profile-api", `/api/v1/users/web_profile_info/?username=${encodeURIComponent(page.username)}`);
       profile.userId = data?.data?.user?.id ?? null;
     }
     if (!profile.userId) throw { reason: "unavailable", detail: "profile no-id" };
-    return { ...profile, dtsg: dtsgFromDocument() ?? profile.dtsg };
+    return { ...profile, dtsg: dtsgFromDocument() ?? profile.dtsg, headerPicture };
   }
 
   async function graphql(step, { name, docId }, variables, dtsg) {
@@ -166,20 +180,20 @@ export async function collectFromPage(page) {
       return { items: data?.items ?? [] };
     }
     if (page.kind === "story") {
-      const { userId, dtsg, smallPicture } = await account(page);
+      const { userId, dtsg, smallPicture, headerPicture } = await account(page);
       const result = await storyItems("story", userId, dtsg);
       // Never offer another account's Stories if the ID lookup went wrong.
-      if (result.owner && result.owner.toLowerCase() !== page.username.toLowerCase()) return { reason: "unavailable", detail: "story owner-mismatch", userId, smallPicture };
-      return { ...result, owner: result.owner ?? page.username, userId, smallPicture };
+      if (result.owner && result.owner.toLowerCase() !== page.username.toLowerCase()) return { reason: "unavailable", detail: "story owner-mismatch", userId, smallPicture, headerPicture };
+      return { ...result, owner: result.owner ?? page.username, userId, smallPicture, headerPicture };
     }
     if (page.kind === "highlights") {
-      const { userId, dtsg, smallPicture } = await account(page);
+      const { userId, dtsg, smallPicture, headerPicture } = await account(page);
       const data = await graphql("highlights", highlightsTrayQuery, { user_id: userId }, dtsg);
-      return { highlights: data?.highlights ?? { edges: [] }, userId, smallPicture };
+      return { highlights: data?.highlights ?? { edges: [] }, userId, smallPicture, headerPicture };
     }
     if (page.kind === "avatar") {
-      const { userId, smallPicture } = await account(page);
-      return { ...await profilePicture(userId, smallPicture, page.username), userId, smallPicture };
+      const { userId, smallPicture, headerPicture } = await account(page);
+      return { ...await profilePicture(userId, smallPicture, page.username), userId, smallPicture, headerPicture };
     }
     if (page.kind === "highlight") {
       let dtsg = dtsgFromDocument();

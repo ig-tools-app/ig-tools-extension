@@ -250,13 +250,17 @@ function showFailure(result, link) {
 
 // ---- Profile pages: Stories, Highlights and profile picture tabs ----
 
-const profile = { username: "", userId: null, smallPicture: null, stories: null, highlights: null, avatar: null };
+const profile = { username: "", userId: null, smallPicture: null, picture: null, stories: null, highlights: null, avatar: null };
 
 function remember(result) {
   profile.userId ??= result?.userId ?? null;
-  if (!profile.smallPicture && result?.smallPicture) {
-    profile.smallPicture = result.smallPicture;
-    showSource(profile.username, message("kindProfile"), profile.smallPicture);
+  profile.smallPicture ??= result?.smallPicture ?? null;
+  // The account line shows the profile header's picture, else the small one
+  // from the HTML (only ever this account's; see pictureFromHtml in collect.js).
+  const picture = result?.headerPicture ?? profile.smallPicture;
+  if (!profile.picture && picture) {
+    profile.picture = picture;
+    showSource(profile.username, message("kindProfile"), picture);
   }
 }
 const accountRequest = kind => ({ kind, username: profile.username, userId: profile.userId, smallPicture: profile.smallPicture, storyId: null });

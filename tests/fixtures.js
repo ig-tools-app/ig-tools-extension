@@ -171,4 +171,6 @@ export const gridHtml = `<main><div style="display:flex">
 // Other pages pass no ID and carry only the token.
 export const profileHtml = (profileId, body = "") => `<!doctype html><title>Instagram</title>${body}
 <script type="application/json">{"require":[["DTSGInitialData",[],{"token":"test-dtsg"}]]}</script>
-${profileId ? `<script type="application/json">{"page_logging":{"params":{"page_id":"profilePage_${profileId}","profile_id":"${profileId}"}},"profile_pic_url_hd":"${cdn.replace(/\//g, "\\/")}\\/avatar_150.jpg?stp=x"}</script>` : ""}`;
+${profileId ? `<script type="application/json">{"page_logging":{"params":{"page_id":"profilePage_${profileId}","profile_id":"${profileId}"}}}</script>` : ""}
+<script type="application/json">{"viewer":{"username":"viewer","profile_pic_url_hd":"${cdn.replace(/\//g, "\\/")}\\/viewer_s150x150.jpg?stp=x"}}</script>
+${profileId === "787132" ? `<script type="application/json">{"user":{"username":"natgeo","profile_pic_url_hd":"${cdn.replace(/\//g, "\\/")}\\/avatar_150.jpg?stp=x"}}</script>` : ""}`;
