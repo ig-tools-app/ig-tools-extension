@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – 인스타그램용 다운로더",
+    "message": "ig.tools – 인스타그램 익명 스토리 뷰어 & 다운로더",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "보고 있는 인스타그램 페이지의 사진, 동영상, 릴스, 스토리를 저장하세요. 링크는 로그인 없이 ig.tools에서 열 수 있습니다.",
+    "message": "프로필에서 인스타그램 스토리와 하이라이트를 익명으로 보고 저장하세요. 조회자 목록에 표시되지 않습니다. 사진, 동영상, 릴스도 저장할 수 있습니다.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "프로필",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "여기서 스토리를 저장해도 조회자 목록에 표시되지 않습니다.",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "Instagram에서",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "다운로드 폴더에 바로",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "여기서 하이라이트를 저장해도 조회자 목록에 표시되지 않습니다.",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "보기",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "닫기",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "이전",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "다음",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "익명: 조회자 목록에 표시되지 않습니다",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "인스타그램에서 스토리를 열면 조회자 목록에 표시됩니다. 익명으로 보려면 먼저 프로필을 열고 거기서 ig.tools를 사용하세요.",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "@$USER$ 프로필 열기",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "재생",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "일시정지",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "음소거",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "음소거 해제",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "동영상 진행률",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "볼륨",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "다시 시도",
+    "description": "Button that runs a failed request again"
   }
 }

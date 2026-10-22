@@ -10,18 +10,23 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 
 **Detailed description**
 
-> Save photos, videos, Reels and Stories from the Instagram page you're on, in one click.
+> View and save any account's Instagram Stories and Highlights anonymously, and save photos, videos and Reels in one click.
+>
+> ANONYMOUS STORIES AND HIGHLIGHTS
+> 1. Open the account's profile on instagram.com. Don't open the Story itself.
+> 2. Click the ig.tools icon and choose Stories or Highlights.
+> 3. Tap any item to watch it in the viewer, then save one, a selection, or all.
+> You won't appear in the viewer list (tested in October 2026). Opening a Story or Highlight in Instagram itself still records the view as usual; the popup reminds you if you do.
 >
 > HOW IT WORKS
 > • Open a post, Reel, Story or Highlight on instagram.com.
 > • Click the ig.tools icon: the popup shows every photo and video on that page.
-> • Save one, a selection, or all of them.
+> • Tap one to view it full size or play it, and save one, a selection, or all of them.
 >
 > WHAT YOU GET
 > • Photos in the largest size Instagram provides
 > • Videos and Reels as MP4 with sound, never re-encoded and with no added watermark
 > • Every slide of a carousel, and all current Stories of an account
-> • On a profile page, the account's current Stories and its Highlights are listed without opening them. Saving them this way doesn't add you to the viewer list. If you open a Story or Highlight in Instagram itself, Instagram records the view as usual.
 > • Profile pages also offer the account's full-size profile picture
 > • Download buttons right on Instagram: next to the bookmark on posts, on photos, videos and each carousel slide, on profile grids, and on Stories and Reels. Turn them off in the settings if you prefer the popup alone.
 > • Choose where files go: sorted into a folder per account (with posts, stories and highlights folders), all in one ig.tools folder, or straight in Downloads

@@ -25,6 +25,8 @@ const avatarAppIds = [];
 // Set POPUP_SCREENSHOTS=<dir> to save popup screenshots for review or the store listing.
 const screenshots = process.env.POPUP_SCREENSHOTS;
 let scenario = "ok";
+// Usernames and paths are wrapped in bidi isolates (U+2068, U+2069) for Arabic.
+const plain = text => text.replace(/[\u2068\u2069]/g, "");
 
 // The extension as it ships: what `npm run package` zips.
 function extensionCopy() {
@@ -66,9 +68,10 @@ async function startCdn() {
   execFileSync("openssl", ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-keyout", key, "-out", cert, "-days", "1", "-subj", "/CN=scontent.cdninstagram.com"], { stdio: "ignore" });
   cdnServer = createServer({ key: readFileSync(key), cert: readFileSync(cert) }, (request, response) => {
     const video = new URL(request.url, "https://cdn").pathname.endsWith(".mp4");
-    // Images are the extension icon, so previews render in screenshots.
-    response.writeHead(200, { "Content-Type": video ? "video/mp4" : "image/png", "Access-Control-Allow-Origin": "*" });
-    response.end(video ? "fake mp4" : readFileSync(join(root, "icons", "icon-128.png")));
+    // Images are the extension icon, so previews render in screenshots. Videos are
+    // a real 1280×720 clip, so the viewer plays them at a real size.
+    response.writeHead(200, { "Content-Type": video ? "video/webm" : "image/png", "Access-Control-Allow-Origin": "*" });
+    response.end(readFileSync(video ? join(root, "tests", "media", "landscape.webm") : join(root, "icons", "icon-128.png")));
   });
   await new Promise(resolve => cdnServer.listen(0, "127.0.0.1", resolve));
   return cdnServer.address().port;
@@ -162,7 +165,7 @@ test("a photo post shows one card and saves it to Downloads/ig.tools", async () 
   // One item is saved with the main button; the link field gives way to a footer link.
   assert.equal(await popup.locator(".card .save").count(), 0);
   assert.equal(await popup.locator("#form").isHidden(), true);
-  assert.equal(await popup.locator("#source-name").textContent(), "@natgeo");
+  assert.equal(plain(await popup.locator("#source-name").textContent()), "@natgeo");
   assert.equal(await popup.getByRole("link", { name: "Open in ig.tools" }).isVisible(), true);
   assert.equal(apiHeaders["x-ig-app-id"], "936619743392459");
   assert.equal(apiHeaders["x-csrftoken"], "test-token");
@@ -207,6 +210,135 @@ test("selected slides are the only ones the main button saves", async () => {
   // Clearing the selection offers the rest again.
   await popup.getByRole("button", { name: "Clear" }).click();
   assert.equal(await popup.locator("#download-all").textContent(), "Download all 3");
+  await close(page, popup);
+});
+
+test("tapping a card opens the viewer: full-size photo, playing video, keys and save", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/p/Ccarousel33/");
+  // The volume instagram.com remembers for this browser, and a playing,
+  // unmuted Instagram video on the page (Instagram's mute state).
+  await page.evaluate(() => {
+    localStorage.setItem("ig_volume_settings", JSON.stringify({ volume: 0.3 }));
+    const video = Object.assign(document.createElement("video"), { muted: false, width: 200, height: 100 });
+    video.play = () => Promise.resolve();
+    Object.defineProperty(video, "paused", { value: false });
+    document.body.append(video);
+  });
+  await popup.getByRole("button", { name: "View: Photo 1" }).click();
+  const viewer = popup.getByRole("dialog");
+  await viewer.waitFor();
+  assert.equal(await popup.locator("#viewer-position").textContent(), "1 / 3");
+  // Focus starts on the viewer itself, so Space plays and pauses instead of pressing ✕.
+  assert.equal(await popup.evaluate(() => document.activeElement?.id), "viewer");
+  // The full-size file, not the grid preview.
+  assert.match(await viewer.locator("img").getAttribute("src"), /slide1_1080\.jpg/);
+  assert.equal(await popup.locator("#viewer-prev").isHidden(), true);
+  await popup.getByRole("button", { name: "Next" }).click();
+  assert.match(await viewer.locator("video").getAttribute("src"), /slide2\.mp4/);
+  if (screenshots) await popup.screenshot({ path: join(screenshots, "popup-viewer.png") });
+  // Our own control bar (Chrome's native one does not render in a toolbar popup).
+  assert.equal(await viewer.locator("video").evaluate(video => !video.controls && video.autoplay), true);
+  const bar = viewer.locator(".video-controls");
+  await viewer.locator("video").evaluate(video => video.pause());
+  await bar.getByRole("button", { name: "Play" }).click();
+  await bar.getByRole("button", { name: "Pause" }).waitFor();
+  await bar.getByRole("button", { name: "Pause" }).click();
+  assert.equal(await viewer.locator("video").evaluate(video => video.paused), true);
+  await viewer.focus();
+  await popup.keyboard.press("Space");
+  assert.equal(await viewer.locator("video").evaluate(video => video.paused), false);
+  await popup.keyboard.press("Space");
+  assert.equal(await viewer.locator("video").evaluate(video => video.paused), true);
+  assert.equal(await viewer.isVisible(), true);
+  // Starts with Instagram's volume and mute state; a change carries over to the next video.
+  assert.equal(await viewer.locator("video").evaluate(video => Math.round(video.volume * 100)), 30);
+  assert.equal(await viewer.locator("video").evaluate(video => video.muted), false);
+  assert.equal(await bar.getByRole("slider", { name: "Volume" }).inputValue(), "30");
+  await bar.getByRole("slider", { name: "Volume" }).fill("80");
+  assert.equal(await viewer.locator("video").evaluate(video => Math.round(video.volume * 100)), 80);
+  await popup.getByRole("button", { name: "Previous" }).click();
+  await popup.getByRole("button", { name: "Next" }).click();
+  assert.equal(await viewer.locator("video").evaluate(video => Math.round(video.volume * 100)), 80);
+  await bar.getByRole("button", { name: "Mute" }).click();
+  assert.equal(await viewer.locator("video").evaluate(video => video.muted), true);
+  assert.equal(await bar.getByRole("slider", { name: "Volume" }).inputValue(), "0");
+  const [frameBox, barBox] = await Promise.all([viewer.locator(".viewer-frame").boundingBox(), bar.boundingBox()]);
+  assert.ok(Math.abs(barBox.width - frameBox.width) < 1 && Math.abs(barBox.y + barBox.height - (frameBox.y + frameBox.height)) < 1, "the bar spans the video's bottom edge");
+  // The video box has the file's shape (720×900 in the API response) and fills
+  // the stage, before anything loads, so its controls sit on its bottom edge,
+  // inside the stage and above the save bar.
+  const [stage, video, save] = await Promise.all([popup.locator("#viewer-stage").boundingBox(), viewer.locator("video").boundingBox(), popup.locator("#viewer-save").boundingBox()]);
+  assert.ok(video.y >= stage.y && video.y + video.height <= stage.y + stage.height + 1 && video.y + video.height <= save.y, "video fits the stage");
+  assert.ok(Math.abs(video.width / video.height - 720 / 900) < 0.02, `video box ${video.width}×${video.height} keeps the file's shape`);
+  assert.ok(video.width >= stage.width - 20 || video.height >= stage.height - 2, "video fills the stage one way");
+  await popup.keyboard.press("ArrowRight");
+  assert.equal(await popup.locator("#viewer-position").textContent(), "3 / 3");
+  assert.equal(await popup.locator("#viewer-next").isHidden(), true);
+  // Saving here also marks the card's own button.
+  await popup.locator("#viewer-save").click();
+  assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/posts/Ccarousel33_3.jpg"]);
+  await popup.locator("#viewer-save.is-done").waitFor();
+  await popup.keyboard.press("Escape");
+  await viewer.waitFor({ state: "hidden" });
+  assert.equal(await popup.getByRole("button", { name: "Saved" }).count(), 1);
+  assert.equal(await popup.evaluate(() => document.activeElement?.getAttribute("aria-label")), "View: Photo 1");
+  await close(page, popup);
+});
+
+test("a Story video, which has no size of its own, gets its cover's shape in the viewer", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/natgeo/");
+  await popup.getByRole("button", { name: "View: Video 1" }).click();
+  const frame = popup.locator(".viewer-frame");
+  await frame.waitFor();
+  const box = await frame.boundingBox();
+  assert.ok(Math.abs(box.width / box.height - 1080 / 1350) < 0.02, `frame ${box.width}×${box.height}`);
+  await popup.keyboard.press("Escape");
+  await close(page, popup);
+});
+
+test("without an Instagram video on the page, the viewer follows the mute state last seen there, else starts muted", async () => {
+  for (const [seen, expected] of [[null, true], [false, false]]) {
+    const { page, popup } = await openPopup("https://www.instagram.com/natgeo/");
+    // What content.js records when an Instagram video's sound changes.
+    if (seen !== null) {
+      await page.evaluate(() => {
+        // Hidden: a video with no size does not count as one on the page.
+        const video = Object.assign(document.createElement("video"), { hidden: true });
+        document.body.append(video);
+        video.muted = true;
+        setTimeout(() => { video.muted = false; }, 20);
+      });
+      await page.waitForTimeout(100);
+    }
+    await popup.getByRole("button", { name: "View: Video 1" }).click();
+    await popup.locator(".viewer-frame video").waitFor();
+    assert.equal(await popup.locator(".viewer-frame video").evaluate(video => video.muted), expected, `seen ${seen}`);
+    await close(page, popup);
+  }
+});
+
+test("a Story page says the view is recorded and offers the profile instead", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/stories/natgeo/3100/");
+  await popup.locator(".card").nth(1).waitFor();
+  assert.match(await popup.locator("#story-tip-text").textContent(), /^Opening a Story in Instagram adds you to its viewer list/);
+  if (screenshots) await popup.locator("body").screenshot({ path: join(screenshots, "popup-story-tip.png") });
+  assert.equal(await popup.locator("#media-note").isHidden(), true);
+  await popup.getByRole("button", { name: /^Open @.natgeo.'s profile$/ }).click();
+  await page.waitForURL("https://www.instagram.com/natgeo/");
+  await close(page, popup);
+});
+
+test("profile Stories carry the anonymous badge", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/natgeo/");
+  await popup.locator(".card").nth(1).waitFor();
+  assert.equal(await popup.locator("#media-note").textContent(), "Anonymous: you won't show up as a viewer");
+  assert.equal(await popup.locator("#story-tip").isHidden(), true);
+  if (screenshots) {
+    for (const scheme of ["light", "dark"]) {
+      await popup.emulateMedia({ colorScheme: scheme });
+      await popup.locator("body").screenshot({ path: join(screenshots, `popup-stories-${scheme}.png`) });
+    }
+  }
   await close(page, popup);
 });
 
@@ -288,12 +420,15 @@ test("signed out, the popup explains and offers ig.tools", async () => {
   await close(page);
 });
 
-test("when Instagram limits requests, the popup asks to try again", async () => {
+test("when Instagram limits requests, Try again runs the request again", async () => {
   scenario = "busy";
   const { page, popup } = await openPopup("https://www.instagram.com/reel/Creel222222/");
   await popup.getByText("Instagram didn't respond").waitFor();
-  await close(page, popup);
   scenario = "ok";
+  await popup.getByRole("button", { name: "Try again" }).click();
+  await popup.getByRole("button", { name: "Download video" }).waitFor();
+  assert.equal(await popup.locator("#status").isHidden(), true);
+  await close(page, popup);
 });
 
 test("a deleted post is reported as unavailable", async () => {
@@ -329,7 +464,7 @@ test("profile tabs reuse the account and list Highlights, then a Highlight's ite
     await popup.waitForLoadState("networkidle");
     await popup.locator("body").screenshot({ path: join(screenshots, "popup-highlights.png") });
   }
-  assert.equal(await popup.locator("#media-note").textContent(), "Saving Highlights here doesn't add you to the viewer list.");
+  assert.equal(await popup.locator("#media-note").textContent(), "Anonymous: you won't show up as a viewer");
   // The second Highlight has no safe cover and no title, so it falls back to the tab name.
   assert.equal(await popup.locator(".highlight-open").count(), 2);
   assert.equal(await popup.locator(".highlight-cover").count(), 2);
@@ -503,12 +638,12 @@ test("page buttons are on after install and the switch turns them off and on", a
 test("the folder setting changes where the popup and the page buttons save", async () => {
   const { page, popup } = await openPopup("https://www.instagram.com/p/Cphoto11111/");
   await popup.locator(".card").first().waitFor();
-  assert.equal(await popup.locator("#actions-note").textContent(), "Saves to Downloads/ig.tools/natgeo/posts/");
+  assert.equal(plain(await popup.locator("#actions-note").textContent()), "Saves to Downloads/ig.tools/natgeo/posts/");
   await popup.getByRole("button", { name: "Settings" }).click();
   assert.equal(await popup.getByRole("radio", { name: /By account/ }).isChecked(), true);
   await popup.getByRole("radio", { name: /Straight to Downloads/ }).check();
   await popup.getByRole("button", { name: "Back" }).click();
-  assert.equal(await popup.locator("#actions-note").textContent(), "Saves to Downloads/");
+  assert.equal(plain(await popup.locator("#actions-note").textContent()), "Saves to Downloads/");
   await popup.getByRole("button", { name: "Download photo" }).click();
   assert.deepEqual(await waitForSaved(popup, 1), ["natgeo_Cphoto11111.jpg"]);
   await close(page, popup);

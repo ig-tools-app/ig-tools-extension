@@ -15,6 +15,10 @@ The ig.tools extension does not collect, store or transmit any personal data, an
 - While they are on, a script runs on www.instagram.com pages only. It looks at the page's layout to place download buttons and reads nothing else.
 - When you click a button, the post or Story address is passed to the extension, which requests the media from Instagram and downloads it, exactly as described above. Nothing is sent anywhere else.
 
+**Video sound**
+
+So videos in the popup play at the volume you use on Instagram, the popup reads instagram.com's own volume setting and whether Instagram's videos are muted, from the open Instagram tab. The download buttons' script notes when Instagram's videos are muted or unmuted, in that tab's memory only. Nothing is stored or sent.
+
 **Settings**
 
 The download buttons switch and your download folder choice are stored in your browser (`chrome.storage.local`). They are not synced or sent anywhere.

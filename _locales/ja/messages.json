@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Instagram用ダウンローダー",
+    "message": "ig.tools – Instagram匿名ストーリーズ閲覧・ダウンローダー",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "開いているInstagramページの写真・動画・リール・ストーリーズを保存。リンクはログイン不要のig.toolsでも開けます。",
+    "message": "プロフィールからInstagramのストーリーズやハイライトを匿名で閲覧・保存。閲覧者リストに表示されません。写真・動画・リールも保存できます。",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "プロフィール",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "ここからストーリーズを保存しても、閲覧者リストには表示されません。",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "Instagram上",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "ダウンロードフォルダに直接",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "ここからハイライトを保存しても、閲覧者リストには表示されません。",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "表示",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "閉じる",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "前へ",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "次へ",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "匿名：閲覧者リストに表示されません",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "Instagramでストーリーズを開くと閲覧者リストに表示されます。匿名で見るには、先にプロフィールを開いてそこからig.toolsを使ってください。",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "@$USER$ のプロフィールを開く",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "再生",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "一時停止",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "ミュート",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "ミュート解除",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "動画の再生位置",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "音量",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "再試行",
+    "description": "Button that runs a failed request again"
   }
 }

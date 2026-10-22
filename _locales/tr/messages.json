@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Instagram için İndirici",
+    "message": "ig.tools – Instagram için Anonim Hikâye Görüntüleyici ve İndirici",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Açık Instagram sayfasındaki fotoğraf, video, Reels ve hikâyeleri kaydedin. Bağlantıları giriş yapmadan ig.tools'ta açın.",
+    "message": "Instagram hikâye ve öne çıkanlarını profilden anonim olarak izleyin ve kaydedin. Fotoğraf, video ve Reels de kaydedin.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "Profil",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "Hikâyeleri buradan kaydetmek sizi görüntüleyenler listesine eklemez.",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "Instagram'da",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "Doğrudan İndirilenler'e",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "Öne Çıkanları buradan kaydetmek sizi görüntüleyenler listesine eklemez.",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "Görüntüle",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "Kapat",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "Önceki",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "Sonraki",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "Anonim: izleyici olarak görünmezsiniz",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "Instagram'da bir hikâyeyi açmak sizi görüntüleyenler listesine ekler. Anonim kalmak için önce profili açın ve ig.tools'u oradan kullanın.",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "@$USER$ profilini aç",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "Oynat",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "Duraklat",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "Sesi kapat",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "Sesi aç",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "Video ilerlemesi",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "Ses düzeyi",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "Tekrar dene",
+    "description": "Button that runs a failed request again"
   }
 }

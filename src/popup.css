@@ -127,8 +127,9 @@ svg { display: block; }
 
 .media { display: flex; flex-direction: column; gap: 10px; }
 .tabs { display: flex; gap: 2px; padding: 3px; border-radius: var(--r-md); background: var(--surface); }
+/* Tabs share the width by their text, so a long label (Arabic "Profile picture") is not cut. */
 .tabs [role="tab"] {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
   min-height: 32px;
   padding: 0 6px;
@@ -269,6 +270,7 @@ svg { display: block; }
 .status p { margin: 0; color: var(--muted); font-size: 13px; }
 .status a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
 .status a:hover { text-decoration: underline; }
+button.primary.small { justify-self: start; width: auto; height: 36px; padding: 0 16px; font-size: 14px; border-radius: var(--r-md); }
 .status .detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
 
 /* ---- Link form (pages without media) ---- */
@@ -407,3 +409,58 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 6px; backg
 /* A status that offers ig.tools already holds the link, so the footer copy goes. */
 body:has(#status:not([hidden]) #status-link:not([hidden])) #site-link { display: none; }
 [dir="rtl"] .path { direction: ltr; text-align: right; }
+
+/* ---- Anonymous badge (profile Stories and Highlights) and Story-page tip ---- */
+.anon-badge { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 12px; border-radius: var(--r-lg); background: var(--accent-soft); color: var(--text); font-size: 13px; font-weight: 600; }
+.anon-icon { flex: none; color: var(--accent); }
+.anon-icon svg { width: 18px; height: 18px; }
+.story-tip { display: grid; gap: 4px; padding: 10px 12px; border-radius: var(--r-lg); background: var(--accent-soft); font-size: 13px; }
+.story-tip p { margin: 0; }
+.story-tip .text-button { justify-self: start; }
+
+/* Each card opens the viewer; select and save sit above this layer. */
+.open { position: absolute; inset: 0; z-index: 0; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.pick, .save, .badge { z-index: 1; }
+.badge { pointer-events: none; }
+
+/* ---- Viewer: one item at a time over the whole popup ---- */
+body.viewing { height: 600px; }
+.viewer { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; background: #0b0a0d; color: #fff; }
+/* Focus starts on the viewer itself (Space plays and pauses); it needs no ring. */
+.viewer:focus, .viewer:focus-visible { outline: none; box-shadow: none; }
+.viewer-top { flex: none; display: flex; align-items: center; justify-content: space-between; height: 48px; padding-inline: 16px 8px; }
+.viewer-position { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* The media box is sized in popup.js from the file's own width and height, so
+   a video's controls sit on its bottom edge from the start (before loading,
+   the browser would size it to the poster and lay the controls out squeezed). */
+.viewer-stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding-inline: 8px; overflow: hidden; }
+.viewer-stage > img, .viewer-frame { display: block; flex: none; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--r-md); background: #000; }
+.viewer-frame { position: relative; overflow: hidden; }
+.viewer-frame video { display: block; width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+/* Our own control bar along the video's bottom edge (see videoFrame in popup.js). */
+.video-controls {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 10px 8px;
+  background: linear-gradient(transparent, rgb(0 0 0 / 65%));
+  color: #fff;
+  direction: ltr;
+}
+.video-controls button { flex: none; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: #fff; cursor: pointer; }
+.video-controls button:hover { background: rgb(255 255 255 / 16%); }
+.video-controls svg { width: 20px; height: 20px; }
+.vc-seek { flex: 1; min-width: 0; margin: 0; accent-color: #fff; cursor: pointer; }
+.vc-time { flex: none; font-size: 12px; font-variant-numeric: tabular-nums; }
+.vc-volume { flex: none; width: 56px; margin: 0; accent-color: #fff; cursor: pointer; }
+.viewer-icon { width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgb(255 255 255 / 12%); color: #fff; cursor: pointer; }
+.viewer-icon:hover { background: rgb(255 255 255 / 22%); }
+.viewer-icon svg { width: 20px; height: 20px; }
+.viewer-nav { position: absolute; inset-block-start: calc(50% - 20px); }
+.viewer-nav.prev { inset-inline-start: 8px; }
+.viewer-nav.next { inset-inline-end: 8px; }
+.viewer-bottom { flex: none; padding: 12px 16px 16px; }
+.viewer .primary.is-done { color: #fff; }

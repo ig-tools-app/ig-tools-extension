@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Descargador para Instagram",
+    "message": "ig.tools – Ver historias en anónimo y descargador para Instagram",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Guarda fotos, videos, Reels e historias de la página de Instagram abierta. Abre enlaces en ig.tools sin iniciar sesión.",
+    "message": "Ve y guarda historias y destacadas de Instagram en anónimo desde un perfil. También guarda fotos, videos y Reels.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "Perfil",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "Guardar historias aquí no te añade a la lista de espectadores.",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "En Instagram",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "Directamente en Descargas",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "Guardar destacadas aquí no te añade a la lista de espectadores.",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "Ver",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "Cerrar",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "Anterior",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "Siguiente",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "Anónimo: no aparecerás como espectador",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "Abrir una historia en Instagram te añade a su lista de espectadores. Para seguir en anónimo, abre primero el perfil y usa ig.tools desde ahí.",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "Abrir el perfil de @$USER$",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "Reproducir",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "Pausar",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "Silenciar",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "Activar sonido",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "Progreso del video",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "Volumen",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "Reintentar",
+    "description": "Button that runs a failed request again"
   }
 }

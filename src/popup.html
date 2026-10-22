@@ -13,6 +13,10 @@
   </header>
 
   <main id="main" class="body">
+    <div id="story-tip" class="story-tip" hidden>
+      <p id="story-tip-text"></p>
+      <button id="story-tip-open" type="button" class="text-button" hidden></button>
+    </div>
     <div id="source" class="source" hidden>
       <span class="avatar"><span id="source-picture" class="avatar-picture"></span></span>
       <span class="source-text">
@@ -26,6 +30,7 @@
         <button type="button" role="tab" data-tab="highlights" data-i18n="tabHighlights"></button>
         <button type="button" role="tab" data-tab="avatar" data-i18n="tabAvatar"></button>
       </div>
+      <p id="media-note" class="anon-badge" hidden><span class="anon-icon" aria-hidden="true"></span><span id="media-note-text"></span></p>
       <div id="media-head" class="media-head">
         <button id="back" type="button" class="back" hidden data-i18n="back"></button>
         <h2 id="media-title" class="sr-only"></h2>
@@ -33,10 +38,10 @@
         <button id="select-toggle" type="button" class="text-button" hidden></button>
       </div>
       <ul id="grid" class="grid"></ul>
-      <p id="media-note" class="note" hidden></p>
     </section>
     <div id="status" class="status" role="status" hidden>
       <p id="status-text"></p>
+      <button id="status-retry" type="button" class="primary small" hidden data-i18n="tryAgain"></button>
       <a id="status-link" href="#" hidden></a>
       <small id="status-detail" class="detail" hidden></small>
     </div>
@@ -109,6 +114,18 @@
       <a id="privacy" href="#" data-i18n="privacy"></a>
     </p>
   </main>
+  <div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-position" tabindex="-1" hidden>
+    <div class="viewer-top">
+      <span id="viewer-position" class="viewer-position"></span>
+      <button id="viewer-close" type="button" class="viewer-icon" data-i18n-label="close"></button>
+    </div>
+    <div id="viewer-stage" class="viewer-stage"></div>
+    <button id="viewer-prev" type="button" class="viewer-icon viewer-nav prev flip" data-i18n-label="previous"></button>
+    <button id="viewer-next" type="button" class="viewer-icon viewer-nav next flip" data-i18n-label="next"></button>
+    <div class="viewer-bottom">
+      <button id="viewer-save" type="button" class="primary"></button>
+    </div>
+  </div>
   <script type="module" src="popup.js"></script>
 </body>
 </html>

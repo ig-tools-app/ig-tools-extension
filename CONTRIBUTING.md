@@ -49,10 +49,17 @@ All CSS lives in [`src/content.css`](src/content.css) under `igt-` classes; noth
 - Colours follow the icon: the orange-to-magenta gradient is for the one main button, magenta for selection and links. Every colour has a dark value.
 - Layout: a header (logo, settings), a scrolling middle, then the main button and the ig.tools link pinned at the bottom. Chrome limits popups to 600px tall. The middle is a flex column, not a grid: grid rows in a scrolling box shrink and cards overlap.
 - Media: one item is shown large and saved with the main button. Several items get a grid (two columns for posts, three for Stories) with select (top-left) and save (bottom-right) controls; the main button saves the selection, or everything.
+- Viewer: tapping a card opens it over the whole popup (body set to 600px): full-size photo or the MP4 playing from Instagram's CDN, previous/next, Esc, and a save button that goes through the card's own save. Instagram's Stories viewer is never opened.
+  - The media box is sized from the file's width and height before it is shown. Story videos have no size in Instagram's response, so `filesFromItem` takes the cover image's.
+  - Videos use our own control bar (`videoFrame` in `src/popup.js`): inside a toolbar popup Chrome draws the native `controls` as a sliver in the corner, whatever the size or state. Tests open the popup as a tab, where native controls look fine, so check viewer changes in the real popup.
+  - Sound follows Instagram (`readInstagramSound`): the volume from instagram.com's `ig_volume_settings` in localStorage, and the mute state, which Instagram keeps only in memory, from a video on the page, else from what `content.js` saw (`window.__igtSound`, shared isolated world), else muted. Read once per popup, never written back.
+- On profile Stories and Highlights tabs, a badge says the view is anonymous (two-account test, October 2026). On a Story or Highlight page, where Instagram's viewer already recorded the view, a tip says so and offers the account's profile.
 - The link field only shows on pages without media. On Instagram pages, ig.tools is a link at the bottom.
 - Settings (the on-page buttons switch, shortcut, download folder) open from the gear and live in `chrome.storage.local` (`src/settings.js`). There is no default shortcut; Chrome does not let extensions set one, so the settings link to `chrome://extensions/shortcuts`.
 - The font stack lists named fonts before `system-ui`: on Chinese Windows, `system-ui` resolves to a font that draws no visible underscore at 125% scaling.
 - Use logical properties (`inset-inline-*`, `margin-inline-*`); Arabic is right-to-left.
+- Wrap usernames and paths inside translated text in `ltr()` (Unicode isolates): in Arabic, `@natgeo` otherwise shows as `natgeo@` and a path's trailing slash jumps to the front.
+- The viewer takes focus itself when it opens, so Space plays and pauses; Esc closes only the viewer, not the popup. When Instagram doesn't respond, the status offers Try again, which runs just that view again.
 
 ## Translations
 

@@ -71,6 +71,8 @@ test("a carousel keeps its order and numbers each file", () => {
 test("Stories and Highlights go to per-account folders", () => {
   const stories = mediaFromResult({ items: storyItems, owner: "natgeo" }, { kind: "story" });
   assert.deepEqual(stories.map(f => [f.type, f.filename]), [["image", "ig.tools/natgeo/stories/3100.jpg"], ["video", "ig.tools/natgeo/stories/3101.mp4"]]);
+  // Story videos have no size of their own (as on instagram.com); the cover's is used.
+  assert.deepEqual([stories[1].width, stories[1].height], [1080, 1350]);
   const highlight = mediaFromResult({ items: highlightItems, owner: "natgeo" }, { kind: "highlight", title: "Travel 2026", highlightId: "17900000000000001" });
   assert.equal(highlight[0].filename, "ig.tools/natgeo/highlights/Travel 2026/3200.jpg");
 });

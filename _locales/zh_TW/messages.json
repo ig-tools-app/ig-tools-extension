@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Instagram 下載工具",
+    "message": "ig.tools – Instagram 匿名限時動態查看與下載工具",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "儲存目前 Instagram 頁面中的相片、影片、Reels 和限時動態，也能在 ig.tools 免登入開啟連結。",
+    "message": "在個人檔案匿名查看和儲存 Instagram 限時動態與精選動態，不會出現在觀看者名單中。也能儲存相片、影片和 Reels。",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "個人檔案",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "在這裡儲存限時動態，不會出現在觀看者名單中。",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "在 Instagram 上",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "直接放進下載資料夾",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "在這裡儲存精選動態，不會出現在觀看者名單中。",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "查看",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "關閉",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "上一個",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "下一個",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "匿名：不會出現在觀看者名單中",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "在 Instagram 裡開啟限時動態會出現在觀看者名單中。想匿名，請先開啟對方個人檔案，再從那裡使用 ig.tools。",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "開啟 @$USER$ 的個人檔案",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "播放",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "暫停",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "靜音",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "取消靜音",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "影片進度",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "音量",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "重試",
+    "description": "Button that runs a failed request again"
   }
 }

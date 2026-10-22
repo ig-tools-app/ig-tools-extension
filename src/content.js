@@ -365,6 +365,13 @@
   function schedule() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(scan); }
   }
+  // Instagram keeps its mute state in memory only. The popup's viewer reads it
+  // from a playing video; on a page without one it reads what was seen here
+  // (this script and the popup's injected functions share the isolated world).
+  document.addEventListener("volumechange", event => {
+    if (event.target instanceof HTMLVideoElement) window.__igtSound = { muted: event.target.muted };
+  }, true);
+
   // ---- On and off ----
   // The popup's switch is stored in chrome.storage; pages already open follow it
   // without a reload. Off removes every button and marker, so on starts afresh.

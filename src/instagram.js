@@ -91,8 +91,9 @@ function filesFromItem(item, owner) {
       type: isVideo ? "video" : "image",
       url: source.url,
       previewUrl: preview?.url ?? null,
-      width: source.width,
-      height: source.height,
+      // Story videos come without a size; their cover image has the same shape.
+      width: source.width ?? images[0]?.width ?? null,
+      height: source.height ?? images[0]?.height ?? null,
       owner: item?.user?.username ?? owner ?? null,
       code: item?.code ?? String(item?.pk ?? "").split("_")[0],
     }];

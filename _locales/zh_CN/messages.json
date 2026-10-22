@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Instagram 下载工具",
+    "message": "ig.tools – Instagram 匿名快拍查看与下载工具",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "保存当前 Instagram 页面中的图片、视频、Reels 和快拍，也能在 ig.tools 免登录打开链接。",
+    "message": "在主页匿名查看和保存 Instagram 快拍与精选快拍，不会出现在观看者名单中。也能保存图片、视频和 Reels。",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "主页",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "在这里保存快拍，不会出现在观看者名单中。",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "在 Instagram 上",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "直接放进下载文件夹",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "在这里保存精选快拍，不会出现在观看者名单中。",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "查看",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "关闭",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "上一个",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "下一个",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "匿名：不会出现在观看者名单中",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "在 Instagram 里打开快拍会出现在观看者名单中。想匿名，请先打开对方主页，再从那里使用 ig.tools。",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "打开 @$USER$ 的主页",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "播放",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "暂停",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "静音",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "取消静音",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "视频进度",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "音量",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "重试",
+    "description": "Button that runs a failed request again"
   }
 }

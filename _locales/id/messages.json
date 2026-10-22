@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "ig.tools – Pengunduh untuk Instagram",
+    "message": "ig.tools – Lihat Story Anonim & Pengunduh untuk Instagram",
     "description": "Extension name in the Chrome Web Store (max 75 characters)"
   },
   "extDescription": {
-    "message": "Simpan foto, video, Reels, dan Story dari halaman Instagram yang terbuka. Buka tautan di ig.tools tanpa login.",
+    "message": "Lihat dan simpan Story dan Sorotan Instagram secara anonim dari profil. Simpan juga foto, video, dan Reels.",
     "description": "Store and extensions-page summary (max 132 characters)"
   },
   "openButton": {
@@ -285,10 +285,6 @@
     "message": "Profil",
     "description": "Kind of page, shown under the username"
   },
-  "storiesNote": {
-    "message": "Menyimpan Story di sini tidak menambahkan Anda ke daftar penonton.",
-    "description": "Note under Stories listed on a profile page (tested in October 2026)"
-  },
   "settingsOnInstagram": {
     "message": "Di Instagram",
     "description": "Settings group title"
@@ -353,8 +349,66 @@
     "message": "Langsung ke Unduhan",
     "description": "Folder option: every file straight in the Downloads folder"
   },
-  "highlightsNote": {
-    "message": "Menyimpan Sorotan di sini tidak menambahkan Anda ke daftar penonton.",
-    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
+  "view": {
+    "message": "Lihat",
+    "description": "Accessible name prefix of a card's button that opens the viewer, followed by the item name"
+  },
+  "close": {
+    "message": "Tutup",
+    "description": "Closes the viewer"
+  },
+  "previous": {
+    "message": "Sebelumnya",
+    "description": "Viewer: previous item"
+  },
+  "next": {
+    "message": "Berikutnya",
+    "description": "Viewer: next item"
+  },
+  "anonymousBadge": {
+    "message": "Anonim: Anda tidak muncul sebagai penonton",
+    "description": "Badge on a profile's Stories and Highlights tabs (two-account test, October 2026)"
+  },
+  "storyPageTip": {
+    "message": "Membuka Story di Instagram menambahkan Anda ke daftar penonton. Agar tetap anonim, buka profilnya dulu dan gunakan ig.tools dari sana.",
+    "description": "Shown on a Story or Highlight page, where Instagram's viewer already recorded the view"
+  },
+  "openProfile": {
+    "message": "Buka profil @$USER$",
+    "description": "Button in the Story-page tip; $USER$ is the account's username",
+    "placeholders": {
+      "user": {
+        "content": "$1",
+        "example": "natgeo"
+      }
+    }
+  },
+  "play": {
+    "message": "Putar",
+    "description": "Video control in the viewer"
+  },
+  "pause": {
+    "message": "Jeda",
+    "description": "Video control in the viewer"
+  },
+  "mute": {
+    "message": "Bisukan",
+    "description": "Video control in the viewer"
+  },
+  "unmute": {
+    "message": "Bunyikan",
+    "description": "Video control in the viewer"
+  },
+  "seek": {
+    "message": "Progres video",
+    "description": "Accessible name of the video progress bar in the viewer"
+  },
+  "volume": {
+    "message": "Volume",
+    "description": "Accessible name of the volume slider in the viewer"
+  },
+  "tryAgain": {
+    "message": "Coba lagi",
+    "description": "Button that runs a failed request again"
   }
 }
