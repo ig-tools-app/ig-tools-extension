@@ -52,7 +52,7 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 | Asset | Size | File |
 | --- | --- | --- |
 | Icon | 128×128 | `icons/icon-128.png` |
-| Screenshots | 1280×800 | `store/images/screenshot-1-popup.png` (to be replaced with one showing the saved-media grid) |
+| Screenshots | 1280×800 | `store/images/screenshot-1-anonymous-stories.png`, `screenshot-2-viewer.png`, `screenshot-3-save.png`, `screenshot-4-settings.png` (upload in this order; the real popup on demo content, no real accounts) |
 | Small promo tile | 440×280 | `store/images/promo-small-440x280.png` |
 
 ## Privacy practices
