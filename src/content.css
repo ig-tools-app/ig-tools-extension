@@ -49,8 +49,9 @@
 .igt-tile-button[data-igt-state="failed"] { opacity: 1; }
 @media (hover: none) { .igt-tile-button { opacity: 1; } }
 
-/* Carousel: one slide, top-right corner of the media (Instagram uses the other
-   corners and the edges for tags, sound, arrows and dots). */
+/* Carousels and single photos or videos: top-right corner of the media (Instagram
+   uses the other corners and the edges for tags, sound, arrows and dots). On a
+   carousel it saves the slide on screen. */
 .igt-slide-frame { position: relative; }
 .igt-slide-button {
   position: absolute;

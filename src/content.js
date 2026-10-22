@@ -12,6 +12,7 @@
 // - carousel: a <ul> whose <li> slides sit at translateX(index × width) inside a
 //   clipping frame; the slide whose left edge meets the frame is on screen. A
 //   button in the frame's top-right corner saves that slide only.
+// - single photo or video: the same top-right button on the post's largest media.
 // - Reels player: an item in the vertical action column, between share and save.
 // - Stories and Highlights: a control in the playing card's header, before
 //   "more"; a floating button only if that header is not found.
@@ -161,6 +162,7 @@
       describeOnHover(button);
       parts.host.classList.add("igt-slide-frame");
       parts.host.append(button);
+      clearCorner(parts.host);
     }
   }
 
@@ -182,6 +184,59 @@
       describeOnHover(button);
       bookmarkGroup.prepend(button);
     }
+  }
+
+  // ---- Single photos and videos: the same top-right button as on carousels ----
+  // From a post's action row, the post is the nearest ancestor holding a large
+  // photo or video (feed posts are <article>s; post pages and dialogs are not).
+  // Media inside a <li> is a carousel slide, which has its own button.
+  const isLarge = el => el.getBoundingClientRect().width >= 250;
+  const largestMedia = scope => [...scope.querySelectorAll("img, video")].filter(isLarge)
+    .sort((a, b) => b.getBoundingClientRect().width * b.getBoundingClientRect().height - a.getBoundingClientRect().width * a.getBoundingClientRect().height)[0];
+
+  function addMediaButtons() {
+    for (const section of document.querySelectorAll("section[data-igt-done]:not([data-igt-media])")) {
+      // A few levels up at most, and never past the post; media may still be loading.
+      let scope = section.parentElement, media = null;
+      for (let level = 0; scope && level < 12 && !(media = largestMedia(scope)); level++) {
+        if (scope.matches("article, [role=dialog], main")) break;
+        scope = scope.parentElement;
+      }
+      if (!media) continue;
+      section.dataset.igtMedia = "1";
+      const code = postCodeFor(section);
+      if (!code || media.closest("li")) continue;
+      // The outermost wrapper the size of the media, so Instagram's overlays sit inside it.
+      const box = media.getBoundingClientRect();
+      let host = media.parentElement;
+      while (host.parentElement && scope.contains(host.parentElement) && host.parentElement !== scope) {
+        const outer = host.parentElement.getBoundingClientRect();
+        if (Math.abs(outer.width - box.width) > 4 || Math.abs(outer.height - box.height) > 4) break;
+        host = host.parentElement;
+      }
+      if (host.querySelector(":scope > .igt-media-button")) continue;
+      host.classList.add("igt-slide-frame");
+      host.append(makeButton("igt-slide-button igt-media-button", postUrl(code)));
+      clearCorner(host);
+    }
+  }
+
+  // Feed videos carry the post header (avatar, Follow, "more") over the top of
+  // the media; the corner button then moves below Instagram's own controls.
+  function clearCorner(host) {
+    const button = host.querySelector(":scope > .igt-slide-button");
+    if (!button || button.dataset.igtCorner) return;
+    button.dataset.igtCorner = "1";
+    host.addEventListener("pointerenter", () => {
+      // Every control in the header row counts, so the button lines up under the whole row.
+      const frame = host.getBoundingClientRect();
+      const bottoms = [...host.querySelectorAll("a, button, [role=button], [role=link]")]
+        .filter(el => !el.closest(".igt-button"))
+        .map(el => el.getBoundingClientRect())
+        .filter(box => box.width > 0 && box.height < 64 && box.top < frame.top + 64)
+        .map(box => box.bottom - frame.top);
+      button.style.insetBlockStart = bottoms.length ? `${Math.round(Math.max(...bottoms) + 8)}px` : "";
+    });
   }
 
   function addGridButtons() {
@@ -298,6 +353,7 @@
     scheduled = false;
     addActionButtons();
     addCarouselButtons();
+    addMediaButtons();
     addGridButtons();
     addReelButtons();
     addStoryButtons();

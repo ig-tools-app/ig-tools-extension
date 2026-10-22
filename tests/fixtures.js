@@ -92,9 +92,15 @@ export const actionRow = `<section style="display:flex;justify-content:space-bet
 <div><div role="button" class="bookmark">${icon("Save")}</div></div>
 </section>`;
 export const feedHtml = `<main>
-<article><a href="/p/Cphoto11111/"><time>1h</time></a><img src="${cdn}/photo_640.jpg" width="400" height="400">${actionRow}</article>
+<article><a href="/p/Cphoto11111/"><time>1h</time></a><div class="media" style="width:400px;height:400px"><div><img src="${cdn}/photo_640.jpg" width="400" height="400" style="display:block"></div></div>${actionRow}</article>
 <article><a href="/p/Cmissing999/"><time>2h</time></a>${actionRow}</article>
 </main>`;
+// A single video in the feed, with the post header (Follow, "more") laid over
+// the top of the video as instagram.com does for Reels in the feed.
+export const feedVideoHtml = `<main><article><a href="/reel/Creel222222/"><time>4h</time></a>
+<div class="media" style="position:relative;width:400px;height:500px"><video width="400" height="500" style="display:block"></video>
+<div class="overlay-header" style="position:absolute;top:0;left:0;right:0;height:42px;display:flex;justify-content:flex-end;align-items:center;gap:8px;padding-right:12px"><div role="button" style="width:40px;height:18px">Follow</div><div role="button" style="width:24px;height:24px">${icon("More")}</div></div>
+</div>${actionRow}</article></main>`;
 // A carousel post page: slides at translateX(index × width) in a clipping frame,
 // plus Instagram's 1px end marker. Tests move .track to change the slide on screen.
 const slide = (offset, inner) => `<li style="position:absolute;top:0;left:0;width:400px;height:500px;transform:translateX(${offset}px)">${inner}</li>`;

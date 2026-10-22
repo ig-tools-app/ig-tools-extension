@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { bigCarouselPost, carouselPageHtml, reelOverFeedHtml, carouselPost, feedCarouselHtml, feedHtml, gridHtml, reelsPageHtml, storyPageHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
+import { bigCarouselPost, carouselPageHtml, feedVideoHtml, reelOverFeedHtml, carouselPost, feedCarouselHtml, feedHtml, gridHtml, reelsPageHtml, storyPageHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
 import { shortcodeToId } from "../../src/instagram.js";
 
 const root = fileURLToPath(new URL("../..", import.meta.url));
@@ -115,7 +115,7 @@ before(async () => {
     const pathname = new URL(url).pathname;
     const header = scenario === "avatar-on-page" && pathname === "/natgeo/" ? profileHeader
       : pathname === "/" ? feedHtml : pathname === "/gridacct/" ? gridHtml : pathname === "/p/Ccarousel33/" ? carouselPageHtml
-      : pathname === "/feedcarousel/" ? feedCarouselHtml : pathname === "/reels/Creel222222/" ? (scenario === "reel-over-feed" ? reelOverFeedHtml : reelsPageHtml)
+      : pathname === "/feedcarousel/" ? feedCarouselHtml : pathname === "/feedvideo/" ? feedVideoHtml : pathname === "/reels/Creel222222/" ? (scenario === "reel-over-feed" ? reelOverFeedHtml : reelsPageHtml)
       : pathname.startsWith("/stories/") && scenario !== "no-story-header" ? storyPageHtml() : "";
     return route.fulfill({ status: 200, contentType: "text/html", headers: { "Set-Cookie": "csrftoken=test-token; Path=/" }, body: profileHtml(profileIds[new URL(url).pathname], header) });
   });
@@ -666,11 +666,53 @@ test("a carousel gets a top-right button that saves only the slide on screen", a
   await closePage(page);
 });
 
-test("single posts and Highlight trays get no slide button", async () => {
+test("a single photo gets the same top-right button as a carousel slide", async () => {
+  await recordBackgroundDownloads();
   const page = await context.newPage();
   await page.goto("https://www.instagram.com/");
-  await page.locator(".igt-action").first().waitFor();
-  assert.equal(await page.locator(".igt-slide-button").count(), 0);
+  const button = page.locator(".igt-media-button");
+  await button.waitFor({ state: "attached" });
+  // Only the post with a photo; the second post has none.
+  assert.equal(await page.locator(".igt-media-button").count(), 1);
+  assert.equal(await button.evaluate(b => b.parentElement.classList.contains("media")), true);
+  assert.equal(await button.evaluate(b => getComputedStyle(b).opacity), "0");
+  await page.locator("article .media").first().hover();
+  await page.waitForTimeout(250);
+  assert.equal(await button.evaluate(b => getComputedStyle(b).opacity), "1");
+  const [media, box] = await Promise.all([page.locator("article .media").first().boundingBox(), button.boundingBox()]);
+  assert.ok(box.x + box.width > media.x + media.width - 24 && box.y < media.y + 24, "top-right corner");
+  // The action row button stays a plain "download" on single posts.
   assert.equal(await page.locator(".igt-action").first().getAttribute("aria-label"), "Download with ig.tools");
+  await button.click();
+  await page.locator('.igt-media-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Cphoto11111.jpg"]);
   await closePage(page);
+});
+
+test("on a feed video the top-right button moves below the header Instagram lays over it", async () => {
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/feedvideo/");
+  const button = page.locator(".igt-media-button");
+  await button.waitFor({ state: "attached" });
+  await page.locator(".media").hover();
+  await page.waitForTimeout(250);
+  const [more, box] = await Promise.all([page.locator(".overlay-header [role=button]").last().boundingBox(), button.boundingBox()]);
+  assert.ok(box.y >= more.y + more.height + 4, `button at ${box.y} clears "more" ending at ${more.y + more.height}`);
+  await button.click();
+  await page.locator('.igt-media-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Creel222222.mp4"]);
+  await closePage(page);
+});
+
+test("carousels get no second button for the whole post's media", async () => {
+  for (const path of ["/p/Ccarousel33/", "/feedcarousel/"]) {
+    const page = await context.newPage();
+    await page.goto(`https://www.instagram.com${path}`);
+    await page.locator(".igt-slide-button").waitFor({ state: "attached" });
+    await page.waitForTimeout(200);
+    assert.equal(await page.locator(".igt-slide-button").count(), 1, path);
+    assert.equal(await page.locator(".igt-media-button").count(), 0, path);
+    await closePage(page);
+  }
 });
