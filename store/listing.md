@@ -21,8 +21,8 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > • Photos in the largest size Instagram provides
 > • Videos and Reels as MP4 with sound, never re-encoded and with no added watermark
 > • Every slide of a carousel, and all current Stories of an account
-> • On a profile page, the account's current Stories are listed without opening them. Saving them this way doesn't add you to the Story's viewer list. If you open a Story in Instagram itself, Instagram records the view as usual.
-> • Profile pages also list the account's Highlights and its full-size profile picture
+> • On a profile page, the account's current Stories and its Highlights are listed without opening them. Saving them this way doesn't add you to the viewer list. If you open a Story or Highlight in Instagram itself, Instagram records the view as usual.
+> • Profile pages also offer the account's full-size profile picture
 > • Download buttons right on Instagram: next to the bookmark on posts, on photos, videos and each carousel slide, on profile grids, and on Stories and Reels. Turn them off in the settings if you prefer the popup alone.
 > • Choose where files go: sorted into a folder per account (with posts, stories and highlights folders), all in one ig.tools folder, or straight in Downloads
 > • Set your own keyboard shortcut to open it

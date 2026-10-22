@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "ダウンロードフォルダに直接",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "ここからハイライトを保存しても、閲覧者リストには表示されません。",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "Straight to Downloads",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "Saving Highlights here doesn't add you to the viewer list.",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

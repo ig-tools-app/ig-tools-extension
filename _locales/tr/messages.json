@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "Doğrudan İndirilenler'e",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "Öne Çıkanları buradan kaydetmek sizi görüntüleyenler listesine eklemez.",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

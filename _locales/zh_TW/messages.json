@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "直接放進下載資料夾",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "在這裡儲存精選動態，不會出現在觀看者名單中。",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

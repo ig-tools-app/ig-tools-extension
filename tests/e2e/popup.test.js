@@ -327,6 +327,7 @@ test("profile tabs reuse the account and list Highlights, then a Highlight's ite
     await popup.waitForLoadState("networkidle");
     await popup.locator("body").screenshot({ path: join(screenshots, "popup-highlights.png") });
   }
+  assert.equal(await popup.locator("#media-note").textContent(), "Saving Highlights here doesn't add you to the viewer list.");
   // The second Highlight has no safe cover and no title, so it falls back to the tab name.
   assert.equal(await popup.locator(".highlight-open").count(), 2);
   assert.equal(await popup.locator(".highlight-cover").count(), 2);
@@ -338,6 +339,7 @@ test("profile tabs reuse the account and list Highlights, then a Highlight's ite
   await popup.locator(".card").first().waitFor();
   assert.equal(await popup.locator("#media-title").textContent(), "Travel 2026");
   assert.equal(await popup.getByRole("button", { name: "Back" }).isVisible(), true);
+  assert.equal(await popup.locator("#media-note").isVisible(), true);
   await popup.getByRole("button", { name: "Download: Photo 1" }).click();
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/highlights/Travel 2026/3200.jpg"]);
   await popup.getByRole("button", { name: "Back" }).click();

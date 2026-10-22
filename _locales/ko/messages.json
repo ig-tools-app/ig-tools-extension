@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "다운로드 폴더에 바로",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "여기서 하이라이트를 저장해도 조회자 목록에 표시되지 않습니다.",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

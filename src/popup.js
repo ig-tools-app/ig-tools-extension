@@ -277,8 +277,13 @@ async function showStoriesTab() {
   if (!profile.stories.length) return showStatus(message("noStories"), browseLink(), profile.storiesDetail);
   status.hidden = true;
   renderMedia(profile.stories, "story");
-  // Tested in October 2026 for this profile-page request only; see README.
-  mediaNote.textContent = message("storiesNote");
+  showNote("storiesNote");
+}
+
+// Tested in October 2026 with two accounts for these profile-page requests
+// only (the Stories viewer is never opened); see README.
+function showNote(key) {
+  mediaNote.textContent = message(key);
   mediaNote.hidden = false;
 }
 
@@ -321,6 +326,7 @@ async function showHighlightsTab() {
     item.append(button);
     grid.append(item);
   }
+  showNote("highlightsNote");
 }
 
 async function showHighlight(highlight) {
@@ -338,6 +344,7 @@ async function showHighlight(highlight) {
   if (!highlight.files.length) return showStatus(message("unavailable"), browseLink());
   status.hidden = true;
   renderMedia(highlight.files, "story");
+  showNote("highlightsNote");
   back.focus();
 }
 

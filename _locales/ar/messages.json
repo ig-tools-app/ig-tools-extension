@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "مباشرة إلى التنزيلات",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "حفظ القصص المميزة من هنا لا يضيفك إلى قائمة المشاهدين.",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }

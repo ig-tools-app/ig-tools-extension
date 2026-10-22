@@ -352,5 +352,9 @@
   "folderDownloads": {
     "message": "直接放进下载文件夹",
     "description": "Folder option: every file straight in the Downloads folder"
+  },
+  "highlightsNote": {
+    "message": "在这里保存精选快拍，不会出现在观看者名单中。",
+    "description": "Note under Highlights listed on a profile page (tested in October 2026)"
   }
 }
