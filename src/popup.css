@@ -443,9 +443,10 @@ body.viewing { height: 600px; }
   inset-inline: 0;
   inset-block-end: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 24px 10px 8px;
+  gap: 2px 6px;
+  padding: 28px 8px 6px;
   background: linear-gradient(transparent, rgb(0 0 0 / 65%));
   color: #fff;
   direction: ltr;
@@ -453,7 +454,9 @@ body.viewing { height: 600px; }
 .video-controls button { flex: none; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: #fff; cursor: pointer; }
 .video-controls button:hover { background: rgb(255 255 255 / 16%); }
 .video-controls svg { width: 20px; height: 20px; }
-.vc-seek { flex: 1; min-width: 0; margin: 0; accent-color: #fff; cursor: pointer; }
+/* The progress bar has a row of its own: portrait Stories leave too little width beside the buttons. */
+.vc-seek { order: -1; flex: 1 0 100%; min-width: 0; height: 16px; margin: 0; accent-color: #fff; cursor: pointer; }
+.vc-mute { margin-inline-start: auto; }
 .vc-time { flex: none; font-size: 12px; font-variant-numeric: tabular-nums; }
 .vc-volume { flex: none; width: 56px; margin: 0; accent-color: #fff; cursor: pointer; }
 .viewer-icon { width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgb(255 255 255 / 12%); color: #fff; cursor: pointer; }
