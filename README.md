@@ -1,5 +1,7 @@
 # ig.tools for Chrome
 
+![ig.tools: Anonymous Story Viewer & Downloader for Instagram](store/images/promo-marquee-1400x560.png)
+
 View and save Instagram Stories and Highlights anonymously from a profile, and save photos, videos, Reels and Stories from the Instagram page you have open, straight from your browser. When you are signed out, or want to look without signing in, open the same link in [ig.tools](https://ig.tools/).
 
 - **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; tap one to view it full size or play it, and save one, a selection, or all of them.
@@ -9,6 +11,14 @@ View and save Instagram Stories and Highlights anonymously from a profile, and s
 - **Shortcut**: none by default. To open the popup from the keyboard, choose a key at `chrome://extensions/shortcuts` (the popup's settings link there).
 - **Download folder**, chosen in the popup's settings: by account (`Downloads/ig.tools/<username>/` with `posts/`, `stories/` and `highlights/<title>/` folders, the default), all in one `Downloads/ig.tools/` folder, or straight in `Downloads/`. Without account folders, file names start with the username, e.g. `natgeo_story_3100.mp4`. Chrome extensions can only save inside your Downloads folder; to use another place, change Chrome's download location.
 - 10 languages, light and dark themes.
+
+<p>
+  <a href="store/images/screenshot-1-anonymous-stories.png"><img src="store/images/screenshot-1-anonymous-stories.png" alt="A profile's Stories in the popup, marked anonymous" width="32%"></a>
+  <a href="store/images/screenshot-2-viewer.png"><img src="store/images/screenshot-2-viewer.png" alt="A Story video playing in the popup's viewer" width="32%"></a>
+  <a href="store/images/screenshot-3-on-instagram.png"><img src="store/images/screenshot-3-on-instagram.png" alt="Download buttons on a post: next to the bookmark and on the photo" width="32%"></a>
+</p>
+
+The screenshots show demo content: illustrated media and a made-up account.
 
 Saving happens locally: the extension asks Instagram for the media on the open page using your existing Instagram session in this browser, and Chrome downloads the files from Instagram's servers. Nothing is sent to ig.tools or anywhere else. See [PRIVACY.md](PRIVACY.md).
 
