@@ -1,5 +1,7 @@
 import { siteUrl, inputFromTabUrl } from "./site.js";
 import { mediaForUrl } from "./page-media.js";
+import { layoutFilename } from "./instagram.js";
+import { getSettings } from "./settings.js";
 
 const instagramPages = ["*://instagram.com/*", "*://*.instagram.com/*"];
 
@@ -27,14 +29,14 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   chrome.tabs.create({ url: siteUrl(input, chrome.i18n.getUILanguage()), index: tab ? tab.index + 1 : undefined });
 });
 
-// ---- On-page download buttons (optional) ----
-// The buttons need access to instagram.com, an optional permission the user
-// grants from the popup. The content script is registered only while it is held.
+// ---- On-page download buttons ----
+// On by default; the popup's switch stores the choice and the content script is
+// registered only while it is on. Pages already open follow the setting through
+// storage.onChanged in content.js.
 
-const instagramOrigins = ["https://www.instagram.com/*"];
 const pageButtonsScript = {
   id: "page-buttons",
-  matches: instagramOrigins,
+  matches: ["https://www.instagram.com/*"],
   js: ["src/content.js"],
   css: ["src/content.css"],
   runAt: "document_idle",
@@ -42,7 +44,7 @@ const pageButtonsScript = {
 };
 
 async function syncPageButtons() {
-  const enabled = await chrome.permissions.contains({ origins: instagramOrigins });
+  const { pageButtons: enabled } = await getSettings();
   const registered = (await chrome.scripting.getRegisteredContentScripts({ ids: [pageButtonsScript.id] })).length > 0;
   if (enabled && !registered) await chrome.scripting.registerContentScripts([pageButtonsScript]);
   if (!enabled && registered) await chrome.scripting.unregisterContentScripts({ ids: [pageButtonsScript.id] });
@@ -50,22 +52,20 @@ async function syncPageButtons() {
 }
 
 chrome.runtime.onStartup.addListener(syncPageButtons);
-chrome.permissions.onAdded.addListener(syncPageButtons);
-chrome.permissions.onRemoved.addListener(syncPageButtons);
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && "pageButtons" in changes) syncPageButtons();
+});
 
 // A button on an Instagram page asks for the media at `url` (a post, Story or
 // Highlight address). The media is read in that tab and saved here.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message?.type === "page-buttons-sync") {
-    syncPageButtons().then(enabled => sendResponse({ enabled }));
-    return true;
-  }
   if (message?.type !== "download-page-media" || !sender.tab?.id) return false;
   (async () => {
     const media = await mediaForUrl(sender.tab.id, message.url, Number.isInteger(message.index) ? message.index : null);
     if (!media.files) return sendResponse(media);
+    const { folderLayout } = await getSettings();
     try {
-      for (const file of media.files) await chrome.downloads.download({ url: file.url, filename: file.filename, conflictAction: "uniquify" });
+      for (const file of media.files) await chrome.downloads.download({ url: file.url, filename: layoutFilename(file.filename, folderLayout), conflictAction: "uniquify" });
       sendResponse({ count: media.files.length });
     } catch (error) {
       sendResponse({ reason: "failed", detail: `download ${error?.message ?? ""}`.trim() });

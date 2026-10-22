@@ -1,6 +1,9 @@
 import { REPOSITORY, instagramInput, inputFromTabUrl, siteUrl } from "./site.js";
-import { avatarFile, highlightsFromResult, mediaFromResult, pageFromUrl, safeMediaUrl, shortcodeToId } from "./instagram.js";
+import { avatarFile, highlightsFromResult, layoutFilename, mediaFromResult, pageFromUrl, safeMediaUrl, shortcodeToId } from "./instagram.js";
 import { collectFromPage } from "./collect.js";
+import { getSettings, setSetting } from "./settings.js";
+
+const settings = await getSettings();
 
 const message = (key, ...substitutions) => chrome.i18n.getMessage(key, substitutions.map(String));
 const $ = id => document.getElementById(id);
@@ -18,7 +21,6 @@ const icons = {
   play: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
   settings: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
   back: svg('<path d="m15 18-6-6 6-6"/>'),
-  close: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
   external: svg('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
   link: svg('<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>'),
 };
@@ -33,7 +35,6 @@ for (const element of document.querySelectorAll("[data-i18n-label]")) {
 input.placeholder = message("placeholder");
 $("settings-open").innerHTML = icons.settings;
 $("settings-back").innerHTML = icons.back;
-$("tip-dismiss").innerHTML = icons.close;
 document.querySelector(".field-icon").innerHTML = icons.link;
 
 // `tool` is an ig.tools page slug, e.g. the profile picture downloader.
@@ -115,7 +116,7 @@ function updateHead() {
 async function save(file, button) {
   button.disabled = true;
   try {
-    await chrome.downloads.download({ url: file.url, filename: file.filename, conflictAction: "uniquify" });
+    await chrome.downloads.download({ url: file.url, filename: layoutFilename(file.filename, settings.folderLayout), conflictAction: "uniquify" });
     file.saved = true;
     if (button.classList.contains("save")) {
       button.innerHTML = icons.done;
@@ -215,9 +216,17 @@ function renderMedia(files, layout) {
     update();
   };
   actions.hidden = false;
-  // Every file of a view goes to the same folder.
-  actionsNote.textContent = message("savesTo", `Downloads/${files[0].filename.split("/").slice(0, -1).join("/")}/`);
+  noteFile = files[0];
+  updateNote();
   update();
+}
+
+// Every file of a view goes to the same folder; the line under the main button names it.
+let noteFile;
+function updateNote() {
+  if (!noteFile) return;
+  const folder = layoutFilename(noteFile.filename, settings.folderLayout).split("/").slice(0, -1).join("/");
+  actionsNote.textContent = message("savesTo", `Downloads/${folder ? `${folder}/` : ""}`);
 }
 
 let tabId;
@@ -393,7 +402,6 @@ async function loadPage(tab) {
   const page = tab?.url ? pageFromUrl(tab.url) : null;
   const siteInput = tab?.url && inputFromTabUrl(tab.url);
   if (siteInput) input.value = siteInput;
-  if (page) showTip();
   if (!page || page.kind === "other") return showStatus(message("notMediaPage")), showForm();
   if (page.kind === "profile") {
     profile.username = page.username;
@@ -447,10 +455,11 @@ $("shortcut-change").addEventListener("click", event => {
   chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
   window.close();
 });
-// The shortcut is unset when another extension already uses Alt+Shift+S.
+// There is no default shortcut; the user picks one in Chrome's shortcut settings.
 chrome.commands.getAll().then(commands => {
   const keys = commands.find(command => command.name === "_execute_action")?.shortcut;
   const slot = $("shortcut-keys");
+  $("shortcut-change").textContent = message(keys ? "shortcutChange" : "shortcutSet");
   if (!keys) return void (slot.textContent = message("shortcutNotSet"));
   const [before, after = ""] = message("shortcutHelp", "⁣").split("⁣");
   slot.replaceChildren(before);
@@ -463,46 +472,30 @@ chrome.commands.getAll().then(commands => {
   slot.append(after);
 });
 
-// ---- On-page buttons: an optional permission for instagram.com ----
+// ---- On-page buttons and download folder ----
 
 const pageButtons = $("page-buttons");
-const instagramOrigins = ["https://www.instagram.com/*"];
-const tipDismissed = () => { try { return localStorage.getItem("tipDismissed") === "1"; } catch { return false; } };
-let buttonsEnabled = chrome.permissions.contains({ origins: instagramOrigins });
-buttonsEnabled.then(enabled => { pageButtons.checked = enabled; });
-
-// On Instagram, a tip offers the buttons until they are on or the tip is dismissed.
-async function showTip() {
-  $("tip").hidden = tipDismissed() || await buttonsEnabled;
-}
-
-// permissions.request must run straight from the click, before any other await.
-async function enablePageButtons() {
-  const granted = await chrome.permissions.request({ origins: instagramOrigins }).catch(() => false);
-  pageButtons.checked = granted;
-  if (!granted) return false;
-  $("tip").hidden = true;
-  await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
-  // The open Instagram tab gets the buttons now, without a reload.
-  const tab = tabId && await chrome.tabs.get(tabId).catch(() => null);
+pageButtons.checked = settings.pageButtons;
+pageButtons.addEventListener("change", async () => {
+  settings.pageButtons = pageButtons.checked;
+  await setSetting("pageButtons", pageButtons.checked);
+  // Open pages follow the setting; a tab opened while the buttons were off gets them now.
+  if (!pageButtons.checked || !tabId) return;
+  const tab = await chrome.tabs.get(tabId).catch(() => null);
   if (tab?.url && pageFromUrl(tab.url)) {
     await chrome.scripting.insertCSS({ target: { tabId }, files: ["src/content.css"] }).catch(() => {});
     await chrome.scripting.executeScript({ target: { tabId }, files: ["src/content.js"] }).catch(() => {});
   }
-  return true;
-}
+});
 
-pageButtons.addEventListener("change", async () => {
-  if (pageButtons.checked) return enablePageButtons();
-  const removed = await chrome.permissions.remove({ origins: instagramOrigins }).catch(() => false);
-  pageButtons.checked = !removed;
-  if (removed) await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
-});
-$("tip-on").addEventListener("click", () => enablePageButtons());
-$("tip-dismiss").addEventListener("click", () => {
-  try { localStorage.setItem("tipDismissed", "1"); } catch { /* shown again next time */ }
-  $("tip").hidden = true;
-});
+for (const radio of document.querySelectorAll('input[name="folder"]')) {
+  radio.checked = radio.value === settings.folderLayout;
+  radio.addEventListener("change", () => {
+    settings.folderLayout = radio.value;
+    setSetting("folderLayout", radio.value);
+    updateNote();
+  });
+}
 
 input.addEventListener("input", () => { error.hidden = true; input.removeAttribute("aria-invalid"); });
 

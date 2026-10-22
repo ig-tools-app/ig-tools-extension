@@ -1,5 +1,5 @@
-// On-page download buttons for instagram.com. Registered only after the user
-// turns them on in the popup (optional host permission). Runs as a classic
+// On-page download buttons for instagram.com. Registered while the buttons are
+// switched on in the popup settings (on by default). Runs as a classic
 // content script, so it cannot import modules; the saving itself happens in
 // the background (see background.js and page-media.js).
 //
@@ -275,6 +275,7 @@
       const bare = items.filter(item => !item.innerText.trim());
       const wrapper = document.createElement("div");
       wrapper.className = (bare[0] ?? items[0]).className;
+      wrapper.dataset.igtWrapper = "1";
       const button = makeButton("igt-reel-button", currentUrl());
       // The address bar follows the Reel on screen as the user scrolls.
       button.targetUrl = currentUrl;
@@ -348,9 +349,11 @@
     document.body.append(floating);
   }
 
-  let scheduled = false;
+  let scheduled = false, running = false;
   function scan() {
     scheduled = false;
+    // A timer (the Story fallback) may still fire after the buttons were turned off.
+    if (!running) return;
     addActionButtons();
     addCarouselButtons();
     addMediaButtons();
@@ -362,6 +365,26 @@
   function schedule() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(scan); }
   }
-  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
-  scan();
+  // ---- On and off ----
+  // The popup's switch is stored in chrome.storage; pages already open follow it
+  // without a reload. Off removes every button and marker, so on starts afresh.
+  const observer = new MutationObserver(schedule);
+  function start() {
+    running = true;
+    observer.observe(document.body, { childList: true, subtree: true });
+    scan();
+  }
+  function stop() {
+    running = false;
+    observer.disconnect();
+    document.querySelectorAll("[data-igt-wrapper], .igt-button").forEach(el => el.remove());
+    document.querySelectorAll("[data-igt-done], [data-igt-media]").forEach(el => { delete el.dataset.igtDone; delete el.dataset.igtMedia; });
+    for (const name of ["igt-row-end", "igt-slide-frame", "igt-tile"]) document.querySelectorAll(`.${name}`).forEach(el => el.classList.remove(name));
+  }
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== "local" || !("pageButtons" in changes)) return;
+    if (changes.pageButtons.newValue === false) stop();
+    else { stop(); start(); }
+  });
+  chrome.storage.local.get("pageButtons").then(({ pageButtons }) => { if (pageButtons !== false) start(); });
 })();

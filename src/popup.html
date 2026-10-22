@@ -51,11 +51,6 @@
       <p id="error" class="error" role="alert" hidden data-i18n="invalidInput"></p>
       <p id="helper" class="helper" data-i18n="helper"></p>
     </form>
-    <div id="tip" class="tip" hidden>
-      <p data-i18n="tipText"></p>
-      <button id="tip-on" type="button" class="tip-on" data-i18n="tipOn"></button>
-      <button id="tip-dismiss" type="button" class="icon-button small" data-i18n-label="dismiss"></button>
-    </div>
   </main>
 
   <div id="actions" class="actions" hidden>
@@ -75,7 +70,30 @@
         <input id="page-buttons" class="switch" type="checkbox" role="switch" aria-describedby="page-buttons-help">
       </label>
     </div>
-    <h2 class="group-title" data-i18n="settingsDownloads"></h2>
+    <h2 id="folder-title" class="group-title" data-i18n="settingsDownloads"></h2>
+    <div class="group" role="radiogroup" aria-labelledby="folder-title">
+      <label class="row choice">
+        <input type="radio" name="folder" value="account">
+        <span class="row-text">
+          <b data-i18n="folderAccount"></b>
+          <small class="path">Downloads/ig.tools/&lt;username&gt;/posts/…</small>
+        </span>
+      </label>
+      <label class="row choice">
+        <input type="radio" name="folder" value="folder">
+        <span class="row-text">
+          <b data-i18n="folderOne"></b>
+          <small class="path">Downloads/ig.tools/&lt;username&gt;_….jpg</small>
+        </span>
+      </label>
+      <label class="row choice">
+        <input type="radio" name="folder" value="downloads">
+        <span class="row-text">
+          <b data-i18n="folderDownloads"></b>
+          <small class="path">Downloads/&lt;username&gt;_….jpg</small>
+        </span>
+      </label>
+    </div>
     <div class="group">
       <div class="row">
         <span class="row-text">
@@ -83,12 +101,6 @@
           <small id="shortcut-keys"></small>
         </span>
         <a id="shortcut-change" href="#" data-i18n="shortcutChange"></a>
-      </div>
-      <div class="row">
-        <span class="row-text">
-          <b data-i18n="folder"></b>
-          <small>Downloads/ig.tools/&lt;username&gt;/</small>
-        </span>
       </div>
     </div>
     <p class="about">

@@ -136,8 +136,8 @@
     "description": "Popup switch that turns the on-page download buttons on or off"
   },
   "pageButtonsHelp": {
-    "message": "يضيف زر تنزيل إلى المنشورات وشبكات الملفات الشخصية والقصص وReels. سيطلب Chrome الوصول إلى instagram.com.",
-    "description": "Explains the switch and Chrome's permission prompt"
+    "message": "يضيف زر تنزيل إلى المنشورات وشبكات الملفات الشخصية والقصص والريلز.",
+    "description": "Help under the on-page buttons switch in settings"
   },
   "pageButtonTitle": {
     "message": "نزّل باستخدام ig.tools",
@@ -175,21 +175,9 @@
     "message": "الإعدادات",
     "description": "Settings button and page title"
   },
-  "dismiss": {
-    "message": "إغلاق",
-    "description": "Accessible name of the button that closes the tip"
-  },
   "formTitle": {
     "message": "التنزيل من Instagram",
     "description": "Title above the link field on pages without media"
-  },
-  "tipText": {
-    "message": "أضف أزرار التنزيل إلى Instagram",
-    "description": "Tip offering the on-page download buttons"
-  },
-  "tipOn": {
-    "message": "تفعيل",
-    "description": "Button in the tip that turns the on-page buttons on"
   },
   "select": {
     "message": "تحديد",
@@ -331,10 +319,6 @@
     "message": "تغيير",
     "description": "Link to Chrome's shortcut settings"
   },
-  "folder": {
-    "message": "المجلد",
-    "description": "Settings row: download folder"
-  },
   "sourceCode": {
     "message": "الشيفرة المصدرية",
     "description": "Link to the source code"
@@ -352,5 +336,21 @@
         "example": "1.0.0"
       }
     }
+  },
+  "shortcutSet": {
+    "message": "تعيين",
+    "description": "Link to Chrome's shortcut settings when no shortcut is set"
+  },
+  "folderAccount": {
+    "message": "حسب الحساب",
+    "description": "Folder option: a folder per account with posts, stories and highlights subfolders"
+  },
+  "folderOne": {
+    "message": "الكل في مجلد ig.tools واحد",
+    "description": "Folder option: every file in one ig.tools folder"
+  },
+  "folderDownloads": {
+    "message": "مباشرة إلى التنزيلات",
+    "description": "Folder option: every file straight in the Downloads folder"
   }
 }

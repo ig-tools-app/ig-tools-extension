@@ -136,8 +136,8 @@
     "description": "Popup switch that turns the on-page download buttons on or off"
   },
   "pageButtonsHelp": {
-    "message": "게시물, 프로필 그리드, 스토리, 릴스에 다운로드 버튼을 추가합니다. Chrome에서 instagram.com 접근 권한을 요청합니다.",
-    "description": "Explains the switch and Chrome's permission prompt"
+    "message": "게시물, 프로필 그리드, 스토리, 릴스에 다운로드 버튼을 추가합니다.",
+    "description": "Help under the on-page buttons switch in settings"
   },
   "pageButtonTitle": {
     "message": "ig.tools로 다운로드",
@@ -175,21 +175,9 @@
     "message": "설정",
     "description": "Settings button and page title"
   },
-  "dismiss": {
-    "message": "닫기",
-    "description": "Accessible name of the button that closes the tip"
-  },
   "formTitle": {
     "message": "Instagram에서 다운로드",
     "description": "Title above the link field on pages without media"
-  },
-  "tipText": {
-    "message": "Instagram에 다운로드 버튼 추가",
-    "description": "Tip offering the on-page download buttons"
-  },
-  "tipOn": {
-    "message": "켜기",
-    "description": "Button in the tip that turns the on-page buttons on"
   },
   "select": {
     "message": "선택",
@@ -331,10 +319,6 @@
     "message": "변경",
     "description": "Link to Chrome's shortcut settings"
   },
-  "folder": {
-    "message": "폴더",
-    "description": "Settings row: download folder"
-  },
   "sourceCode": {
     "message": "소스 코드",
     "description": "Link to the source code"
@@ -352,5 +336,21 @@
         "example": "1.0.0"
       }
     }
+  },
+  "shortcutSet": {
+    "message": "설정",
+    "description": "Link to Chrome's shortcut settings when no shortcut is set"
+  },
+  "folderAccount": {
+    "message": "계정별",
+    "description": "Folder option: a folder per account with posts, stories and highlights subfolders"
+  },
+  "folderOne": {
+    "message": "ig.tools 폴더 하나에",
+    "description": "Folder option: every file in one ig.tools folder"
+  },
+  "folderDownloads": {
+    "message": "다운로드 폴더에 바로",
+    "description": "Folder option: every file straight in the Downloads folder"
   }
 }

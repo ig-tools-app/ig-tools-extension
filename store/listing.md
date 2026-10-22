@@ -15,7 +15,7 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > HOW IT WORKS
 > • Open a post, Reel, Story or Highlight on instagram.com.
 > • Click the ig.tools icon: the popup shows every photo and video on that page.
-> • Save one, or choose Download all. Files go to your Downloads/ig.tools folder.
+> • Save one, a selection, or all of them.
 >
 > WHAT YOU GET
 > • Photos in the largest size Instagram provides
@@ -23,15 +23,15 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 > • Every slide of a carousel, and all current Stories of an account
 > • On a profile page, the account's current Stories are listed without opening them. Saving them this way doesn't add you to the Story's viewer list. If you open a Story in Instagram itself, Instagram records the view as usual.
 > • Profile pages also list the account's Highlights and its full-size profile picture
-> • Files are sorted into Downloads/ig.tools/<username>/ with posts, stories and highlights folders
-> • Press Alt+Shift+S to open it from the keyboard
-> • Optional: turn on download buttons right on Instagram, next to the bookmark on posts, on each carousel slide, on profile grids, and on Stories and Reels
+> • Download buttons right on Instagram: next to the bookmark on posts, on photos, videos and each carousel slide, on profile grids, and on Stories and Reels. Turn them off in the settings if you prefer the popup alone.
+> • Choose where files go: sorted into a folder per account (with posts, stories and highlights folders), all in one ig.tools folder, or straight in Downloads
+> • Set your own keyboard shortcut to open it
 >
 > SIGNED OUT, OR PREFER NOT TO SIGN IN?
 > Paste any Instagram link or @username into the popup, or right-click an Instagram link, to open it in ig.tools and view public posts, Reels and Stories there without signing in.
 >
 > PRIVACY
-> Saving happens in your browser. Unless you turn on the optional on-page buttons, the extension sees a page only after you click its icon. It talks only to Instagram and collects nothing.
+> Saving happens in your browser. The extension runs on instagram.com only, talks only to Instagram and collects nothing.
 >
 > OPEN SOURCE
 > https://github.com/ig-tools-app/ig-tools-extension
@@ -58,11 +58,12 @@ Copy for the developer dashboard. The name and summary come from `_locales/*/mes
 
 **Permission justification**
 
-- `activeTab`: Gives access to the current Instagram tab only after the user clicks the toolbar icon, so the extension can find the media on that page.
-- `scripting`: Runs one function in that tab to request the page's media from Instagram's own web API with the user's session. No content scripts run on any page.
+- Host permission `https://www.instagram.com/*`: The extension's single purpose is saving media from Instagram. It adds download buttons to Instagram posts, profile grids, Reels and Stories (users can turn them off in the settings), and reads the media on the open Instagram page with the user's session. It accesses no other site.
+- `activeTab`: When the user clicks the toolbar icon on an Instagram address outside www.instagram.com (instagram.com, m.instagram.com), gives access to that tab so the extension can find the media on the page.
+- `scripting`: Runs one function in the Instagram tab to request the page's media from Instagram's own web API with the user's session, and registers the download buttons' content script while they are switched on.
 - `downloads`: Saves the photos and videos the user chooses to the Downloads folder.
+- `storage`: Stores the user's two settings (download buttons on or off, and the download folder layout) locally.
 - `contextMenus`: Adds "Open link with ig.tools" and "Open this page with ig.tools" to the right-click menu on Instagram links and pages.
-- Optional host permission `https://www.instagram.com/*`: Requested only when the user turns on "Download buttons on Instagram" in the popup. It lets the extension add download buttons to Instagram posts, profile grids and Stories. It is never requested at install, and turning the switch off removes it.
 
 **Remote code**: No, I am not using remote code.
 

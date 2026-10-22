@@ -26,14 +26,10 @@ const avatarAppIds = [];
 const screenshots = process.env.POPUP_SCREENSHOTS;
 let scenario = "ok";
 
-// A click on the toolbar icon grants activeTab for instagram.com. Tests cannot
-// click the toolbar, so a copy of the extension gets that host access up front.
+// The extension as it ships: what `npm run package` zips.
 function extensionCopy() {
   const dir = join(work, "extension");
   for (const entry of ["manifest.json", "src", "_locales", "icons"]) cpSync(join(root, entry), join(dir, entry), { recursive: true });
-  const manifest = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8"));
-  manifest.host_permissions = ["https://www.instagram.com/*"];
-  writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest));
   return dir;
 }
 
@@ -415,9 +411,14 @@ test("when Instagram refuses the full-size picture, the small one and ig.tools a
   scenario = "ok";
 });
 
-test("Alt+Shift+S opens the popup", async () => {
+test("there is no default shortcut; settings link to Chrome's shortcut page", async () => {
   const commands = await worker.evaluate(() => chrome.commands.getAll());
-  assert.deepEqual(commands.filter(c => c.name === "_execute_action").map(c => c.shortcut), ["Alt+Shift+S"]);
+  assert.deepEqual(commands.filter(c => c.name === "_execute_action").map(c => c.shortcut), [""]);
+  const { page, popup } = await openPopup("https://www.instagram.com/");
+  await popup.getByRole("button", { name: "Settings" }).click();
+  assert.equal(await popup.locator("#shortcut-keys").textContent(), "Not set");
+  assert.equal(await popup.locator("#shortcut-change").textContent(), "Set");
+  await close(page, popup);
 });
 
 test("a profile without current Stories says so and offers ig.tools", async () => {
@@ -465,20 +466,53 @@ async function closePage(page) {
   rmSync(downloads, { recursive: true, force: true });
 }
 
-test("with instagram.com access the page buttons are registered and the switch is on", async () => {
-  const scripts = await worker.evaluate(() => chrome.scripting.getRegisteredContentScripts());
-  assert.deepEqual(scripts.map(s => [s.id, s.js, s.css]), [["page-buttons", ["src/content.js"], ["src/content.css"]]]);
+test("page buttons are on after install and the switch turns them off and on", async () => {
+  const registered = () => worker.evaluate(async () => (await chrome.scripting.getRegisteredContentScripts()).map(s => [s.id, s.js, s.css]));
+  assert.deepEqual(await registered(), [["page-buttons", ["src/content.js"], ["src/content.css"]]]);
   const { page, popup } = await openPopup("https://www.instagram.com/");
-  // With the buttons on, the tip offering them stays hidden.
-  await popup.getByText("Open a post, Reel, Story or profile on Instagram").waitFor();
-  assert.equal(await popup.locator("#tip").isHidden(), true);
+  await page.locator(".igt-action").first().waitFor();
   await popup.getByRole("button", { name: "Settings" }).click();
-  assert.equal(await popup.getByRole("switch", { name: "Download buttons on Instagram" }).isChecked(), true);
-  assert.equal(await popup.locator("#shortcut-keys").textContent(), "Alt + Shift + S opens this popup");
+  const toggle = popup.getByRole("switch", { name: "Download buttons on Instagram" });
+  assert.equal(await toggle.isChecked(), true);
   assert.equal(await popup.locator("#main").isHidden(), true);
+  // Off: no new pages get the script, and the open page drops its buttons.
+  await toggle.click();
+  await page.locator(".igt-button").first().waitFor({ state: "detached" });
+  assert.equal(await page.locator("[data-igt-done]").count(), 0);
+  for (let i = 0; i < 20 && (await registered()).length; i++) await page.waitForTimeout(50);
+  assert.deepEqual(await registered(), []);
+  // On again: the open page gets them back without a reload.
+  await toggle.click();
+  await page.locator(".igt-action").first().waitFor();
+  for (let i = 0; i < 20 && !(await registered()).length; i++) await page.waitForTimeout(50);
+  assert.equal((await registered()).length, 1);
   await popup.getByRole("button", { name: "Back" }).click();
   assert.equal(await popup.locator("#main").isVisible(), true);
   await close(page, popup);
+});
+
+test("the folder setting changes where the popup and the page buttons save", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/p/Cphoto11111/");
+  await popup.locator(".card").first().waitFor();
+  assert.equal(await popup.locator("#actions-note").textContent(), "Saves to Downloads/ig.tools/natgeo/posts/");
+  await popup.getByRole("button", { name: "Settings" }).click();
+  assert.equal(await popup.getByRole("radio", { name: /By account/ }).isChecked(), true);
+  await popup.getByRole("radio", { name: /Straight to Downloads/ }).check();
+  await popup.getByRole("button", { name: "Back" }).click();
+  assert.equal(await popup.locator("#actions-note").textContent(), "Saves to Downloads/");
+  await popup.getByRole("button", { name: "Download photo" }).click();
+  assert.deepEqual(await waitForSaved(popup, 1), ["natgeo_Cphoto11111.jpg"]);
+  await close(page, popup);
+  // The page buttons read the same setting.
+  await worker.evaluate(() => chrome.storage.local.set({ folderLayout: "folder" }));
+  await recordBackgroundDownloads();
+  const feed = await context.newPage();
+  await feed.goto("https://www.instagram.com/");
+  await feed.locator("article .igt-action").first().click();
+  await feed.locator('article .igt-action[data-igt-state="done"]').first().waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo_Cphoto11111.jpg"]);
+  await closePage(feed);
+  await worker.evaluate(() => chrome.storage.local.clear());
 });
 
 test("a feed post gets a button next to the bookmark that saves the post", async () => {

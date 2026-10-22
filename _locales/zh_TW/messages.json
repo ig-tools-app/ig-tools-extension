@@ -136,8 +136,8 @@
     "description": "Popup switch that turns the on-page download buttons on or off"
   },
   "pageButtonsHelp": {
-    "message": "在貼文、個人檔案網格、限時動態和 Reels 加上下載按鈕。Chrome 會要求存取 instagram.com 的權限。",
-    "description": "Explains the switch and Chrome's permission prompt"
+    "message": "在貼文、個人檔案格狀畫面、限時動態和 Reels 加入下載按鈕。",
+    "description": "Help under the on-page buttons switch in settings"
   },
   "pageButtonTitle": {
     "message": "用 ig.tools 下載",
@@ -175,21 +175,9 @@
     "message": "設定",
     "description": "Settings button and page title"
   },
-  "dismiss": {
-    "message": "關閉",
-    "description": "Accessible name of the button that closes the tip"
-  },
   "formTitle": {
     "message": "從 Instagram 下載",
     "description": "Title above the link field on pages without media"
-  },
-  "tipText": {
-    "message": "在 Instagram 加入下載按鈕",
-    "description": "Tip offering the on-page download buttons"
-  },
-  "tipOn": {
-    "message": "開啟",
-    "description": "Button in the tip that turns the on-page buttons on"
   },
   "select": {
     "message": "選取",
@@ -331,10 +319,6 @@
     "message": "變更",
     "description": "Link to Chrome's shortcut settings"
   },
-  "folder": {
-    "message": "資料夾",
-    "description": "Settings row: download folder"
-  },
   "sourceCode": {
     "message": "原始碼",
     "description": "Link to the source code"
@@ -352,5 +336,21 @@
         "example": "1.0.0"
       }
     }
+  },
+  "shortcutSet": {
+    "message": "設定",
+    "description": "Link to Chrome's shortcut settings when no shortcut is set"
+  },
+  "folderAccount": {
+    "message": "依帳號分類",
+    "description": "Folder option: a folder per account with posts, stories and highlights subfolders"
+  },
+  "folderOne": {
+    "message": "全部放在 ig.tools 資料夾",
+    "description": "Folder option: every file in one ig.tools folder"
+  },
+  "folderDownloads": {
+    "message": "直接放進下載資料夾",
+    "description": "Folder option: every file straight in the Downloads folder"
   }
 }

@@ -25,10 +25,8 @@
     "type": "module"
   },
   "commands": {
-    "_execute_action": {
-      "suggested_key": { "default": "Alt+Shift+S" }
-    }
+    "_execute_action": {}
   },
-  "permissions": ["activeTab", "contextMenus", "downloads", "scripting"],
-  "optional_host_permissions": ["https://www.instagram.com/*"]
+  "permissions": ["activeTab", "contextMenus", "downloads", "scripting", "storage"],
+  "host_permissions": ["https://www.instagram.com/*"]
 }

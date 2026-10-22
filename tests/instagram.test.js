@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { avatarFile, highlightsFromResult, mediaFromResult, pageFromUrl, safeFolder, safeMediaUrl, shortcodeToId } from "../src/instagram.js";
+import { avatarFile, highlightsFromResult, layoutFilename, mediaFromResult, pageFromUrl, safeFolder, safeMediaUrl, shortcodeToId } from "../src/instagram.js";
 import { carouselPost, cdn, highlightItems, highlightsTray, photoPost, reelPost, storyItems } from "./fixtures.js";
 
 test("recognises the Instagram pages that hold media", () => {
@@ -111,4 +111,17 @@ test("unsafe or empty responses produce no files", () => {
   assert.equal(file.filename, "ig.tools/a_b/posts/.._.._x.jpg");
   const [dots] = mediaFromResult({ items: [{ code: "..", user: { username: ".." }, image_versions2: { candidates: [{ url: `${cdn}/a.jpg` }] } }] });
   assert.equal(dots.filename, "ig.tools/_/posts/_.jpg");
+});
+
+test("folder layouts flatten the account folders into prefixed names", () => {
+  const files = ["ig.tools/natgeo/posts/Cxyz_2.jpg", "ig.tools/natgeo/stories/3100.mp4", "ig.tools/natgeo/highlights/Travel 2026/3200.jpg", "ig.tools/natgeo/natgeo_profile_picture.jpg"];
+  assert.deepEqual(files.map(file => layoutFilename(file, "account")), files);
+  assert.deepEqual(files.map(file => layoutFilename(file, "folder")), [
+    "ig.tools/natgeo_Cxyz_2.jpg", "ig.tools/natgeo_story_3100.mp4", "ig.tools/natgeo_highlight_Travel 2026_3200.jpg", "ig.tools/natgeo_profile_picture.jpg",
+  ]);
+  assert.deepEqual(files.map(file => layoutFilename(file, "downloads")), [
+    "natgeo_Cxyz_2.jpg", "natgeo_story_3100.mp4", "natgeo_highlight_Travel 2026_3200.jpg", "natgeo_profile_picture.jpg",
+  ]);
+  // An unknown setting keeps the default layout.
+  assert.equal(layoutFilename(files[0], "elsewhere"), files[0]);
 });

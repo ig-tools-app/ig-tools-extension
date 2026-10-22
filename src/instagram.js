@@ -123,6 +123,22 @@ export function mediaFromResult(result, place = { kind: "post" }) {
   });
 }
 
+// Download folder layouts, chosen in the popup settings:
+// "account"   ig.tools/<username>/posts|stories|highlights/<title>/<name> (as built above)
+// "folder"    ig.tools/<username>_<name>, all in one folder
+// "downloads" <username>_<name>, straight in Downloads
+// Without subfolders the kind joins the name (story_, highlight_<title>_) so
+// files of different kinds and accounts never collide.
+
+export function layoutFilename(filename, layout) {
+  if (layout !== "folder" && layout !== "downloads") return filename;
+  const [, owner, ...rest] = filename.split("/");
+  const kind = { stories: "story_", highlights: "highlight_" }[rest[0]] ?? "";
+  const base = rest[0] === "posts" || kind ? `${kind}${rest.slice(1).join("_")}` : rest.join("_");
+  const name = base.startsWith(`${owner}_`) ? base : `${owner}_${base}`;
+  return layout === "folder" ? `ig.tools/${name}` : name;
+}
+
 // The Highlights tray of a profile (GraphQL "highlights" connection).
 export function highlightsFromResult(result) {
   const edges = Array.isArray(result?.highlights?.edges) ? result.highlights.edges : [];

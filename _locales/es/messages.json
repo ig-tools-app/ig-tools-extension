@@ -136,8 +136,8 @@
     "description": "Popup switch that turns the on-page download buttons on or off"
   },
   "pageButtonsHelp": {
-    "message": "Añade un botón de descarga a publicaciones, cuadrículas de perfil, historias y Reels. Chrome pedirá acceso a instagram.com.",
-    "description": "Explains the switch and Chrome's permission prompt"
+    "message": "Añade un botón de descarga a publicaciones, cuadrículas de perfil, historias y reels.",
+    "description": "Help under the on-page buttons switch in settings"
   },
   "pageButtonTitle": {
     "message": "Descargar con ig.tools",
@@ -175,21 +175,9 @@
     "message": "Ajustes",
     "description": "Settings button and page title"
   },
-  "dismiss": {
-    "message": "Cerrar",
-    "description": "Accessible name of the button that closes the tip"
-  },
   "formTitle": {
     "message": "Descargar de Instagram",
     "description": "Title above the link field on pages without media"
-  },
-  "tipText": {
-    "message": "Añade botones de descarga a Instagram",
-    "description": "Tip offering the on-page download buttons"
-  },
-  "tipOn": {
-    "message": "Activar",
-    "description": "Button in the tip that turns the on-page buttons on"
   },
   "select": {
     "message": "Seleccionar",
@@ -331,10 +319,6 @@
     "message": "Cambiar",
     "description": "Link to Chrome's shortcut settings"
   },
-  "folder": {
-    "message": "Carpeta",
-    "description": "Settings row: download folder"
-  },
   "sourceCode": {
     "message": "Código fuente",
     "description": "Link to the source code"
@@ -352,5 +336,21 @@
         "example": "1.0.0"
       }
     }
+  },
+  "shortcutSet": {
+    "message": "Asignar",
+    "description": "Link to Chrome's shortcut settings when no shortcut is set"
+  },
+  "folderAccount": {
+    "message": "Por cuenta",
+    "description": "Folder option: a folder per account with posts, stories and highlights subfolders"
+  },
+  "folderOne": {
+    "message": "Todo en una carpeta ig.tools",
+    "description": "Folder option: every file in one ig.tools folder"
+  },
+  "folderDownloads": {
+    "message": "Directamente en Descargas",
+    "description": "Folder option: every file straight in the Downloads folder"
   }
 }

@@ -295,24 +295,6 @@ input:focus, input:focus-visible { outline: none; box-shadow: none; }
 .error { margin: 0; color: var(--danger); font-size: 13px; }
 .helper { margin: 0; color: var(--muted); font-size: 13px; }
 
-/* ---- Tip: offers the on-page buttons until turned on or dismissed ---- */
-.tip { display: flex; align-items: center; gap: 8px; padding: 8px 6px 8px 12px; border-radius: var(--r-lg); background: var(--accent-soft); font-size: 13px; }
-[dir="rtl"] .tip { padding: 8px 12px 8px 6px; }
-.tip p { flex: 1; margin: 0; }
-.tip-on {
-  flex: none;
-  height: 30px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-@media (prefers-color-scheme: dark) { .tip-on { color: #1a0712; } }
-
 /* ---- Main action and ig.tools link, pinned under the scrolling part ---- */
 .actions { flex: none; display: grid; gap: 6px; padding: 12px 16px; border-block-start: 1px solid var(--line); }
 .actions-note { margin: 0; text-align: center; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -367,6 +349,22 @@ label.row { cursor: pointer; }
 .row-text small { color: var(--muted); font-size: 12px; }
 .row a { flex: none; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
 .row a:hover, .about a:hover { text-decoration: underline; }
+/* Folder choice: a radio per row, the example path under each label. */
+.choice input {
+  appearance: none;
+  flex: none;
+  order: -1;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.choice input:checked { border: 5px solid var(--accent); }
+.choice input:focus-visible { box-shadow: 0 0 0 3px var(--focus-ring); }
+.choice:has(input:checked) { background: var(--accent-soft); }
+.path { font-family: ui-monospace, Consolas, monospace; font-size: 11px !important; overflow-wrap: anywhere; }
 kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font: 12px ui-monospace, Consolas, monospace; }
 .switch {
   appearance: none;
@@ -408,3 +406,4 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 6px; backg
 .media-head h2:not(.sr-only, :empty) + .media-count::before { content: "· "; }
 /* A status that offers ig.tools already holds the link, so the footer copy goes. */
 body:has(#status:not([hidden]) #status-link:not([hidden])) #site-link { display: none; }
+[dir="rtl"] .path { direction: ltr; text-align: right; }

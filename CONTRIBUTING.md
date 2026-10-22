@@ -5,7 +5,7 @@ Thanks for helping. Bug reports and small, focused pull requests are welcome. Pl
 ## Ground rules
 
 - **Saving stays local.** Media is read from the open Instagram tab and downloaded from Instagram's CDN. No requests to any other server, no analytics, no remote code. If a change affects what data is read or where it goes, update `PRIVACY.md` in the same pull request.
-- **Minimal permissions.** The extension uses `activeTab`, `scripting`, `downloads` and `contextMenus`. Access to instagram.com is an optional permission, requested only when the user turns on the on-page buttons; the content script is registered at runtime while it is held (`syncPageButtons` in `src/background.js`). Never move it into `host_permissions` or a static `content_scripts` entry: that would ask every user at install and disable the extension for existing users on update. Changes that need more permissions need an issue and discussion first.
+- **Minimal permissions.** The extension uses `https://www.instagram.com/*` (host), `activeTab`, `scripting`, `downloads`, `storage` and `contextMenus`. The on-page buttons are on by default; their content script is registered at runtime while the `pageButtons` setting is on (`syncPageButtons` in `src/background.js`), and open pages follow the setting through `storage.onChanged` in `src/content.js`. Do not add hosts: Chrome disables the extension for existing users on an update that asks for new access. Changes that need more permissions need an issue and discussion first.
 - **Describe only what is tested.** Do not add claims to the README or store copy that you have not verified on instagram.com.
 
 ## How media is fetched
@@ -20,7 +20,7 @@ All Instagram requests live in [`src/collect.js`](src/collect.js). It runs in th
 | Profile: Highlights tab | GraphQL `PolarisProfileStoryHighlightsTrayContentQuery` with `{ user_id }` |
 | Profile: picture tab | The `<img>` instagram.com shows in the profile header, matched by the username in its alt text: it is the full-size 1080px picture and needs no request. Fallbacks: REST `GET /api/v1/users/<id>/info/` (Android app ID first, then web; often rate limited), then the 150px `profile_pic_url_hd` from the profile page HTML |
 
-On profile pages the popup passes the account ID back to the collector after the first request, so switching tabs does not reload the profile page. Downloads go to `ig.tools/<username>/posts|stories|highlights/<title>/`; Highlight titles pass through `safeFolder` in `src/instagram.js`.
+On profile pages the popup passes the account ID back to the collector after the first request, so switching tabs does not reload the profile page. File names are built as `ig.tools/<username>/posts|stories|highlights/<title>/…`; Highlight titles pass through `safeFolder` in `src/instagram.js`. Just before downloading, `layoutFilename` turns that into the folder layout the user chose (`folderLayout` setting: `account`, `folder` or `downloads`).
 
 - GraphQL requests need the page's `fb_dtsg` token (`DTSGInitialData`). The `doc_id`s are hard-coded and change when Instagram updates its web app; that is the usual cause of breakage.
 - `/api/v1/feed/reels_media/` answers 500 on the web (October 2026), so Stories and Highlights use GraphQL.
@@ -50,7 +50,7 @@ All CSS lives in [`src/content.css`](src/content.css) under `igt-` classes; noth
 - Layout: a header (logo, settings), a scrolling middle, then the main button and the ig.tools link pinned at the bottom. Chrome limits popups to 600px tall. The middle is a flex column, not a grid: grid rows in a scrolling box shrink and cards overlap.
 - Media: one item is shown large and saved with the main button. Several items get a grid (two columns for posts, three for Stories) with select (top-left) and save (bottom-right) controls; the main button saves the selection, or everything.
 - The link field only shows on pages without media. On Instagram pages, ig.tools is a link at the bottom.
-- Settings (the on-page buttons switch, shortcut, folder) open from the gear. Until the on-page buttons are on, a dismissible tip offers them (remembered in the popup's `localStorage`).
+- Settings (the on-page buttons switch, shortcut, download folder) open from the gear and live in `chrome.storage.local` (`src/settings.js`). There is no default shortcut; Chrome does not let extensions set one, so the settings link to `chrome://extensions/shortcuts`.
 - The font stack lists named fonts before `system-ui`: on Chinese Windows, `system-ui` resolves to a font that draws no visible underscore at 125% scaling.
 - Use logical properties (`inset-inline-*`, `margin-inline-*`); Arabic is right-to-left.
 

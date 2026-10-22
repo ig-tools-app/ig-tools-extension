@@ -4,10 +4,10 @@ Save photos, videos, Reels and Stories from the Instagram page you have open, st
 
 - **Save from this page**: open a post, Reel, Story or Highlight on instagram.com and click the toolbar icon. The popup lists every photo and video on that page; save one, a selection, or all of them.
 - **Profile pages**: three tabs. **Stories** lists the account's current Stories, so you can save them without opening the Stories viewer. Saving them this way doesn't add you to the Story's viewer list (tested in October 2026; Instagram may change this). If you open a Story in Instagram itself, Instagram records the view as usual. **Highlights** lists the account's Highlights; open one to save its items. **Profile picture** saves the full-size picture shown on the profile.
-- **Download buttons on Instagram** (optional, off by default): turn them on from the tip in the popup, or the switch in its settings (gear icon), to get a download button next to the bookmark on posts (on a carousel it saves every slide), one in the top-right corner of the photo or video (on hover; on a carousel it saves just the slide on screen), one on profile grid tiles (on hover), one in the Reels player's action column, and one in the header of a Story or Highlight, next to pause, that saves the item playing.
+- **Download buttons on Instagram** (on by default; turn them off with the switch in the popup's settings, the gear icon): a download button next to the bookmark on posts (on a carousel it saves every slide), one in the top-right corner of the photo or video (on hover; on a carousel it saves just the slide on screen), one on profile grid tiles (on hover), one in the Reels player's action column, and one in the header of a Story or Highlight, next to pause, that saves the item playing.
 - **Open in ig.tools**: paste any Instagram link or `@username` in the popup, or right-click an Instagram link and choose "Open link with ig.tools".
-- **Shortcut**: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> opens the popup. If another extension already uses it, Chrome leaves it unset; choose your own at `chrome://extensions/shortcuts`.
-- **Tidy downloads**: files go to `Downloads/ig.tools/<username>/` with `posts/`, `stories/` and `highlights/<title>/` folders.
+- **Shortcut**: none by default. To open the popup from the keyboard, choose a key at `chrome://extensions/shortcuts` (the popup's settings link there).
+- **Download folder**, chosen in the popup's settings: by account (`Downloads/ig.tools/<username>/` with `posts/`, `stories/` and `highlights/<title>/` folders, the default), all in one `Downloads/ig.tools/` folder, or straight in `Downloads/`. Without account folders, file names start with the username, e.g. `natgeo_story_3100.mp4`. Chrome extensions can only save inside your Downloads folder; to use another place, change Chrome's download location.
 - 10 languages, light and dark themes.
 
 Saving happens locally: the extension asks Instagram for the media on the open page using your existing Instagram session in this browser, and Chrome downloads the files from Instagram's servers. Nothing is sent to ig.tools or anywhere else. See [PRIVACY.md](PRIVACY.md).
@@ -18,13 +18,14 @@ Saving happens locally: the extension asks Instagram for the media on the open p
 
 | Permission | Why |
 | --- | --- |
-| `activeTab` | Access to the current tab is granted only when you click the toolbar icon, and only for that tab. |
-| `scripting` | With that access, read the media on the open Instagram page (one request to Instagram's own web API). |
+| `https://www.instagram.com/*` | Add the download buttons to Instagram pages, and read the media on the open Instagram page when you click the toolbar icon. This is the only site the extension can access; Chrome shows it at install as "Read and change your data on www.instagram.com". |
+| `activeTab` | The same, when you click the toolbar icon on `instagram.com` without `www` or on `m.instagram.com`. |
+| `scripting` | Read the media on the open Instagram page (one request to Instagram's own web API) and place the download buttons. |
 | `downloads` | Save the files you choose to your Downloads folder. |
+| `storage` | Remember your two settings: the download buttons switch and the download folder. Stored only in your browser. |
 | `contextMenus` | Add "Open link with ig.tools" and "Open this page with ig.tools" to the right-click menu. |
-| `https://www.instagram.com/*` (optional) | Only if you turn on **Download buttons on Instagram** in the popup. Adds the buttons to Instagram pages. Turning the switch off removes the access again. |
 
-Without the optional access there are no host permissions and no content scripts: the extension cannot see any page until you click its icon.
+The extension runs on www.instagram.com only. With the download buttons switched off, no script runs on Instagram pages until you click the toolbar icon.
 
 ## How saving works
 

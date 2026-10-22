@@ -136,8 +136,8 @@
     "description": "Popup switch that turns the on-page download buttons on or off"
   },
   "pageButtonsHelp": {
-    "message": "Adds a download button to posts, profile grids, Stories and Reels. Chrome asks for access to instagram.com.",
-    "description": "Explains the switch and Chrome's permission prompt"
+    "message": "Adds a download button to posts, profile grids, Stories and Reels.",
+    "description": "Help under the on-page buttons switch in settings"
   },
   "pageButtonTitle": {
     "message": "Download with ig.tools",
@@ -175,21 +175,9 @@
     "message": "Settings",
     "description": "Settings button and page title"
   },
-  "dismiss": {
-    "message": "Dismiss",
-    "description": "Accessible name of the button that closes the tip"
-  },
   "formTitle": {
     "message": "Download from Instagram",
     "description": "Title above the link field on pages without media"
-  },
-  "tipText": {
-    "message": "Add download buttons to Instagram",
-    "description": "Tip offering the on-page download buttons"
-  },
-  "tipOn": {
-    "message": "Turn on",
-    "description": "Button in the tip that turns the on-page buttons on"
   },
   "select": {
     "message": "Select",
@@ -331,10 +319,6 @@
     "message": "Change",
     "description": "Link to Chrome's shortcut settings"
   },
-  "folder": {
-    "message": "Folder",
-    "description": "Settings row: download folder"
-  },
   "sourceCode": {
     "message": "Source code",
     "description": "Link to the source code"
@@ -352,5 +336,21 @@
         "example": "1.0.0"
       }
     }
+  },
+  "shortcutSet": {
+    "message": "Set",
+    "description": "Link to Chrome's shortcut settings when no shortcut is set"
+  },
+  "folderAccount": {
+    "message": "By account",
+    "description": "Folder option: a folder per account with posts, stories and highlights subfolders"
+  },
+  "folderOne": {
+    "message": "All in one ig.tools folder",
+    "description": "Folder option: every file in one ig.tools folder"
+  },
+  "folderDownloads": {
+    "message": "Straight to Downloads",
+    "description": "Folder option: every file straight in the Downloads folder"
   }
 }
