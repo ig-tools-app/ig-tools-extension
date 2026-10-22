@@ -2,6 +2,9 @@
 // need to change SITE (and the locale paths below if theirs differ).
 export const SITE = "https://ig.tools";
 
+// Linked from the popup settings as the source code and privacy policy.
+export const REPOSITORY = "https://github.com/ig-tools-app/ig-tools-extension";
+
 // Browser UI language → site path prefix. Anything else opens the English site.
 const localePaths = {
   es: "/es", pt: "/pt-br", ja: "/ja", ko: "/ko", id: "/id", tr: "/tr", ar: "/ar",

@@ -163,11 +163,14 @@ test("a photo post shows one card and saves it to Downloads/ig.tools", async () 
   const { page, popup } = await openPopup("https://www.instagram.com/p/Cphoto11111/");
   await popup.locator(".card").first().waitFor();
   assert.equal(await popup.locator(".card").count(), 1);
-  assert.equal(await popup.locator("#download-all").isHidden(), true);
-  assert.equal(await popup.locator("#open").getAttribute("class"), "secondary");
+  // One item is saved with the main button; the link field gives way to a footer link.
+  assert.equal(await popup.locator(".card .save").count(), 0);
+  assert.equal(await popup.locator("#form").isHidden(), true);
+  assert.equal(await popup.locator("#source-name").textContent(), "@natgeo");
+  assert.equal(await popup.getByRole("link", { name: "Open in ig.tools" }).isVisible(), true);
   assert.equal(apiHeaders["x-ig-app-id"], "936619743392459");
   assert.equal(apiHeaders["x-csrftoken"], "test-token");
-  await popup.getByRole("button", { name: "Download: Photo 1" }).click();
+  await popup.getByRole("button", { name: "Download photo" }).click();
   await popup.getByRole("button", { name: "Saved" }).waitFor();
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/posts/Cphoto11111.jpg"]);
   await close(page, popup);
@@ -175,7 +178,7 @@ test("a photo post shows one card and saves it to Downloads/ig.tools", async () 
 
 test("a Reel saves the MP4", async () => {
   const { page, popup } = await openPopup("https://www.instagram.com/reel/Creel222222/");
-  await popup.getByRole("button", { name: "Download: Video 1" }).click();
+  await popup.getByRole("button", { name: "Download video" }).click();
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/posts/Creel222222.mp4"]);
   await close(page, popup);
 });
@@ -192,8 +195,22 @@ test("a carousel lists every slide and Download all saves them in order", async 
       await popup.locator("body").screenshot({ path: join(screenshots, `popup-carousel-${scheme}.png`) });
     }
   }
-  await popup.getByRole("button", { name: "Download all" }).click();
+  await popup.getByRole("button", { name: "Download all 3" }).click();
   assert.deepEqual(await waitForSaved(popup, 3), ["ig.tools/natgeo/posts/Ccarousel33_1.jpg", "ig.tools/natgeo/posts/Ccarousel33_2.mp4", "ig.tools/natgeo/posts/Ccarousel33_3.jpg"]);
+  await close(page, popup);
+});
+
+test("selected slides are the only ones the main button saves", async () => {
+  const { page, popup } = await openPopup("https://www.instagram.com/p/Ccarousel33/");
+  await popup.getByRole("button", { name: "Select: Photo 2" }).click();
+  await popup.getByRole("button", { name: "Select: Video 1" }).click();
+  assert.equal(await popup.locator("#media-count").textContent(), "2 selected");
+  await popup.getByRole("button", { name: "Download 2 selected" }).click();
+  assert.deepEqual(await waitForSaved(popup, 2), ["ig.tools/natgeo/posts/Ccarousel33_2.mp4", "ig.tools/natgeo/posts/Ccarousel33_3.jpg"]);
+  await popup.locator("#download-all.is-done").waitFor();
+  // Clearing the selection offers the rest again.
+  await popup.getByRole("button", { name: "Clear" }).click();
+  assert.equal(await popup.locator("#download-all").textContent(), "Download all 3");
   await close(page, popup);
 });
 
@@ -352,7 +369,7 @@ test("the profile picture shown on the page is saved without any request", async
   avatarAppIds.length = 0;
   const { page, popup } = await openPopup("https://www.instagram.com/natgeo/");
   await popup.getByRole("tab", { name: "Profile picture" }).click();
-  await popup.getByRole("button", { name: "Download: Profile picture" }).click();
+  await popup.getByRole("button", { name: "Download profile picture" }).click();
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/natgeo_profile_picture.jpg"]);
   // The account's own picture, not the viewer's small one or a look-alike username's.
   assert.match(await popup.locator(".card img").getAttribute("src"), /avatar_page_1080/);
@@ -366,7 +383,7 @@ test("the profile picture tab saves the full-size picture", async () => {
   avatarAppIds.length = 0;
   const { page, popup } = await openPopup("https://www.instagram.com/natgeo/");
   await popup.getByRole("tab", { name: "Profile picture" }).click();
-  await popup.getByRole("button", { name: "Download: Profile picture" }).click();
+  await popup.getByRole("button", { name: "Download profile picture" }).click();
   assert.deepEqual(await waitForSaved(popup, 1), ["ig.tools/natgeo/natgeo_profile_picture.jpg"]);
   assert.match(await popup.locator(".card img").getAttribute("src"), /avatar_1080/);
   assert.equal(await popup.locator("#status").isHidden(), true);
@@ -421,7 +438,8 @@ test("Stories of a different account than the profile are never shown", async ()
 test("pages without media only show the link field", async () => {
   const home = await openPopup("https://www.instagram.com/");
   await home.popup.getByText("Open a post, Reel, Story or profile on Instagram").waitFor();
-  assert.equal(await home.popup.locator("#open").getAttribute("class"), "primary");
+  assert.equal(await home.popup.locator("#open").isVisible(), true);
+  assert.equal(await home.popup.locator("#actions").isHidden(), true);
   await close(home.page, home.popup);
 });
 
@@ -451,7 +469,15 @@ test("with instagram.com access the page buttons are registered and the switch i
   const scripts = await worker.evaluate(() => chrome.scripting.getRegisteredContentScripts());
   assert.deepEqual(scripts.map(s => [s.id, s.js, s.css]), [["page-buttons", ["src/content.js"], ["src/content.css"]]]);
   const { page, popup } = await openPopup("https://www.instagram.com/");
+  // With the buttons on, the tip offering them stays hidden.
+  await popup.getByText("Open a post, Reel, Story or profile on Instagram").waitFor();
+  assert.equal(await popup.locator("#tip").isHidden(), true);
+  await popup.getByRole("button", { name: "Settings" }).click();
   assert.equal(await popup.getByRole("switch", { name: "Download buttons on Instagram" }).isChecked(), true);
+  assert.equal(await popup.locator("#shortcut-keys").textContent(), "Alt + Shift + S opens this popup");
+  assert.equal(await popup.locator("#main").isHidden(), true);
+  await popup.getByRole("button", { name: "Back" }).click();
+  assert.equal(await popup.locator("#main").isVisible(), true);
   await close(page, popup);
 });
 

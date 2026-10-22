@@ -45,8 +45,11 @@ All CSS lives in [`src/content.css`](src/content.css) under `igt-` classes; noth
 
 ## Popup
 
-- Colours and radii follow the ig.tools site's design tokens, with a dark value for every colour. One primary button per view.
-- Media grid: two columns for posts, three for Stories, one large card for a single item. The scroll container wraps the grid; the grid itself must not scroll, or its rows collapse and cards overlap. Chrome limits popups to 600px tall.
+- Colours follow the icon: the orange-to-magenta gradient is for the one main button, magenta for selection and links. Every colour has a dark value.
+- Layout: a header (logo, settings), a scrolling middle, then the main button and the ig.tools link pinned at the bottom. Chrome limits popups to 600px tall. The middle is a flex column, not a grid: grid rows in a scrolling box shrink and cards overlap.
+- Media: one item is shown large and saved with the main button. Several items get a grid (two columns for posts, three for Stories) with select (top-left) and save (bottom-right) controls; the main button saves the selection, or everything.
+- The link field only shows on pages without media. On Instagram pages, ig.tools is a link at the bottom.
+- Settings (the on-page buttons switch, shortcut, folder) open from the gear. Until the on-page buttons are on, a dismissible tip offers them (remembered in the popup's `localStorage`).
 - The font stack lists named fonts before `system-ui`: on Chinese Windows, `system-ui` resolves to a font that draws no visible underscore at 125% scaling.
 - Use logical properties (`inset-inline-*`, `margin-inline-*`); Arabic is right-to-left.
 

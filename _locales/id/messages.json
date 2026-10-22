@@ -31,14 +31,6 @@
     "message": "Buka halaman ini dengan ig.tools",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "Di halaman ini",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "Unduh semua",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "Unduh",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "Instagram tidak merespons. Coba lagi sebentar lagi.",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "Lihat di ig.tools tanpa login",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "Foto $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "Setelan",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "Tutup",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "Unduh dari Instagram",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "Tambahkan tombol unduh ke Instagram",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "Aktifkan",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "Pilih",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "Pilih semua",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "Hapus pilihan",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "$COUNT$ dipilih",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$ item",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "1 foto",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "1 video",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "Unduh semua $COUNT$",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "Unduh $COUNT$ yang dipilih",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "Unduh foto",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "Unduh video",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "Unduh foto profil",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "Disimpan ke $PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "Buka di ig.tools · tanpa login",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "Postingan",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "Reel",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "Story",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "Sorotan",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "Profil",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "Menyimpan Story di sini tidak menambahkan Anda ke daftar penonton.",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "Di Instagram",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "Unduhan",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "Pintasan keyboard",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "$KEYS$ membuka popup ini",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "Belum diatur",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "Ubah",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "Folder",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "Kode sumber",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "Privasi",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "Versi $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }

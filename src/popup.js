@@ -1,25 +1,40 @@
-import { instagramInput, inputFromTabUrl, siteUrl } from "./site.js";
-import { avatarFile, highlightsFromResult, mediaFromResult, pageFromUrl, shortcodeToId } from "./instagram.js";
+import { REPOSITORY, instagramInput, inputFromTabUrl, siteUrl } from "./site.js";
+import { avatarFile, highlightsFromResult, mediaFromResult, pageFromUrl, safeMediaUrl, shortcodeToId } from "./instagram.js";
 import { collectFromPage } from "./collect.js";
 
 const message = (key, ...substitutions) => chrome.i18n.getMessage(key, substitutions.map(String));
 const $ = id => document.getElementById(id);
 const form = $("form"), input = $("input"), error = $("error");
-const mediaSection = $("media"), grid = $("grid"), downloadAll = $("download-all"), title = $("media-title"), back = $("back");
+const mediaSection = $("media"), grid = $("grid"), title = $("media-title"), back = $("back");
+const mediaCount = $("media-count"), selectToggle = $("select-toggle"), mediaNote = $("media-note");
+const actions = $("actions"), primary = $("download-all"), actionsNote = $("actions-note"), siteLink = $("site-link");
 const tabs = $("tabs"), tabButtons = [...tabs.querySelectorAll("[role=tab]")];
 const status = $("status"), statusText = $("status-text"), statusLink = $("status-link");
-
-document.documentElement.lang = message("@@ui_locale").replace("_", "-");
-document.documentElement.dir = message("@@bidi_dir");
-for (const element of document.querySelectorAll("[data-i18n]")) element.textContent = message(element.dataset.i18n);
-input.placeholder = message("placeholder");
 
 const svg = path => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
 const icons = {
   download: svg('<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>'),
   done: svg('<path d="m5 12 5 5 9-10"/>'),
   play: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
+  settings: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
+  back: svg('<path d="m15 18-6-6 6-6"/>'),
+  close: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
+  external: svg('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
+  link: svg('<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>'),
 };
+
+document.documentElement.lang = message("@@ui_locale").replace("_", "-");
+document.documentElement.dir = message("@@bidi_dir");
+for (const element of document.querySelectorAll("[data-i18n]")) element.textContent = message(element.dataset.i18n);
+for (const element of document.querySelectorAll("[data-i18n-label]")) {
+  element.setAttribute("aria-label", message(element.dataset.i18nLabel));
+  element.title = element.getAttribute("aria-label");
+}
+input.placeholder = message("placeholder");
+$("settings-open").innerHTML = icons.settings;
+$("settings-back").innerHTML = icons.back;
+$("tip-dismiss").innerHTML = icons.close;
+document.querySelector(".field-icon").innerHTML = icons.link;
 
 // `tool` is an ig.tools page slug, e.g. the profile picture downloader.
 function openOnSite(value, tool) {
@@ -40,19 +55,42 @@ function showStatus(text, link, detail) {
   }
 }
 
-// With media on screen, saving is the main action and ig.tools becomes the secondary one.
-function demoteSiteForm() {
-  $("open").className = "secondary";
-  $("form-title").hidden = false;
+// Pages with nothing to save show the ig.tools link field instead.
+function showForm() {
+  form.hidden = false;
+  document.body.classList.add("is-empty");
 }
+
+// The account the media belongs to, above the media. `picture` is a small
+// profile picture when one is known; otherwise the first letter stands in.
+function showSource(username, detail, picture) {
+  if (!username) return;
+  $("source").hidden = false;
+  $("source-name").textContent = `@${username}`;
+  $("source-detail").textContent = detail;
+  const slot = $("source-picture");
+  const url = safeMediaUrl(picture);
+  if (url) {
+    const image = document.createElement("img");
+    image.src = url;
+    image.alt = "";
+    image.referrerPolicy = "no-referrer";
+    image.onerror = () => { slot.textContent = username[0]; };
+    slot.replaceChildren(image);
+  } else if (!slot.firstElementChild) {
+    slot.textContent = username[0];
+  }
+}
+
+const itemsText = files => files.length > 1 ? message("itemCount", files.length) : message(files[0].type === "video" ? "oneVideo" : "onePhoto");
 
 // Each view gets a ticket; a request that finishes after the user moved on is ignored.
 let currentView = 0;
 const isCurrent = ticket => ticket === currentView;
 
-// Clears the grid and heading before a view is drawn, and starts a new ticket.
-// On profile tabs the selected tab already names the view, so the heading is
-// kept for screen readers only (`visibleHeading` false).
+// Clears the media before a view is drawn, and starts a new ticket. On profile
+// tabs the selected tab already names the view, so the heading is kept for
+// screen readers only (`visibleHeading` false).
 function resetView(heading, visibleHeading = true) {
   currentView++;
   mediaSection.hidden = false;
@@ -62,35 +100,54 @@ function resetView(heading, visibleHeading = true) {
   title.textContent = heading;
   title.classList.toggle("sr-only", !visibleHeading);
   back.hidden = true;
-  downloadAll.hidden = true;
-  downloadAll.disabled = false;
+  mediaCount.textContent = "";
+  selectToggle.hidden = true;
+  mediaNote.hidden = true;
+  actions.hidden = true;
   updateHead();
 }
 
-// The heading row is dropped when it would only hold a hidden heading.
+// The heading row is dropped when it would show nothing.
 function updateHead() {
-  $("media-head").hidden = title.classList.contains("sr-only") && back.hidden && downloadAll.hidden;
+  $("media-head").hidden = title.classList.contains("sr-only") && back.hidden && !mediaCount.textContent;
 }
 
 async function save(file, button) {
   button.disabled = true;
   try {
     await chrome.downloads.download({ url: file.url, filename: file.filename, conflictAction: "uniquify" });
-    button.innerHTML = icons.done;
-    button.setAttribute("aria-label", message("saved"));
-    button.classList.add("is-done");
+    file.saved = true;
+    if (button.classList.contains("save")) {
+      button.innerHTML = icons.done;
+      button.setAttribute("aria-label", message("saved"));
+      button.classList.add("is-done");
+    }
+    return true;
   } catch {
     button.disabled = false;
     showStatus(message("downloadFailed"));
+    return false;
   }
 }
 
-// layout: "post" (2 columns), "story" (3 columns), "avatar" (one square card).
+function setPrimary(label, done = false) {
+  primary.innerHTML = `${done ? icons.done : icons.download}<span></span>`;
+  primary.lastChild.textContent = done ? message("saved") : label;
+  primary.classList.toggle("is-done", done);
+  primary.disabled = done;
+}
+
+// layout: "post" (2 columns), "story" (3 columns), "avatar" (one round picture).
+// One item is shown large and saved with the main button; several get a grid
+// with select and save controls on each card, and the main button saves the
+// selection, or everything when nothing is selected.
 function renderMedia(files, layout) {
   mediaSection.hidden = false;
-  grid.className = `grid${files.length === 1 ? " is-single" : ""}${layout === "post" ? "" : ` is-${layout}`}`;
+  const single = files.length === 1;
+  grid.className = `grid${single ? " is-single" : ""}${layout === "post" ? "" : ` is-${layout}`}`;
+  const selected = new Set();
   let photos = 0, videos = 0;
-  const buttons = files.map(file => {
+  const cards = files.map(file => {
     const label = layout === "avatar" ? message("tabAvatar") : file.type === "video" ? message("videoLabel", ++videos) : message("photoLabel", ++photos);
     const item = document.createElement("li");
     item.className = "card";
@@ -102,23 +159,65 @@ function renderMedia(files, layout) {
       item.append(image);
     }
     if (file.type === "video") item.insertAdjacentHTML("beforeend", `<span class="badge">${icons.play}</span>`);
+    grid.append(item);
+    if (single) return { item };
+    const pick = document.createElement("button");
+    pick.type = "button";
+    pick.className = "pick";
+    pick.innerHTML = `<span>${icons.done}</span>`;
+    pick.setAttribute("aria-label", `${message("select")}: ${label}`);
+    pick.setAttribute("aria-pressed", "false");
+    pick.addEventListener("click", () => {
+      selected.has(file) ? selected.delete(file) : selected.add(file);
+      update();
+    });
     const button = document.createElement("button");
     button.type = "button";
     button.className = "save";
     button.innerHTML = icons.download;
     button.setAttribute("aria-label", `${message("download")}: ${label}`);
-    button.addEventListener("click", () => save(file, button));
-    item.append(button);
-    grid.append(item);
-    return button;
+    button.addEventListener("click", () => save(file, button).then(update));
+    item.append(pick, button);
+    return { item, pick, button };
   });
-  downloadAll.hidden = files.length < 2;
-  downloadAll.onclick = async () => {
-    downloadAll.disabled = true;
-    for (const [index, file] of files.entries()) if (!buttons[index].disabled) await save(file, buttons[index]);
+
+  const singleLabel = layout === "avatar" ? message("downloadAvatar") : files[0]?.type === "video" ? message("downloadVideo") : message("downloadPhoto");
+  function update() {
+    for (const [index, { item, pick }] of cards.entries()) {
+      if (!pick) continue;
+      item.classList.toggle("is-selected", selected.has(files[index]));
+      pick.setAttribute("aria-pressed", String(selected.has(files[index])));
+    }
+    const targets = selected.size ? [...selected] : files;
+    const label = single ? singleLabel : selected.size ? message("downloadSelected", selected.size) : message("downloadAllCount", files.length);
+    if (!primary.dataset.busy) setPrimary(label, targets.every(file => file.saved));
+    if (!single) {
+      mediaCount.textContent = selected.size ? message("selectedCount", selected.size) : message("itemCount", files.length);
+      selectToggle.hidden = false;
+      selectToggle.textContent = message(selected.size ? "clearSelection" : "selectAll");
+    }
+    updateHead();
+  }
+  selectToggle.onclick = () => {
+    if (selected.size) selected.clear();
+    else files.forEach(file => selected.add(file));
+    update();
   };
-  updateHead();
-  demoteSiteForm();
+  primary.onclick = async () => {
+    const targets = (selected.size ? [...selected] : files).filter(file => !file.saved);
+    primary.dataset.busy = "1";
+    primary.disabled = true;
+    for (const file of targets) {
+      const card = cards[files.indexOf(file)];
+      if (!await save(file, card.button ?? primary)) break;
+    }
+    delete primary.dataset.busy;
+    update();
+  };
+  actions.hidden = false;
+  // Every file of a view goes to the same folder.
+  actionsNote.textContent = message("savesTo", `Downloads/${files[0].filename.split("/").slice(0, -1).join("/")}/`);
+  update();
 }
 
 let tabId;
@@ -146,7 +245,10 @@ const profile = { username: "", userId: null, smallPicture: null, stories: null,
 
 function remember(result) {
   profile.userId ??= result?.userId ?? null;
-  profile.smallPicture ??= result?.smallPicture ?? null;
+  if (!profile.smallPicture && result?.smallPicture) {
+    profile.smallPicture = result.smallPicture;
+    showSource(profile.username, message("kindProfile"), profile.smallPicture);
+  }
 }
 const accountRequest = kind => ({ kind, username: profile.username, userId: profile.userId, smallPicture: profile.smallPicture, storyId: null });
 const browseLink = () => ({ label: message("browseOnSite"), input: `@${profile.username}` });
@@ -166,6 +268,9 @@ async function showStoriesTab() {
   if (!profile.stories.length) return showStatus(message("noStories"), browseLink(), profile.storiesDetail);
   status.hidden = true;
   renderMedia(profile.stories, "story");
+  // Tested in October 2026 for this profile-page request only; see README.
+  mediaNote.textContent = message("storiesNote");
+  mediaNote.hidden = false;
 }
 
 async function showHighlightsTab() {
@@ -207,13 +312,13 @@ async function showHighlightsTab() {
     item.append(button);
     grid.append(item);
   }
-  demoteSiteForm();
 }
 
 async function showHighlight(highlight) {
   resetView(highlight.title || message("tabHighlights"));
   const ticket = currentView;
   back.hidden = false;
+  updateHead();
   if (!highlight.files) {
     showStatus(message("loading"));
     const result = await collect({ kind: "highlight", highlightId: highlight.id });
@@ -224,7 +329,6 @@ async function showHighlight(highlight) {
   if (!highlight.files.length) return showStatus(message("unavailable"), browseLink());
   status.hidden = true;
   renderMedia(highlight.files, "story");
-  back.hidden = false;
   back.focus();
 }
 
@@ -275,59 +379,129 @@ back.addEventListener("click", () => showHighlightsTab());
 
 // ---- Entry point ----
 
+function showSiteLink(siteInput, label) {
+  siteLink.hidden = false;
+  siteLink.innerHTML = `<span></span>${icons.external}`;
+  siteLink.firstChild.textContent = label;
+  siteLink.onclick = event => { event.preventDefault(); openOnSite(siteInput); };
+}
+
+const kindLabels = { story: "kindStory", highlight: "kindHighlight" };
+
 async function loadPage(tab) {
   tabId = tab?.id;
   const page = tab?.url ? pageFromUrl(tab.url) : null;
   const siteInput = tab?.url && inputFromTabUrl(tab.url);
   if (siteInput) input.value = siteInput;
-  if (!page) return;
-  if (page.kind === "other") return showStatus(message("notMediaPage"));
+  if (page) showTip();
+  if (!page || page.kind === "other") return showStatus(message("notMediaPage")), showForm();
   if (page.kind === "profile") {
     profile.username = page.username;
+    showSource(page.username, message("kindProfile"));
+    showSiteLink(`@${page.username}`, message("browseOnSite"));
     tabs.hidden = false;
     return selectTab(tabButtons[0]);
   }
+  if (siteInput) showSiteLink(siteInput, message("openOnSiteFooter"));
   const mediaId = page.kind === "post" ? shortcodeToId(page.shortcode) : null;
   if (page.kind === "post" && !mediaId) return showStatus(message("unavailable"));
   showStatus(message("loading"));
-  const siteLink = siteInput ? { label: message("openOnSite"), input: siteInput } : undefined;
+  const statusSiteLink = siteInput ? { label: message("openOnSite"), input: siteInput } : undefined;
   const result = await collect({ ...page, mediaId });
-  if (showFailure(result, siteLink)) return;
+  if (showFailure(result, statusSiteLink)) return;
   const files = mediaFromResult(result, page);
-  if (!files.length) return showStatus(message("unavailable"), siteLink, result?.detail);
+  if (!files.length) return showStatus(message("unavailable"), statusSiteLink, result?.detail);
   status.hidden = true;
+  const isReel = page.kind === "post" && /\/reels?\//.test(new URL(tab.url).pathname);
+  const kind = message(isReel ? "kindReel" : kindLabels[page.kind] ?? "kindPost");
+  const owner = result.items?.[0]?.user;
+  title.textContent = kind;
+  // Several items are counted above the grid instead.
+  showSource(owner?.username ?? result.owner ?? page.username, files.length > 1 ? kind : `${kind} · ${itemsText(files)}`, owner?.profile_pic_url);
   renderMedia(files, page.kind);
 }
 
 // Tests open the popup as a normal page and pass the Instagram tab to inspect.
 const testTab = Number(new URLSearchParams(location.search).get("tab"));
 const query = testTab ? chrome.tabs.get(testTab).then(tab => [tab]) : chrome.tabs.query({ active: true, currentWindow: true });
-query.then(([tab]) => loadPage(tab)).finally(() => { if (mediaSection.hidden) input.focus(); });
+query.then(([tab]) => loadPage(tab)).finally(() => { if (!form.hidden) input.focus(); });
+
+// ---- Settings ----
+
+function showSettings(open) {
+  document.body.classList.toggle("in-settings", open);
+  for (const id of ["settings", "settings-title", "settings-back"]) $(id).hidden = !open;
+  $(open ? "settings-back" : "settings-open").focus();
+}
+$("settings-open").addEventListener("click", () => showSettings(true));
+$("settings-back").addEventListener("click", () => showSettings(false));
+
+$("version").textContent = message("version", chrome.runtime.getManifest().version);
+for (const [id, href] of [["source-code", REPOSITORY], ["privacy", `${REPOSITORY}/blob/main/PRIVACY.md`]]) {
+  $(id).href = href;
+  $(id).target = "_blank";
+  $(id).rel = "noopener";
+}
+$("shortcut-change").addEventListener("click", event => {
+  event.preventDefault();
+  chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
+  window.close();
+});
+// The shortcut is unset when another extension already uses Alt+Shift+S.
+chrome.commands.getAll().then(commands => {
+  const keys = commands.find(command => command.name === "_execute_action")?.shortcut;
+  const slot = $("shortcut-keys");
+  if (!keys) return void (slot.textContent = message("shortcutNotSet"));
+  const [before, after = ""] = message("shortcutHelp", "⁣").split("⁣");
+  slot.replaceChildren(before);
+  keys.split("+").forEach((key, index) => {
+    if (index) slot.append(" + ");
+    const kbd = document.createElement("kbd");
+    kbd.textContent = key;
+    slot.append(kbd);
+  });
+  slot.append(after);
+});
 
 // ---- On-page buttons: an optional permission for instagram.com ----
 
 const pageButtons = $("page-buttons");
 const instagramOrigins = ["https://www.instagram.com/*"];
-chrome.permissions.contains({ origins: instagramOrigins }).then(enabled => { pageButtons.checked = enabled; });
+const tipDismissed = () => { try { return localStorage.getItem("tipDismissed") === "1"; } catch { return false; } };
+let buttonsEnabled = chrome.permissions.contains({ origins: instagramOrigins });
+buttonsEnabled.then(enabled => { pageButtons.checked = enabled; });
+
+// On Instagram, a tip offers the buttons until they are on or the tip is dismissed.
+async function showTip() {
+  $("tip").hidden = tipDismissed() || await buttonsEnabled;
+}
+
+// permissions.request must run straight from the click, before any other await.
+async function enablePageButtons() {
+  const granted = await chrome.permissions.request({ origins: instagramOrigins }).catch(() => false);
+  pageButtons.checked = granted;
+  if (!granted) return false;
+  $("tip").hidden = true;
+  await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
+  // The open Instagram tab gets the buttons now, without a reload.
+  const tab = tabId && await chrome.tabs.get(tabId).catch(() => null);
+  if (tab?.url && pageFromUrl(tab.url)) {
+    await chrome.scripting.insertCSS({ target: { tabId }, files: ["src/content.css"] }).catch(() => {});
+    await chrome.scripting.executeScript({ target: { tabId }, files: ["src/content.js"] }).catch(() => {});
+  }
+  return true;
+}
 
 pageButtons.addEventListener("change", async () => {
-  if (pageButtons.checked) {
-    // permissions.request must run straight from the click, before any other await.
-    const granted = await chrome.permissions.request({ origins: instagramOrigins }).catch(() => false);
-    pageButtons.checked = granted;
-    if (!granted) return;
-    await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
-    // The open Instagram tab gets the buttons now, without a reload.
-    const tab = tabId && await chrome.tabs.get(tabId).catch(() => null);
-    if (tab?.url && pageFromUrl(tab.url)) {
-      await chrome.scripting.insertCSS({ target: { tabId }, files: ["src/content.css"] }).catch(() => {});
-      await chrome.scripting.executeScript({ target: { tabId }, files: ["src/content.js"] }).catch(() => {});
-    }
-  } else {
-    const removed = await chrome.permissions.remove({ origins: instagramOrigins }).catch(() => false);
-    pageButtons.checked = !removed;
-    if (removed) await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
-  }
+  if (pageButtons.checked) return enablePageButtons();
+  const removed = await chrome.permissions.remove({ origins: instagramOrigins }).catch(() => false);
+  pageButtons.checked = !removed;
+  if (removed) await chrome.runtime.sendMessage({ type: "page-buttons-sync" });
+});
+$("tip-on").addEventListener("click", () => enablePageButtons());
+$("tip-dismiss").addEventListener("click", () => {
+  try { localStorage.setItem("tipDismissed", "1"); } catch { /* shown again next time */ }
+  $("tip").hidden = true;
 });
 
 input.addEventListener("input", () => { error.hidden = true; input.removeAttribute("aria-invalid"); });

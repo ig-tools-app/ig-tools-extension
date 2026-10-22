@@ -31,14 +31,6 @@
     "message": "用 ig.tools 開啟此頁面",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "此頁面的媒體",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "全部下載",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "下載",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "Instagram 沒有回應，請稍後再試。",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "免登入在 ig.tools 查看",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "相片 $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "設定",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "關閉",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "從 Instagram 下載",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "在 Instagram 加入下載按鈕",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "開啟",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "選取",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "全選",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "取消選取",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "已選取 $COUNT$ 項",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$ 項",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "1 張相片",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "1 部影片",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "全部下載（$COUNT$）",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "下載已選取的 $COUNT$ 項",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "下載相片",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "下載影片",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "下載大頭貼",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "儲存到 $PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "在 ig.tools 開啟 · 無需登入",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "貼文",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "Reels",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "限時動態",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "精選動態",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "個人檔案",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "在這裡儲存限時動態，不會出現在觀看者名單中。",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "在 Instagram 上",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "下載",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "鍵盤快速鍵",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "按 $KEYS$ 開啟這個視窗",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "未設定",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "變更",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "資料夾",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "原始碼",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "隱私權",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "版本 $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }

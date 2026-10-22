@@ -31,14 +31,6 @@
     "message": "이 페이지를 ig.tools에서 열기",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "이 페이지",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "모두 다운로드",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "다운로드",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "인스타그램이 응답하지 않습니다. 잠시 후 다시 시도하세요.",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "로그인 없이 ig.tools에서 보기",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "사진 $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "설정",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "닫기",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "Instagram에서 다운로드",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "Instagram에 다운로드 버튼 추가",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "켜기",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "선택",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "모두 선택",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "선택 해제",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "$COUNT$개 선택됨",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$개 항목",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "사진 1장",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "동영상 1개",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "$COUNT$개 모두 다운로드",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "선택한 $COUNT$개 다운로드",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "사진 다운로드",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "동영상 다운로드",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "프로필 사진 다운로드",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "저장 위치: $PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "ig.tools에서 열기 · 로그인 불필요",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "게시물",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "릴스",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "스토리",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "하이라이트",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "프로필",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "여기서 스토리를 저장해도 조회자 목록에 표시되지 않습니다.",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "Instagram에서",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "다운로드",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "키보드 단축키",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "$KEYS$ 키로 이 팝업 열기",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "설정 안 됨",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "변경",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "폴더",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "소스 코드",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "개인정보 처리방침",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "버전 $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }

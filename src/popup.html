@@ -5,41 +5,98 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <section id="media" class="media" hidden aria-labelledby="media-title">
-    <div id="tabs" class="tabs" role="tablist" hidden>
-      <button type="button" role="tab" data-tab="stories" data-i18n="tabStories"></button>
-      <button type="button" role="tab" data-tab="highlights" data-i18n="tabHighlights"></button>
-      <button type="button" role="tab" data-tab="avatar" data-i18n="tabAvatar"></button>
+  <header class="top">
+    <button id="settings-back" type="button" class="icon-button flip" hidden data-i18n-label="back"></button>
+    <span id="brand" class="brand"><img src="../icons/icon-32.png" alt="" width="22" height="22">ig.tools</span>
+    <h1 id="settings-title" class="top-title" hidden data-i18n="settings"></h1>
+    <button id="settings-open" type="button" class="icon-button" data-i18n-label="settings"></button>
+  </header>
+
+  <main id="main" class="body">
+    <div id="source" class="source" hidden>
+      <span class="avatar"><span id="source-picture" class="avatar-picture"></span></span>
+      <span class="source-text">
+        <b id="source-name"></b>
+        <small id="source-detail"></small>
+      </span>
     </div>
-    <div id="media-head" class="media-head">
-      <button id="back" type="button" class="back" hidden data-i18n="back"></button>
-      <h1 id="media-title" data-i18n="onThisPage"></h1>
-      <button id="download-all" type="button" class="primary" hidden data-i18n="downloadAll"></button>
+    <section id="media" class="media" hidden aria-labelledby="media-title">
+      <div id="tabs" class="tabs" role="tablist" hidden>
+        <button type="button" role="tab" data-tab="stories" data-i18n="tabStories"></button>
+        <button type="button" role="tab" data-tab="highlights" data-i18n="tabHighlights"></button>
+        <button type="button" role="tab" data-tab="avatar" data-i18n="tabAvatar"></button>
+      </div>
+      <div id="media-head" class="media-head">
+        <button id="back" type="button" class="back" hidden data-i18n="back"></button>
+        <h2 id="media-title" class="sr-only"></h2>
+        <span id="media-count" class="media-count"></span>
+        <button id="select-toggle" type="button" class="text-button" hidden></button>
+      </div>
+      <ul id="grid" class="grid"></ul>
+      <p id="media-note" class="note" hidden></p>
+    </section>
+    <div id="status" class="status" role="status" hidden>
+      <p id="status-text"></p>
+      <a id="status-link" href="#" hidden></a>
+      <small id="status-detail" class="detail" hidden></small>
     </div>
-    <div class="scroller"><ul id="grid" class="grid"></ul></div>
-  </section>
-  <div id="status" class="status" role="status" hidden>
-    <p id="status-text"></p>
-    <a id="status-link" href="#" hidden></a>
-    <small id="status-detail" class="detail" hidden></small>
+    <form id="form" novalidate hidden>
+      <h2 class="form-title" data-i18n="formTitle"></h2>
+      <label class="field">
+        <span class="sr-only" data-i18n="placeholder"></span>
+        <span class="field-icon" aria-hidden="true"></span>
+        <input id="input" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2048" aria-describedby="helper">
+      </label>
+      <button id="open" type="submit" class="primary" data-i18n="openButton"></button>
+      <p id="error" class="error" role="alert" hidden data-i18n="invalidInput"></p>
+      <p id="helper" class="helper" data-i18n="helper"></p>
+    </form>
+    <div id="tip" class="tip" hidden>
+      <p data-i18n="tipText"></p>
+      <button id="tip-on" type="button" class="tip-on" data-i18n="tipOn"></button>
+      <button id="tip-dismiss" type="button" class="icon-button small" data-i18n-label="dismiss"></button>
+    </div>
+  </main>
+
+  <div id="actions" class="actions" hidden>
+    <button id="download-all" type="button" class="primary"></button>
+    <p id="actions-note" class="actions-note"></p>
   </div>
-  <form id="form" novalidate>
-    <h2 id="form-title" class="form-title" hidden data-i18n="viewOnSite"></h2>
-    <label class="field">
-      <span class="sr-only" data-i18n="placeholder"></span>
-      <input id="input" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="2048" aria-describedby="helper">
-    </label>
-    <button id="open" type="submit" class="primary" data-i18n="openButton"></button>
-    <p id="error" class="error" role="alert" hidden data-i18n="invalidInput"></p>
-    <p id="helper" class="helper" data-i18n="helper"></p>
-  </form>
-  <label class="setting">
-    <input id="page-buttons" type="checkbox" role="switch" aria-describedby="page-buttons-help">
-    <span class="setting-text">
-      <span data-i18n="pageButtons"></span>
-      <small id="page-buttons-help" data-i18n="pageButtonsHelp"></small>
-    </span>
-  </label>
+  <a id="site-link" class="site-link" href="#" hidden></a>
+
+  <main id="settings" class="body" hidden>
+    <h2 class="group-title" data-i18n="settingsOnInstagram"></h2>
+    <div class="group">
+      <label class="row">
+        <span class="row-text">
+          <b data-i18n="pageButtons"></b>
+          <small id="page-buttons-help" data-i18n="pageButtonsHelp"></small>
+        </span>
+        <input id="page-buttons" class="switch" type="checkbox" role="switch" aria-describedby="page-buttons-help">
+      </label>
+    </div>
+    <h2 class="group-title" data-i18n="settingsDownloads"></h2>
+    <div class="group">
+      <div class="row">
+        <span class="row-text">
+          <b data-i18n="shortcut"></b>
+          <small id="shortcut-keys"></small>
+        </span>
+        <a id="shortcut-change" href="#" data-i18n="shortcutChange"></a>
+      </div>
+      <div class="row">
+        <span class="row-text">
+          <b data-i18n="folder"></b>
+          <small>Downloads/ig.tools/&lt;username&gt;/</small>
+        </span>
+      </div>
+    </div>
+    <p class="about">
+      <span id="version"></span> ·
+      <a id="source-code" href="#" data-i18n="sourceCode"></a> ·
+      <a id="privacy" href="#" data-i18n="privacy"></a>
+    </p>
+  </main>
   <script type="module" src="popup.js"></script>
 </body>
 </html>

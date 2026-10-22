@@ -31,14 +31,6 @@
     "message": "Open this page with ig.tools",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "On this page",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "Download all",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "Download",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "Instagram didn't respond. Try again in a moment.",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "View on ig.tools without signing in",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "Photo $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "Dismiss",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "Download from Instagram",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "Add download buttons to Instagram",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "Turn on",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "Select",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "Select all",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "Clear",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "$COUNT$ selected",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$ items",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "1 photo",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "1 video",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "Download all $COUNT$",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "Download $COUNT$ selected",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "Download photo",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "Download video",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "Download profile picture",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "Saves to $PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "Open in ig.tools · no login needed",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "Post",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "Reel",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "Story",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "Highlight",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "Profile",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "Saving Stories here doesn't add you to the viewer list.",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "On Instagram",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "Downloads",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "Keyboard shortcut",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "$KEYS$ opens this popup",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "Not set",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "Change",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "Folder",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "Source code",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "Privacy",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "Version $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }

@@ -31,14 +31,6 @@
     "message": "このページをig.toolsで開く",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "このページ",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "すべて保存",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "保存",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "Instagramから応答がありません。しばらくしてからもう一度お試しください。",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "ログインせずにig.toolsで見る",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "写真 $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "設定",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "閉じる",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "Instagramからダウンロード",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "Instagramにダウンロードボタンを追加",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "オンにする",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "選択",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "すべて選択",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "選択を解除",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "$COUNT$件を選択中",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$件",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "写真1枚",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "動画1本",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "$COUNT$件すべてダウンロード",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "選択した$COUNT$件をダウンロード",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "写真をダウンロード",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "動画をダウンロード",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "プロフィール写真をダウンロード",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "保存先：$PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "ig.toolsで開く · ログイン不要",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "投稿",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "リール",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "ストーリーズ",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "ハイライト",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "プロフィール",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "ここからストーリーズを保存しても、閲覧者リストには表示されません。",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "Instagram上",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "ダウンロード",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "キーボードショートカット",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "$KEYS$ でこのポップアップを開く",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "未設定",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "変更",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "フォルダ",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "ソースコード",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "プライバシー",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "バージョン $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }

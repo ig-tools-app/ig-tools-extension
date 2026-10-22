@@ -1,51 +1,57 @@
-/* Colours and radii follow the ig.tools site tokens. */
+/* Colours follow the extension icon: an orange-to-magenta gradient for the one
+   main action, magenta for selection and links, neutral greys elsewhere. */
 :root {
   color-scheme: light;
   --bg: #ffffff;
-  --surface-2: #f6f5f8;
+  --surface: #f6f5f8;
+  --surface-2: #efedf2;
   --line: #ebe9ee;
   --line-strong: #d9d6de;
   --text: #1d1a22;
-  --muted: #66616d;
-  --placeholder: #8f8996;
-  --primary: #b42a78;
-  --primary-hover: #9a2167;
-  --primary-ink: #ffffff;
-  --primary-soft: #fbf0f6;
-  --focus-ring: rgb(180 42 120 / 16%);
+  --muted: #6b6572;
+  --media-bg: #16141a;
+  --accent: #d8196f;
+  --accent-soft: #fdeef4;
+  --brand: linear-gradient(135deg, #e8542c, #d8196f);
+  --brand-shadow: 0 2px 8px rgb(216 25 111 / 22%);
+  --focus-ring: rgb(216 25 111 / 18%);
   --ok: #1f8a5b;
   --danger: #b8322f;
   --r-sm: 8px;
   --r-md: 10px;
-  --shadow-sm: 0 1px 2px rgb(29 26 34 / 8%);
+  --r-lg: 12px;
+  --shadow-sm: 0 1px 2px rgb(29 26 34 / 8%), 0 4px 16px rgb(29 26 34 / 6%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --bg: #1c1a20;
-    --surface-2: #25222a;
-    --line: #2c2931;
-    --line-strong: #3d3943;
+    --surface: #25222a;
+    --surface-2: #2d2a33;
+    --line: #2e2b33;
+    --line-strong: #403b46;
     --text: #f2f0f4;
     --muted: #a8a2af;
-    --placeholder: #7c7683;
-    --primary: #e0559f;
-    --primary-hover: #ea6dae;
-    --primary-ink: #1a0712;
-    --primary-soft: #2e1d28;
-    --focus-ring: rgb(224 85 159 / 26%);
+    --media-bg: #0f0e12;
+    --accent: #ff5c98;
+    --accent-soft: #3a1f2d;
+    --brand-shadow: none;
+    --focus-ring: rgb(255 92 152 / 26%);
     --ok: #4cc38a;
     --danger: #ff8a85;
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   }
 }
 * { box-sizing: border-box; }
+/* Chrome caps popups at 600px tall: the header and actions stay put and the
+   middle part scrolls. */
 body {
   width: 360px;
+  max-height: 600px;
   margin: 0;
-  padding: 16px;
-  display: grid;
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   /* Named fonts before system-ui: on Chinese Windows, system-ui resolves to a
@@ -54,49 +60,117 @@ body {
 }
 [hidden] { display: none !important; }
 h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
-.form-title { font-size: 13px; color: var(--muted); font-weight: 600; }
+button { font: inherit; color: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+svg { display: block; }
 
-.media { display: grid; gap: 10px; }
-.tabs { display: flex; gap: 4px; padding: 4px; border-radius: var(--r-md); background: var(--surface-2); }
-.tabs [role="tab"] {
-  flex: 1;
-  min-height: 36px;
-  padding: 0 8px;
+/* ---- Header ---- */
+.top { flex: none; display: flex; align-items: center; gap: 8px; height: 52px; padding-inline: 16px 8px; border-block-end: 1px solid var(--line); }
+.top:has(#settings-back:not([hidden])) { padding-inline-start: 8px; }
+.brand { flex: 1; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.brand img { display: block; }
+.top-title { flex: 1; }
+.icon-button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
   border: 0;
   border-radius: var(--r-sm);
   background: transparent;
   color: var(--muted);
-  font: inherit;
+  cursor: pointer;
+}
+.icon-button:hover { background: var(--surface); color: var(--text); }
+.icon-button svg { width: 20px; height: 20px; }
+.icon-button.small { width: 28px; height: 28px; }
+.icon-button.small svg { width: 16px; height: 16px; }
+[dir="rtl"] .flip svg { transform: scaleX(-1); }
+
+/* ---- Scrolling middle ---- */
+/* A flex column, not a grid: grid rows in a scrolling box shrink and cards overlap. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.body > * { flex: none; }
+
+.source { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.avatar { flex: none; width: 34px; height: 34px; padding: 2px; border-radius: 50%; background: var(--brand); }
+.avatar-picture {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.avatar-picture img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.source-text { min-width: 0; display: grid; }
+.source-text b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+.source-text small { color: var(--muted); font-size: 12px; }
+
+.media { display: flex; flex-direction: column; gap: 10px; }
+.tabs { display: flex; gap: 2px; padding: 3px; border-radius: var(--r-md); background: var(--surface); }
+.tabs [role="tab"] {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 .tabs [role="tab"]:hover { color: var(--text); }
-.tabs [aria-selected="true"] { background: var(--bg); color: var(--primary); box-shadow: var(--shadow-sm); }
-.media-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; }
-.media-head h1 { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.back {
-  min-height: 40px;
-  padding: 0 4px;
+.tabs [aria-selected="true"] { background: var(--bg); color: var(--text); box-shadow: var(--shadow-sm); }
+@media (prefers-color-scheme: dark) { .tabs [aria-selected="true"] { background: var(--surface-2); } }
+
+.media-head { display: flex; align-items: center; gap: 8px; min-height: 28px; font-size: 13px; }
+.media-head h2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.media-count { flex: 1; color: var(--muted); }
+.back, .text-button {
+  flex: none;
+  min-height: 28px;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: var(--primary);
-  font: inherit;
+  color: var(--accent);
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
 .back::before { content: "‹ "; }
 [dir="rtl"] .back::before { content: "› "; }
-/* Chrome caps popups at 600px tall, so long carousels scroll inside this box.
-   The grid itself must not scroll, or its rows shrink and cards overlap. */
-.scroller { max-height: 240px; overflow-y: auto; }
+
 .grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 .grid.is-story { grid-template-columns: repeat(3, 1fr); }
 .grid.is-single { grid-template-columns: 1fr; }
@@ -108,144 +182,229 @@ h1, h2 { margin: 0; font-size: 15px; font-weight: 650; }
   background: var(--surface-2);
 }
 .is-story .card { aspect-ratio: 9 / 16; }
-.is-single .card { aspect-ratio: auto; height: 280px; }
-/* The picture is round; the card itself is not, so the download button is never clipped. */
-.is-avatar .card { aspect-ratio: 1; height: auto; width: 240px; margin-inline: auto; overflow: visible; background: none; }
-.is-avatar .card img { object-fit: cover; border-radius: 50%; background: var(--surface-2); }
-.is-avatar .save { inset-block-end: 8px; inset-inline-end: 8px; }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
+/* One item: shown whole on a dark backdrop, like a viewer. */
+.is-single .card { aspect-ratio: auto; height: 280px; border-radius: var(--r-lg); background: var(--media-bg); }
+.is-single .card img { object-fit: contain; }
+/* The profile picture is round and needs no backdrop. */
+.is-avatar .card { width: 200px; height: 200px; margin-inline: auto; border-radius: 50%; background: var(--surface-2); box-shadow: 0 0 0 1px var(--line); }
+.is-avatar .card img { object-fit: cover; }
 
 /* Highlights tray: round covers with titles, like Instagram's own tray. */
+.grid.is-highlights { grid-template-columns: repeat(4, 1fr); gap: 8px 4px; }
 .highlight-open {
   width: 100%;
   display: grid;
   justify-items: center;
   gap: 6px;
-  padding: 6px 2px;
+  padding: 4px 0;
   border: 0;
   border-radius: var(--r-md);
   background: transparent;
-  color: var(--text);
-  font: inherit;
   cursor: pointer;
 }
-.highlight-open:hover { background: var(--surface-2); }
-.highlight-cover { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: var(--surface-2); outline: 1px solid var(--line); }
-.highlight-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.highlight-title { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
-.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.is-single .card img { object-fit: contain; }
+.highlight-open:hover { background: var(--surface); }
+.highlight-cover { width: 64px; height: 64px; padding: 2px; border-radius: 50%; border: 1px solid var(--line-strong); }
+.highlight-cover img, .highlight-cover::after { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.highlight-cover:empty::after { content: ""; background: var(--surface-2); }
+.highlight-title { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+
+/* Controls on a card: select (top-left), video badge (bottom-left), save (bottom-right). */
+.pick {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-start: 4px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.pick span { width: 20px; height: 20px; display: grid; place-items: center; border: 2px solid #fff; border-radius: 50%; background: rgb(0 0 0 / 25%); box-shadow: 0 1px 3px rgb(0 0 0 / 25%); }
+.pick svg { width: 12px; height: 12px; color: #fff; opacity: 0; }
+.pick[aria-pressed="true"] span { background: var(--accent); border-color: var(--accent); }
+.pick[aria-pressed="true"] svg { opacity: 1; }
 .badge {
   position: absolute;
-  inset-block-start: 8px;
+  inset-block-end: 8px;
   inset-inline-start: 8px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: rgb(0 0 0 / 55%);
   color: #fff;
 }
-.badge svg { width: 13px; height: 13px; }
+.badge svg { width: 11px; height: 11px; }
+.is-single .badge { inset-block: 10px auto; inset-inline-start: 10px; width: 26px; height: 26px; }
 .save {
   position: absolute;
   inset-block-end: 6px;
   inset-inline-end: 6px;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   padding: 0;
   border: 0;
-  border-radius: var(--r-sm);
-  background: var(--bg);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 92%);
+  color: #1d1a22;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
   cursor: pointer;
 }
-.save svg { width: 20px; height: 20px; }
-.save:hover { color: var(--primary); }
-.save.is-done { color: var(--ok); }
+.save svg { width: 16px; height: 16px; }
+.save:hover { color: #d8196f; }
+.save.is-done { color: #1f8a5b; }
 .save:disabled { cursor: default; }
 
-.status { display: grid; gap: 6px; padding: 12px; border-radius: var(--r-md); background: var(--surface-2); }
-.status p { margin: 0; color: var(--muted); }
-.status a { color: var(--primary); font-weight: 600; text-decoration: none; }
-.status .detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
-.status a:hover { text-decoration: underline; }
+.note { margin: 0; text-align: center; color: var(--muted); font-size: 12px; }
 
-form { display: grid; gap: 10px; }
-.field { display: block; }
+.status { display: grid; gap: 6px; padding: 12px; border-radius: var(--r-lg); background: var(--surface); }
+.status p { margin: 0; color: var(--muted); font-size: 13px; }
+.status a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
+.status a:hover { text-decoration: underline; }
+.status .detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+
+/* ---- Link form (pages without media) ---- */
+form { display: flex; flex-direction: column; gap: 12px; padding-block-start: 4px; }
+.form-title { font-size: 17px; letter-spacing: -.01em; }
+.field { display: flex; align-items: center; gap: 8px; height: 44px; padding-inline: 12px; border: 1px solid var(--line-strong); border-radius: var(--r-lg); cursor: text; }
+.field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--focus-ring); }
+.field:has([aria-invalid="true"]) { border-color: var(--danger); }
+.field-icon { flex: none; color: var(--muted); }
+.field-icon svg { width: 18px; height: 18px; }
 input {
-  width: 100%;
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-md);
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
   background: transparent;
   color: var(--text);
   font: inherit;
   line-height: normal;
 }
-input::placeholder { color: var(--placeholder); }
-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
-input[aria-invalid="true"] { border-color: var(--danger); }
-button.primary, button.secondary {
-  height: 44px;
-  padding: 0 16px;
-  border-radius: var(--r-md);
-  font: inherit;
+input::placeholder { color: var(--muted); }
+input:focus, input:focus-visible { outline: none; box-shadow: none; }
+.error { margin: 0; color: var(--danger); font-size: 13px; }
+.helper { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* ---- Tip: offers the on-page buttons until turned on or dismissed ---- */
+.tip { display: flex; align-items: center; gap: 8px; padding: 8px 6px 8px 12px; border-radius: var(--r-lg); background: var(--accent-soft); font-size: 13px; }
+[dir="rtl"] .tip { padding: 8px 12px 8px 6px; }
+.tip p { flex: 1; margin: 0; }
+.tip-on {
+  flex: none;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
-button.primary { border: 0; background: var(--primary); color: var(--primary-ink); }
-button.primary:hover { background: var(--primary-hover); }
-.media-head button.primary { height: 40px; }
-button.secondary { border: 1px solid var(--line-strong); background: transparent; color: var(--text); }
-button.secondary:hover { border-color: var(--primary); color: var(--primary); }
-button:disabled { opacity: .6; }
-button:focus-visible, a:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
-/* On-page buttons setting: a switch row under the link field. */
-.setting {
+@media (prefers-color-scheme: dark) { .tip-on { color: #1a0712; } }
+
+/* ---- Main action and ig.tools link, pinned under the scrolling part ---- */
+.actions { flex: none; display: grid; gap: 6px; padding: 12px 16px; border-block-start: 1px solid var(--line); }
+.actions-note { margin: 0; text-align: center; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button.primary {
+  width: 100%;
+  height: 44px;
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding-block-start: 12px;
-  border-block-start: 1px solid var(--line);
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: var(--brand);
+  box-shadow: var(--brand-shadow);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 650;
   cursor: pointer;
 }
-.setting-text { display: grid; gap: 2px; font-size: 13px; font-weight: 600; }
-.setting-text small { color: var(--muted); font-weight: 400; font-size: 12px; }
-.setting input {
+button.primary:hover { filter: brightness(1.06); }
+button.primary svg { width: 18px; height: 18px; }
+button.primary.is-done { background: var(--ok); box-shadow: none; }
+@media (prefers-color-scheme: dark) { button.primary.is-done { color: #0b2418; } }
+button:disabled { cursor: default; }
+button.primary:disabled:not(.is-done) { opacity: .6; }
+.site-link {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding-inline: 16px;
+  border-block-start: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+.site-link:hover { color: var(--accent); }
+.site-link svg { width: 14px; height: 14px; }
+[dir="rtl"] .site-link svg { transform: scaleX(-1); }
+
+/* ---- Settings ---- */
+.group-title { margin-block-end: -4px; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.group { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px; }
+.row + .row { border-block-start: 1px solid var(--line); }
+label.row { cursor: pointer; }
+.row-text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.row-text b { font-weight: 600; }
+.row-text small { color: var(--muted); font-size: 12px; }
+.row a { flex: none; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
+.row a:hover, .about a:hover { text-decoration: underline; }
+kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font: 12px ui-monospace, Consolas, monospace; }
+.switch {
   appearance: none;
   flex: none;
   position: relative;
-  width: 36px;
-  height: 20px;
-  margin: 1px 0 0;
-  padding: 0;
-  border: 0;
+  width: 40px;
+  height: 24px;
+  margin: 0;
   border-radius: 999px;
   background: var(--line-strong);
   cursor: pointer;
   transition: background .15s;
 }
-.setting input::after {
+.switch::after {
   content: "";
   position: absolute;
-  inset-block-start: 2px;
-  inset-inline-start: 2px;
-  width: 16px;
-  height: 16px;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
   transition: transform .15s;
 }
-.setting input:checked { background: var(--primary); }
-.setting input:checked::after { transform: translateX(16px); }
-[dir="rtl"] .setting input:checked::after { transform: translateX(-16px); }
-.setting input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
-.error { margin: 0; color: var(--danger); }
-.helper { margin: 0; color: var(--muted); font-size: 13px; }
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(16px); }
+[dir="rtl"] .switch:checked::after { transform: translateX(-16px); }
+.switch:focus-visible { box-shadow: 0 0 0 3px var(--focus-ring); }
+.about { margin: 0; text-align: center; color: var(--muted); font-size: 12px; }
+.about a { color: inherit; }
+
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Settings replace the page view; what the page view showed is kept for Back. */
+.in-settings :is(#main, #actions, #site-link, #brand, #settings-open) { display: none !important; }
+/* On pages without media the hint follows the link field. */
+.is-empty #status { order: 1; }
+.media-head h2:not(.sr-only, :empty) + .media-count::before { content: "· "; }
+/* A status that offers ig.tools already holds the link, so the footer copy goes. */
+body:has(#status:not([hidden]) #status-link:not([hidden])) #site-link { display: none; }

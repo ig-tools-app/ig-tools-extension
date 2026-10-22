@@ -31,14 +31,6 @@
     "message": "Bu sayfayı ig.tools ile aç",
     "description": "Context menu on an Instagram page"
   },
-  "onThisPage": {
-    "message": "Bu sayfada",
-    "description": "Popup heading above the media found on the open Instagram page"
-  },
-  "downloadAll": {
-    "message": "Tümünü indir",
-    "description": "Popup button that saves every file on the page"
-  },
   "download": {
     "message": "İndir",
     "description": "Accessible name of each file's download button"
@@ -78,10 +70,6 @@
   "failed": {
     "message": "Instagram yanıt vermedi. Biraz sonra tekrar deneyin.",
     "description": "Shown when Instagram returned an error or did not respond"
-  },
-  "viewOnSite": {
-    "message": "Giriş yapmadan ig.tools'ta görüntüle",
-    "description": "Heading above the ig.tools link field when media is shown"
   },
   "photoLabel": {
     "message": "Fotoğraf $NUMBER$",
@@ -180,6 +168,188 @@
       "count": {
         "content": "$1",
         "example": "6"
+      }
+    }
+  },
+  "settings": {
+    "message": "Ayarlar",
+    "description": "Settings button and page title"
+  },
+  "dismiss": {
+    "message": "Kapat",
+    "description": "Accessible name of the button that closes the tip"
+  },
+  "formTitle": {
+    "message": "Instagram'dan indir",
+    "description": "Title above the link field on pages without media"
+  },
+  "tipText": {
+    "message": "Instagram'a indirme düğmeleri ekleyin",
+    "description": "Tip offering the on-page download buttons"
+  },
+  "tipOn": {
+    "message": "Aç",
+    "description": "Button in the tip that turns the on-page buttons on"
+  },
+  "select": {
+    "message": "Seç",
+    "description": "Accessible name prefix of a card's select control, followed by the item name"
+  },
+  "selectAll": {
+    "message": "Tümünü seç",
+    "description": "Selects every item"
+  },
+  "clearSelection": {
+    "message": "Temizle",
+    "description": "Clears the selection"
+  },
+  "selectedCount": {
+    "message": "$COUNT$ seçildi",
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "itemCount": {
+    "message": "$COUNT$ öğe",
+    "description": "How many items there are (2 or more)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "onePhoto": {
+    "message": "1 fotoğraf",
+    "description": "Shown when the page has a single photo"
+  },
+  "oneVideo": {
+    "message": "1 video",
+    "description": "Shown when the page has a single video"
+  },
+  "downloadAllCount": {
+    "message": "$COUNT$ öğenin tümünü indir",
+    "description": "Main button: save all items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadSelected": {
+    "message": "Seçilen $COUNT$ öğeyi indir",
+    "description": "Main button: save the selected items",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "downloadPhoto": {
+    "message": "Fotoğrafı indir",
+    "description": "Main button for a single photo"
+  },
+  "downloadVideo": {
+    "message": "Videoyu indir",
+    "description": "Main button for a single video"
+  },
+  "downloadAvatar": {
+    "message": "Profil fotoğrafını indir",
+    "description": "Main button for the profile picture"
+  },
+  "savesTo": {
+    "message": "Kayıt yeri: $PATH$",
+    "description": "Line under the main button naming the download folder",
+    "placeholders": {
+      "path": {
+        "content": "$1",
+        "example": "Downloads/ig.tools/natgeo/"
+      }
+    }
+  },
+  "openOnSiteFooter": {
+    "message": "ig.tools'ta aç · giriş gerekmez",
+    "description": "Link at the bottom of the popup on Instagram pages"
+  },
+  "kindPost": {
+    "message": "Gönderi",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindReel": {
+    "message": "Reels",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindStory": {
+    "message": "Hikâye",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindHighlight": {
+    "message": "Öne Çıkan",
+    "description": "Kind of page, shown under the username"
+  },
+  "kindProfile": {
+    "message": "Profil",
+    "description": "Kind of page, shown under the username"
+  },
+  "storiesNote": {
+    "message": "Hikâyeleri buradan kaydetmek sizi görüntüleyenler listesine eklemez.",
+    "description": "Note under Stories listed on a profile page (tested in October 2026)"
+  },
+  "settingsOnInstagram": {
+    "message": "Instagram'da",
+    "description": "Settings group title"
+  },
+  "settingsDownloads": {
+    "message": "İndirmeler",
+    "description": "Settings group title"
+  },
+  "shortcut": {
+    "message": "Klavye kısayolu",
+    "description": "Settings row: keyboard shortcut"
+  },
+  "shortcutHelp": {
+    "message": "$KEYS$ bu pencereyi açar",
+    "description": "Describes the shortcut; $KEYS$ is the key combination",
+    "placeholders": {
+      "keys": {
+        "content": "$1",
+        "example": "Alt+Shift+S"
+      }
+    }
+  },
+  "shortcutNotSet": {
+    "message": "Atanmadı",
+    "description": "Shown when Chrome left the shortcut unset"
+  },
+  "shortcutChange": {
+    "message": "Değiştir",
+    "description": "Link to Chrome's shortcut settings"
+  },
+  "folder": {
+    "message": "Klasör",
+    "description": "Settings row: download folder"
+  },
+  "sourceCode": {
+    "message": "Kaynak kodu",
+    "description": "Link to the source code"
+  },
+  "privacy": {
+    "message": "Gizlilik",
+    "description": "Link to the privacy policy"
+  },
+  "version": {
+    "message": "Sürüm $VERSION$",
+    "description": "Extension version",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "1.0.0"
       }
     }
   }
