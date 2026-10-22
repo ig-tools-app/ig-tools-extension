@@ -133,6 +133,14 @@ ${column("Like", "28K")}${column("Comment", "935")}${column("Repost", "1.2K")}${
 <div style="margin-top:20px"><a href="/reels/audio/1/" role="link"><img src="${cdn}/audio.jpg" width="26" height="26"></a></div>
 </div></div></main>`;
 
+// A Reel opened from the home feed: the feed stays in <main> (a column of
+// posts with icons, which is not an action column) and the Reels viewer plays
+// in a layer outside it.
+export const reelOverFeedHtml = `<main><div class="feed-column">
+${[1, 2, 3, 4].map(() => `<div style="width:470px;height:300px"><svg aria-label="Like" width="24" height="24"></svg><svg aria-label="Share" width="24" height="24"></svg></div>`).join("")}
+</div></main>
+<div class="reel-layer" style="position:fixed;inset:0;background:#000">${reelsPageHtml.replace(/<\/?main>/g, "")}</div>`;
+
 // The playing Story card: progress bars, then a flex header with the avatar,
 // the sound and pause controls (32px boxes, 16px icons) and "more" (24px icon).
 // `fills` gives each bar's progress in percent.

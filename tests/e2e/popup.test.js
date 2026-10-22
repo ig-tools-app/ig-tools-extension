@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { bigCarouselPost, carouselPageHtml, carouselPost, feedCarouselHtml, feedHtml, gridHtml, reelsPageHtml, storyPageHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
+import { bigCarouselPost, carouselPageHtml, reelOverFeedHtml, carouselPost, feedCarouselHtml, feedHtml, gridHtml, reelsPageHtml, storyPageHtml, highlightGraphql, highlightsTray, photoPost, profileHeader, profileHtml, reelPost, storyGraphql, storyProfile, userInfo } from "../fixtures.js";
 import { shortcodeToId } from "../../src/instagram.js";
 
 const root = fileURLToPath(new URL("../..", import.meta.url));
@@ -115,7 +115,7 @@ before(async () => {
     const pathname = new URL(url).pathname;
     const header = scenario === "avatar-on-page" && pathname === "/natgeo/" ? profileHeader
       : pathname === "/" ? feedHtml : pathname === "/gridacct/" ? gridHtml : pathname === "/p/Ccarousel33/" ? carouselPageHtml
-      : pathname === "/feedcarousel/" ? feedCarouselHtml : pathname === "/reels/Creel222222/" ? reelsPageHtml
+      : pathname === "/feedcarousel/" ? feedCarouselHtml : pathname === "/reels/Creel222222/" ? (scenario === "reel-over-feed" ? reelOverFeedHtml : reelsPageHtml)
       : pathname.startsWith("/stories/") && scenario !== "no-story-header" ? storyPageHtml() : "";
     return route.fulfill({ status: 200, contentType: "text/html", headers: { "Set-Cookie": "csrftoken=test-token; Path=/" }, body: profileHtml(profileIds[new URL(url).pathname], header) });
   });
@@ -566,6 +566,22 @@ test("the Reels player gets a button in its action column, between share and sav
   await page.locator('.igt-reel-button[data-igt-state="done"]').waitFor();
   assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Creel222222.mp4"]);
   await closePage(page);
+});
+
+test("a Reel opened from the feed gets its button in the viewer layer, not in the feed", async () => {
+  scenario = "reel-over-feed";
+  await recordBackgroundDownloads();
+  const page = await context.newPage();
+  await page.goto("https://www.instagram.com/reels/Creel222222/");
+  const button = page.locator(".igt-reel-button");
+  await button.waitFor();
+  assert.equal(await page.locator(".igt-reel-button").count(), 1);
+  assert.equal(await button.evaluate(b => Boolean(b.closest(".reel-layer")) && b.parentElement.nextElementSibling.className), "reel-item item-save");
+  await button.click();
+  await page.locator('.igt-reel-button[data-igt-state="done"]').waitFor();
+  assert.deepEqual(await backgroundFiles(), ["ig.tools/natgeo/posts/Creel222222.mp4"]);
+  await closePage(page);
+  scenario = "ok";
 });
 
 test("a feed carousel's slide button stays put while the slides scroll", async () => {

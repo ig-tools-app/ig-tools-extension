@@ -203,13 +203,18 @@
   // Like, comment and repost carry counts; share, save and "more" are bare icons.
   // The button goes between share and save, as next to the bookmark on posts, in a
   // wrapper that copies the share item's classes so spacing and colour match.
+  // A Reel opened from the home feed plays in a layer outside <main>, over the
+  // feed, so the whole page is searched. Items must be icon-sized: the feed's
+  // own column of posts is also a vertical stack.
   function addReelButtons() {
     if (!location.pathname.startsWith("/reels/")) return;
-    for (const column of document.querySelectorAll("main div")) {
+    for (const column of document.querySelectorAll("div")) {
       if (column.dataset.igtDone || column.children.length < 4) continue;
       const items = [...column.children].filter(hasIcon);
       if (items.length < 4 || items.some(item => item.querySelector("[role=link] svg"))) continue;
-      const lefts = items.map(item => item.getBoundingClientRect().left), tops = items.map(item => item.getBoundingClientRect().top);
+      const boxes = items.map(item => item.getBoundingClientRect());
+      if (boxes.some(box => box.width > 80 || box.height > 80)) continue;
+      const lefts = boxes.map(box => box.left), tops = boxes.map(box => box.top);
       if (Math.max(...lefts) - Math.min(...lefts) > 12 || Math.max(...tops) - Math.min(...tops) < 100) continue;
       column.dataset.igtDone = "1";
       const bare = items.filter(item => !item.innerText.trim());
